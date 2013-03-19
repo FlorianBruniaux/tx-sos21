@@ -3,7 +3,7 @@ Tx-sos21
 
 TX P13 Dirigée par Aurélien Benel.
 
-#MISSION:
+MISSION:
 Prototypage d'un jeu persistant avec une base NoSQL
 Conception et à la réalisation des fonctionnalités suivantes :
     - Action sur un objet (avec effets sur le score suivant les règles prédéfinies)
