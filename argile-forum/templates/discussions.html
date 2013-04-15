@@ -1,0 +1,266 @@
+<html>
+    <head>
+        <title>Argile-forum</title>
+	<link rel="stylesheet" href="style/forum.css" type="text/css">
+        <script src="/_utils/script/sha1.js"></script>
+  	<script src="/_utils/script/json2.js"></script>
+  	<script src="/_utils/script/jquery.js"></script>
+  	<script src="/_utils/script/jquery.couch.js"></script>
+        <script src="/_utils/script/jquery.form.js"></script>
+        <script src="js/script.js"></script>
+        <script src="js/md5.js"></script>
+	
+    </head>
+  <body>
+        <div id="header">
+            <div id="titre">Argile-forum</div>
+            <div id="ident">
+                <!-- Entete avec possibilité de s'enregistrer pour tous. On le met en commentaire pour le masquer -->
+                <!--
+                <a href="#" onclick="afficherFormConnexion()">Connexion</a> - <a href="#" onclick="afficherFormEnregistrement()">S'enregistrer</a>
+                -->
+                <!-- Entete avec uniquement connexion -->
+                <a href="#" onclick="afficherFormConnexion()">Connexion</a>
+            </div>
+        </div>
+        <!-- Formulaire de connexion -->
+        <div id="login" style="display: none">
+            <h2>Connexion</h2>
+            <form id="form-login">
+                <input type="text" name="login" id="connexionNom" autofocus required placeholder="Nom d'utilisateur?">
+                <input type="password" name="mdp" id="connexionMdp" required placeholder="Mot de passe?"><br><br>
+                <a href="#" style="text-decoration: none">
+                <div class="send-button" onclick="connexion()">
+                    Connexion
+                </div>
+                </a>
+            </form>
+        </div>
+        <!-- Formulaire de création de compte. -->
+        <div id="register" style="display: none">
+            <h2>S'enregistrer</h2>
+            <form id="form-register">
+                <input type="text" name="login" id="enregistrementNom" required placeholder="Nom d'utilisateur?">
+                <input type="password" name="mdp" id="enregistrementMdp" required placeholder="Mot de passe?">
+                <input type="email" name="email" id="enregistrementEmail" required placeholder="Email?">
+                Role : <select id="enregistrementRole">
+                    <option value="basique">Basique</option>
+                    <option value="moderateur">Modérateur</option>
+                    <option value="administrateur">Administrateur</option>
+                    <option value="recruteur">Recruteur</option>
+                </select>
+                <br><br>
+                <a href="#" style="text-decoration: none">
+                <div class="send-button" onclick="enregistrement()">
+                    S'enregistrer
+                </div>
+                </a>
+            </form>
+        </div>
+          
+        <div id="question">
+          <h2>Fils de discussion</h2>
+        </div>
+        <!--
+        Liste des discussions
+        -->
+        <div id="content">
+            <div class="topic" id="topic">
+                
+                <table id="topic-summary">
+                    <tr class="topic-row-header">
+                        <td class="topic-summary-row-title">
+                            Titre
+                        </td>
+                        <td class="topic-summary-row">
+                            Date de modifitcation
+                        </td>
+                    </tr>
+                <!-- Boucle pour afficher les discussions  -->
+                {{#discussions}}
+                    <tr>
+                        <td class="topic-summary-row">
+                            <a href='_rewrite/discussion/{{id}}'>{{titre}}</a>
+                        </td>
+                        <td class="topic-date-row">
+                            {{date_modification}}
+                        </td>
+                    </tr>
+                {{/discussions}}
+                </table>
+                                
+                <!--
+                Formulaire de création de discussion
+                -->
+                <div id="nouveau-sujet" class="nouveau-sujet" style="display: none">
+                        <table>
+                                <tr>
+                                    <td>Nouveau fil de discussion</td>
+                                    <td><input type="text" name="title" id="title" value=""/></td>
+
+                                </tr>
+                                <tr>
+                                    <td>Type : </td>
+                                    <td><select id="select-type">
+                                            <option value="scene">Scène</option>
+                                            <option value="action">Action</option>
+                                            <option value="objet">Objet</option>
+                                        </select></td>
+
+                                </tr>
+                                <tr>
+                                    <td>Résumé :</td>
+                                    <td><textarea rows="5" cols="80" id="textarea-sum"></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td>Mots-clé (séparés par une virgule)</td>
+                                    <td><input type="text" name="mots_cle" id="mots_cle" value=""/></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Image (1Mo max) :
+                                    </td>
+                                    <td>
+                                        <form class="imageForm" method="post" action="" enctype="multipart/form-data">
+                                            <input type="text" name="_rev" id="_rev" placeholder="rev)" style="display:none;" />
+                                            <input type="file" name="_attachments" id="_attachments" multiple="multiple" />
+                                        </form>
+                                    </td>
+                                </tr>
+                        </table>
+                    <a href="#" style="text-decoration: none">
+                        <div class="send-button" onclick="creerDiscussion()">
+                            Envoyer
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <!-- Les dix dernières discussions créées -->
+            <div id="discussionsRecentes">
+                <h4 class="header-related">
+                    Derniers objets créés
+                </h4>
+                <div id="objet-nouveau"></div>
+            </div>  
+        </div>
+        <div id="footer">
+            
+        </div>
+        
+        <script type="text/javascript">
+           
+            /*
+             * Enregistrer un nouvel utilisateur
+             */
+            function enregistrement(){
+                var login = $('#enregistrementNom').val();
+                var mdp = $('#enregistrementMdp').val();
+                var email = $('#enregistrementEmail').val();
+                var role = $('#enregistrementRole').val();
+                
+                enregistrer(login,mdp,email,role);
+            }
+            
+            /*
+             * Se connecter
+             */
+            function connexion(){
+                var login = $('#connexionNom').val();
+                var mdp = $('#connexionMdp').val();
+               // alert("connexion");
+                connecter(login,mdp);
+            }
+            
+            /*
+             * Créer une nouvelle page de discussion
+             */
+            function creerDiscussion(){
+                //On récupère les valeurs du formulaire
+                var titre = $("input#title").val();
+                var mots_cle = $("input#mots_cle").val();
+                mots_cle = mots_cle.split(",");
+                var texte = $("#textarea-sum").val();
+                var typeObjet = document.getElementById("select-type");
+                var val_type_objet = typeObjet.options[typeObjet.selectedIndex].value;
+                //On récupère le nom de l'auteur'
+                var auteur = verifierConnexion();
+                //On crée la nouvelle conversation (fonction dans script.js)
+                nouvelleConversation(auteur, titre, texte, val_type_objet, mots_cle, null);       
+            }
+        
+            /*
+             * Afficher/Masquer le formulaire de connexion
+             */
+            function afficherFormConnexion(){
+                var reg = document.getElementById("register");
+                var log = document.getElementById("login");
+                if(log.style.display=="none"){
+                    log.style.display="block";    
+                    reg.style.display="none";
+                }
+                else{
+                    log.style.display="none";
+                }  
+            }
+            
+            /*
+             * Afficher/Masquer le formulaire d'enregistrement d'un nouveau compte'
+             */
+            function afficherFormEnregistrement(){
+                reg = document.getElementById("register");
+                log = document.getElementById("login");
+                if(reg.style.display=="none"){
+                    reg.style.display="block";
+                    log.style.display="none";
+                }
+                else{
+                    reg.style.display="none";
+                }
+            }
+        
+            /*
+             * N'afficher le formulaire de création de sujet que si on est connecté
+             * Afficher aussi le nom d'utilisateur et le lien de déconnexion
+             */
+            $("#ident").ready(function(){
+                var utilisateur = verifierConnexion();
+                if(utilisateur){                
+                    $("#ident").html('<a href="_rewrite/utilisateur/' + utilisateur + '">' + utilisateur + '</a> - <a href="#" onclick="deconnecter()">Deconnexion</a>');
+                    var formulaire = $("#nouveau-sujet");
+                    formulaire.css('display','block'); 
+                    
+                    var role = verifierRole();
+                }
+            });  
+            
+            /*
+             * Afficher la liste des discussions dernièrement créées
+             */
+            $("#discussionsRecentes").ready(function(){
+                db = $.couch.db("argile-forum");
+                db.view("argile-forum/discussions-nouvelles", {
+                    limit: 10,
+                    descending: true,
+                    success: function(data) {
+                        var nouveau_titre = [];
+                        var nouveau_id = [];
+                        for(i in data.rows){
+                                //Récupérer les titres et id des discussions liées
+                                nouveau_titre.unshift(data.rows[i].value.title);
+                                nouveau_id.unshift(data.rows[i].value._id);
+                        }
+                        //Afficher les discussions récupérées
+                        var listeNouveau = document.getElementById("objet-nouveau");
+                        for(i in nouveau_titre){
+                            var nouveau = document.createElement("div");
+                            if (nouveau_titre[i]!=undefined) {
+                                nouveau.innerHTML = "<a href='_rewrite/discussion/"+nouveau_id[i]+"'>"+nouveau_titre[i]+"</a>";
+                            }
+                            listeNouveau.appendChild(nouveau);
+                        }
+                    }
+                });
+            }); 
+  	</script> 
+    </body>
+</html>

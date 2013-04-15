@@ -1,0 +1,516 @@
+<html>
+    <head>
+        <title>Discussion : {{topic}}</title>
+        <link rel="stylesheet" href="../../style/forum.css" type="text/css">
+	<script src="/_utils/script/sha1.js"></script>
+  	<script src="/_utils/script/json2.js"></script>
+  	<script src="/_utils/script/jquery.js"></script>
+  	<script src="/_utils/script/jquery.couch.js"></script>
+        <script src="/_utils/script/jquery.form.js"></script>
+        <script src="../../js/script.js"></script>
+        <script src="../../js/md5.js"></script>
+	
+    </head>
+    <body>
+         <div id="header">
+            <div id="titre">Argile-forum</div>
+            <div id="ident">
+                <!-- Entete avec possibilité de s'enregistrer pour tous. On le met en commentaire pour le masquer -->
+                <!--
+                <a href="#" onclick="afficherFormConnexion()">Connexion</a> - <a href="#" onclick="afficherFormEnregistrement()">S'enregistrer</a>
+                -->
+                <!-- Entete avec uniquement connexion -->
+                <a href="#" onclick="afficherFormConnexion()">Connexion</a>
+            </div>
+        </div>
+        <!-- Formulaire de connexion -->
+        <div id="login" style="display: none">
+            <h2>Connexion</h2>
+            <form id="form-login">
+                <input type="text" name="login" id="connexionNom" autofocus required placeholder="Nom d'utilisateur?">
+                <input type="password" name="mdp" id="connexionMdp" required placeholder="Mot de passe?"><br><br>
+                <a href="#" style="text-decoration: none">
+                <div class="send-button" onclick="connexion()">
+                    Connexion
+                </div>
+                </a>
+            </form>
+        </div>
+        <!-- Formulaire de création de compte -->
+        <div id="register" style="display: none">
+            <h2>S'enregistrer</h2>
+            <form id="form-register">
+                <input type="text" name="login" id="enregistrementNom" required placeholder="Nom d'utilisateur?">
+                <input type="password" name="mdp" id="enregistrementMdp" required placeholder="Mot de passe?">
+                <input type="email" name="email" id="enregistrementEmail" required placeholder="Email?">
+                Role : <select id="enregistrementRole">
+                    <option value="basique">Basique</option>
+                    <option value="moderateur">Modérateur</option>
+                    <option value="administrateur">Administrateur</option>
+                    <option value="recruteur">Recruteur</option>
+                </select>
+                <br><br>
+                <a href="#" style="text-decoration: none">
+                <div class="send-button" onclick="enregistrement()">
+                    S'enregistrer
+                </div>
+                </a>
+            </form>
+        </div>
+        
+        <!--
+        Arborescence des documents
+        -->
+        <div id="arborescence">
+            <div class="menus">
+                <ul id="arborescence-ul">
+                </ul>
+            </div>
+        </div>
+        <!--
+        Description de la discussion
+        -->
+        <div id="content">
+            <div id="topic">
+                <div id="resume">
+                    <div id="table-summary">              
+                        <div align="center" class="image-discussion"></div>
+                        <div class="message-cell">{{topic_text}}</div>
+                        <table id="table-summary">
+                            <tr>
+                                <td id="liste_mots_cle"></td>
+                                <td align="right" class="post-author">
+                                    <div>Type : {{type_objet}}</div>
+                                    <div>{{auteur}}, {{date_modification}}</div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>                
+                </div>
+                <!--
+                Affichage des commentaires
+                -->
+                <div id="answers">
+                    {{#commentaires}}
+                    <table class="answer">
+                        <tr>
+                            <td class="vote-cell"><span id="plus" onclick="vote_up('{{id}}')">+</span> <span class="vote-plus" id="positif_{{id}}">{{vote_positif}}</span> / <span class="vote-moins" id="negatif_{{id}}">{{vote_negatif}}</span> <span id="minus" onclick="vote_down('{{id}}')">-</span></td>
+                            <td class="message-cell">{{text}}</td>
+                        </tr>
+                        <tr>
+                            <td id="valid" class="valid" style="visibility: hidden" onclick="valider('{{topic_id}}','{{id}}')">
+                                <a href="#" style="text-decoration: none; color: white;"><div>Valider</div></a>
+                            </td>
+                            <td id="supprimer" class="supprimer" style="display:  none" onclick="supprimer('{{id}}','{{rev}}')">
+                                <a href="#" style="text-decoration: none; color: white;"><div>Supprimer</div></a>
+                            </td>
+                            <td align="right" class="post-author">{{auteur}}, {{date_modification}}</td>                            
+                        </tr>
+                    </table>
+                    {{/commentaires}}                    
+                    
+                    <!--
+                    Formulaire de réponse
+                    -->
+                    <div id="form-commentaire" style="display: none">
+                        <h3 class="header-answer">Votre message</h3>
+                        <table>
+                            <tr>
+                                <td><textarea rows="5" cols="80" name="textarea-answer" id="textarea-answer"></textarea></td>
+                            </tr>
+                        </table>
+                        <table>
+                            <tr>
+                                <td>Créer un nouvel objet et sa discussion : <input type="text" name="titre" id="titre-post"></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Type : 
+                                    <select id="select-type">
+                                        <option value="scene">Scène</option>
+                                        <option value="action">Action</option>
+                                        <option value="objet">Objet</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Mots-clé (séparés par une virgule) <input type="text" name="mots_cle" id="mots_cle" value=""/></td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Image (1Mo max) :
+                                    <form class="imageForm" method="post" action="" enctype="multipart/form-data">
+                                        <input type="text" name="_rev" id="_rev" placeholder="rev)" style="display:none;" />
+                                        <input type="file" name="_attachments" id="_attachments" multiple="multiple" />
+                                    </form>
+                                </td>
+                            </tr>
+                        </table>
+                        <a href="#" style="text-decoration: none">
+                        <div class="send-button" onclick="ajouterCommentaire()">
+                            Envoyer
+                        </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!--
+            Liste des discussions liées
+            -->
+            <div id="related">
+                <h4 class="header-related">
+                    En relation
+                </h4>
+                <div id="objet-fils">
+                </div>
+            </div>          
+        </div>
+        <div id="footer">
+            
+        </div>
+        <script type="text/javascript">
+            /*
+             * Enregistrer un nouvel utilisateur
+             */
+            function enregistrement(){
+                var login = $('#enregistrementNom').val();
+                var mdp = $('#enregistrementMdp').val();
+                var email = $('#enregistrementEmail').val();
+                var role = $('#enregistrementRole').val();
+                
+                enregistrer(login,mdp,email,role);
+            }
+            
+            /* 
+             * Se connecter
+             */
+            function connexion(){
+                
+                var login = $('#connexionNom').val();
+                var mdp = $('#connexionMdp').val();
+                connecter(login,mdp);
+            }
+            
+            /*
+             * Incrémenter la valeur du commentaire
+             * @param {string}   id  ID du commentaire à noter. 
+             */
+            function vote_up(id){
+
+                db = $.couch.db("argile-forum");
+                db.openDoc(id, {
+                        success: function(doc) {
+                            doc.vote_positif++;
+                            db.saveDoc(doc, {
+                                success: function() {
+                                var count = $("#positif_"+id);
+                                count.text(doc.vote_positif);
+                                }});
+                        }
+                    }
+                );
+            } 
+            
+            /*
+            * Décrémenter la valeur du commentaire
+            * @param {string}   id  ID du commentaire à noter. 
+            */
+            function vote_down(id){
+
+                db = $.couch.db("argile-forum");
+                db.openDoc(id, {
+                    success: function(doc) {
+                        doc.vote_negatif++;
+                        db.saveDoc(doc, {
+                            success: function() {
+                            var count = $("#negatif_"+id);
+                            count.text(doc.vote_negatif);
+                            }});
+                    }
+                });
+            }
+                 
+            /*
+            * Ajouter un nouveau commentaire
+            */
+            function ajouterCommentaire(){
+
+                var comment = $("#textarea-answer").val();
+                comment = comment.replace(/\n/gm,' ');
+                var val_type_objet = $('select#select-type').val();
+                var auteur = verifierConnexion();                
+                
+                //Créer une nouvelle discussion issue de ce commentaire
+                //A créer si on remplie le champ input
+                var titre = $("input#titre-post").val();
+                if(titre!=""){
+                    var parents_id = [];
+                    var parents_titre = [];
+                    var parents_t = [];
+                    
+                    //Récupérer les id des parents
+                    var str = '{{parents_id}}';
+                    var str2 = '{{parents_titre}}';
+                    
+                    if(str!=""){
+                        //Récupérer les titres des parents
+                        parents_titre = str2.split(",");
+                        parents_id = str.split(",");
+                        
+                        for(var k in parents_id){
+                            parents_t.push({
+                                id: parents_id[k],
+                                titre: parents_titre[k]
+                            });
+                        }
+                    }
+                    
+                    //Ajouter comme parent la discussion actuelle
+                    parents_t.push({
+                        id: '{{topic_id}}',
+                        titre: '{{topic}}'
+                    });
+                                        
+                    //Récupérer les mots-clés
+                    var mots_cle = $("input#mots_cle").val();
+                    mots_cle = mots_cle.split(",");
+                                        
+                    //Créer la discussion suite à ce commentaire (fonction dans script.js)
+                    var idConversation = nouvelleConversation(auteur,titre,"Nouvelle page de discussion concernant "+titre, val_type_objet, mots_cle, parents_t);                
+                    
+                    comment = comment + " Je crée une nouvelle discussion concernant '" + titre + "'.";
+                }
+                //Créer le commentaire (fonction dans script.js)
+                nouveauCommentaire(auteur,"{{topic_id}}","{{topic}}",comment);
+            }           
+            
+            /*
+             * Afficher/Masquer le formulaire de connexion
+             */
+            function afficherFormConnexion(){
+                reg = document.getElementById("register");
+                log = document.getElementById("login");
+                if(log.style.display=="none"){
+                    log.style.display="block";    
+                    reg.style.display="none";
+                }
+                else{
+                    log.style.display="none";
+                }  
+            }
+            
+            /*
+             * Afficher/Masquer le formulaire d'enregistrement d'un nouveau compte
+             */
+            function afficherFormEnregistrement(){
+                reg = document.getElementById("register");
+                log = document.getElementById("login");
+                if(reg.style.display=="none"){
+                    reg.style.display="block";
+                    log.style.display="none";
+                }
+                else{
+                    reg.style.display="none";
+                }
+            }
+            
+            
+            /*
+             * Afficher la réponse validée en avant ou pas dans la description de la discussion
+             */
+            $("#summary").ready(function(){
+                
+                var answered = '{{answered}}';
+                //alert(answered);
+                if((answered!="no")&&(answered!="")){
+                    var tableau = document.getElementById("resume");
+                    var ligne = document.createElement("table");
+                    ligne.className = "valid-answer";
+                    
+                    var role = verifierRole();
+                    if(role=="administrateur"){
+                        //Si l'utilisateur est administrateur, il a accès au bouton invalider'
+                        ligne.innerHTML = "<tr><td class='valided'>Réponse</td>\
+                            <td class='message-cell'>\
+                                <table>\
+                                    <tr>\
+                                        <td class='valid-answer-text'>{{answered_text}}</td>\
+                                    </tr>\
+                                    <tr>\
+                                    </tr>\
+                                </table>\
+                            </td></tr><tr><td class='invalid' onclick='invalider(\"{{topic_id}}\")'><a href='#' style='text-decoration: none; color: white;'><div>Invalider</div></a></td><td align='right' class='post-author'>{{answered_author}}, validé le {{answered_date}}</td></tr>";                    }
+                    else{
+                        //Sinon, il n'y a pas accès'
+                        ligne.innerHTML = "<tr><td class='valided'>Réponse</td>\
+                            <td class='message-cell'>\
+                                <table>\
+                                    <tr>\
+                                        <td>{{answered_text}}</td>\
+                                    </tr>\
+                                    <tr>\
+                                    </tr>\
+                                </table>\
+                            </td></tr><tr><td></td><td align='right' class='post-author'>{{answered_author}}, validé le {{answered_date}}</td></tr>";
+                    }
+                    tableau.appendChild(ligne);
+                
+                }
+                                     
+            });
+            
+            /*
+             * Afficher l'arborescence des documents
+             */
+            $("#arborescence").ready(function(){
+                
+                //Récupérer la liste des id/titres des parents de l'objet'
+                //Sauvegardé comme item1,item2,item3. Fonction split pour transformer en tableau
+                var str = '{{parents_id}}';
+                var parents_id = str.split(",");
+                str = '{{parents_titre}}';
+                var parents_titre = str.split(",");
+
+                var menu = document.getElementById("arborescence-ul");
+                
+                var parent = document.createElement("li");
+                parent.className = "menu-parent";
+                parent.innerHTML = "<a href='../../_rewrite'>Accueil</a>";
+                menu.appendChild(parent);
+                
+                if(parents_titre!=""){
+                    for(var i in parents_titre){
+                        var parent = document.createElement("li");
+                        parent.className = "menu-parent";
+                        
+                        //Sinon, le lien vers l'objet'
+                        parent.innerHTML = "<a href='"+parents_id[i]+"'>"+parents_titre[i]+"</a>";
+
+                        //Simple séparateur >
+                        var parent_lien = document.createElement("li");
+                        parent_lien.className = "menu-parent";
+                        parent_lien.innerHTML = ">";     
+                        menu.appendChild(parent_lien);
+                            
+                        menu.appendChild(parent);
+                    }
+                }
+                
+                
+                //Ajouter/Afficher le lien/nom de la discussion en cours
+                var parent_lien = document.createElement("li");
+                parent_lien.className = "menu-parent";
+                parent_lien.innerHTML = ">";     
+                menu.appendChild(parent_lien);
+                
+                var parent = document.createElement("li");
+                parent.className = "menu-ici";
+                parent.innerHTML = "<a href='#'>{{topic}}</a>";
+                menu.appendChild(parent);
+            });
+            
+            /*
+             * Afficher les objets liés à celui affiché
+             */
+            var str = '{{parents_id}}'; //Récupérer les parents
+            if(str!=""){
+                str = str+',{{topic_id}}'; //Y rajouter la discussion en soi
+            }
+            else{
+                var str = '{{topic_id}}'; //Récupérer les parents  
+            }
+            var liee_titre = [];
+            var liee_id = [];
+
+            //Récupérer l'ensemble des discussions 
+            db = $.couch.db("argile-forum");
+            db.view("argile-forum/discussions", {
+                success: function(data) {
+                    //Pour chaque discussion, comparer son arborescence (parents_id)
+                    for(i in data.rows){
+                        var parents_t = "";
+                        for(var j in data.rows[i].value.parents){
+                            if (parents_t==""){
+                                parents_t = data.rows[i].value.parents[j].id;
+                            }
+                            else{
+                                parents_t+=","+data.rows[i].value.parents[j].id;
+                            }
+                        }
+                        if(parents_t == str){
+                            //Récupérer les titres et id des discussions liées
+                            liee_titre.push(data.rows[i].value.title);
+                            liee_id.push(data.rows[i].value._id);
+                        }
+                    }
+
+                    var listeRelation = document.getElementById("objet-fils");
+                    for(i in liee_titre){
+                        var fils = document.createElement("div");
+                        if (liee_titre[i]!=undefined) {
+                            fils.innerHTML = "<a href='"+liee_id[i]+"'>"+liee_titre[i]+"</a>";
+                        }
+                        listeRelation.appendChild(fils);
+                    }
+                }
+            });
+            
+            /*
+             * N'afficher le formulaire d'ajout de commentaire que si on est connecté
+             * Afficher aussi le nom d'utilisateur et le lien de déconnexion
+             */
+            $("#ident").ready(function(){
+                var utilisateur = verifierConnexion();
+                if(utilisateur){
+                    $("#ident").html('<a href="../utilisateur/' + utilisateur + '">' + utilisateur + '</a> - <a href="#" onclick="deconnecter()">Deconnexion</a>');
+                    var formulaire = $("#form-commentaire");
+                    formulaire.css('display','block'); 
+                }
+            });
+            
+            /*
+             * N'afficher l'image associée à la discussion uniquement s'il y en a une
+             */
+            $("#image-discussion").ready(function(){
+                var image = "{{image}}";
+                if(image){
+                    $(".image-discussion").html('<img style="max-width: 700px;" src="../../../../{{topic_id}}/{{image}}"/>');
+                }
+            });
+            
+            /*
+             * Liste des mots clé, s'il y en a
+             */
+            $("#liste_mots_cle").ready(function(){
+                var mots_cle = '{{mots_cle}}';
+                if(mots_cle){
+                    mots_cle = mots_cle.split(",");
+                    for(var i in mots_cle){
+                        $("#liste_mots_cle").append('<a href="../mot-cle/'+mots_cle[i]+'" class="mot_cle">'+mots_cle[i]+'</a>');
+                    }
+                }
+            });
+     
+  	</script>
+        <script>
+            /*
+             * Afficher le bouton Valider si on est administrateur
+             */
+            var role = verifierRole();
+            var answered = '{{answered}}';
+            if((role=="administrateur")&&(answered=='no')){
+                $('.valid').css('visibility','visible');
+            }
+            
+            /*
+             * Afficher le bouton Supprimer si on est modérateur
+             */
+            var role = verifierRole();
+            var answered = '{{answered}}';
+            if((role=="moderateur")&&(answered=='no')){
+                $('.valid').css('display','none');
+                $('.supprimer').css('display','block');
+            }
+        </script>
+    </body>
+</html>
