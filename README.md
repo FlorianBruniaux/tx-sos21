@@ -1,7 +1,7 @@
 TX SOS21 : Serious Game
 =================
 
-##Présentation:
+## Présentation:
 L’objectif est de développer un jeu sérieux multi-joueurs avec des technologies web récentes. 
 Etant 3 à travailler sur le projet nous avons chacun une mission spécifique. 
 
@@ -30,3 +30,58 @@ $ cd <app_name>
 $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
 ```
 
+## Eléments 
+
+### Personnages
+```bash
+  {
+     "_id": "cd62f1b2b43344baa13e7f5e000173c8",
+     "name": "NOM_PERSONNAGE",
+     "loggedOn": true,
+     "place": "NOM_PLACE",
+     "x": 29,
+     "y": 18,
+     "updatedAt": [
+         2013,
+         4,
+         15,
+         16,
+         20
+     ]
+  }
+```
+
+### Objets
+```bash
+  {
+     "_id": "cd62f1b2b43344baa13e7f5e000173c8",
+     "name": "NOM_OBJET",
+     "place": "NOM_PLACE",
+     "visible" : true,
+     "x": 29,
+     "y": 18
+  }
+```
+
+### Action
+```bash
+  {
+     "_id": "cd62f1b2b43344baa13e7f5e000173c8",
+     "character": "NOM_PERSONNAGE",
+     "place": "NOM_PLACE",
+     "verb": "NOM_ACTION",
+     "effects": {
+         "economy": 5,
+         "energy": 5,
+         "money": 5,
+         "reputation": 5
+     },
+     "updatedAt": [
+         2013,
+         4,
+         4,
+         21,
+         31
+     ]
+  }
+```
