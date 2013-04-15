@@ -36,6 +36,7 @@ var sos21 = {
                 me.debug.renderVelocity = false;
                 */
                 me.debug.renderHitBox = true;
+                
                 me.state.set(me.state.PLAY, new PlayScreen());
                 // add our player entity in the entity pool
                 me.entityPool.add("mainPlayer", PlayerEntity, false);
@@ -57,7 +58,7 @@ var PlayScreen = me.ScreenObject.extend({ // game screen
                 
                 me.levelDirector.loadLevel(firstMap); // load a level
                 //console.log(me.levelDirector);
-                me.game.viewport.move(60,30);
+                me.game.viewport.move(30,15);
         },
         onDestroyEvent: function(){
         }
