@@ -1,8 +1,8 @@
-define(['lib/melon', 'lib/pathfinding', 'client', 'server'], function(melon, pathfinding, ressources, server){
+define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'maps'], function(melon, pathfinding, ressources, server, maps){
     // écran de jeu
     var playScreen = me.ScreenObject.extend({
         onResetEvent: function(){ // changement de l'état (me.state.change)
-            me.levelDirector.loadLevel(firstMap); // charger un niveau
+            me.levelDirector.loadLevel(maps.firstMap); // charger un niveau
             //me.game.viewport.move(540,255); // décalage de la caméra mode iso
             me.game.viewport.move(30,15); // decalage de la caméra mode ortho
             this.loadPathFinding();
