@@ -17,6 +17,7 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server'], function(melon, pat
             me.game.sort();
             //this.longpoll(0); // start longpoll with the server
             server.longpoll(0, ressources.players.mainPlayer.pseudo);
+            server.listen.bind(player)();
         },
         loadPathFinding: function(){
             // initialisation du pathfinding sur la carte chargée
