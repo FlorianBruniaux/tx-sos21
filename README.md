@@ -33,22 +33,26 @@ $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
 ## Eléments 
 
 ### Personnages
-```bash
-  {
-     "_id": "cd62f1b2b43344baa13e7f5e000173c8",
-     "name": "NOM_PERSONNAGE",
-     "loggedOn": true,
-     "place": "NOM_PLACE",
-     "x": 29,
-     "y": 18,
-     "updatedAt": [
-         2013,
-         4,
-         15,
-         16,
-         20
-     ]
-  }
+```json
+{
+   "name": "player_name",
+   "pseudo": "player_account",
+   "loggedOn": true,
+   "place": "current_place",
+   "x": 231,
+   "y": 155.33333333333334,
+   "updatedAt": [
+       2013,
+       4,
+       15,
+       16,
+       20
+   ],
+   "image": "joueur",
+   "spriteheight": 70,
+   "spritewidth": 60,
+   "type": "character"
+}
 ```
 
 ### Objets
