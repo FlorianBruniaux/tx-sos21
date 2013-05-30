@@ -2,20 +2,19 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
     
     var Sos21Player = me.ObjectEntity.extend({
         init: function(x, y, settings){  
-            // srv
-           this.servData = (settings.image != null) ? settings : {image: "joueur", spriteheight: 70, spritewidth: 60};
-           this.GUID = this.servData._id ? this.servData._id : null;
-           // melon
-           this.parent(x, y, {image: this.servData.image, spriteheight: this.servData.spriteheight, spritewidth: this.servData.spritewidth});
-           this.setVelocity(2, 2);
-           this.updateColRect(15, 25, 50, 10);
-           this.tmp_pos = {"x":this.pos.x, "y":this.pos.y};
-           this.cache_vel = {"x": this.vel.x, "y": this.vel.y};
-           this.path = [];
-           this.cache_path = [];
+            this.servData = (settings.image != null) ? settings : {image: "joueur", spriteheight: 70, spritewidth: 60};
+            this._id = this.GUID = this.servData._id ? this.servData._id : null;
+            this._rev = this.servData._rev ? this.servData._rev: null;
+            this.parent(x, y, {image: this.servData.image, spriteheight: this.servData.spriteheight, spritewidth: this.servData.spritewidth});
+            this.setVelocity(2, 2);
+            this.updateColRect(15, 25, 50, 10);
+            this.tmp_pos = {"x":this.pos.x, "y":this.pos.y};
+            this.cache_vel = {"x": this.vel.x, "y": this.vel.y};
+            this.path = [];
+            this.cache_path = [];
         },
         update: function() {
-            this.computePath(); 
+            this.computePath();
             // check & update player movement
             this.updateMovement();
             if (this.renderUpdate()) {
@@ -29,30 +28,27 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
             }
         },
         moveTo: function(x, y){
-            y -= this.height/1.5;
-            //console.log("from "+this.pos.x+";"+this.pos.y+" // to "+x+";"+y);
-            if(server.updatePlayerPosition(this.servData, x, y) != null){
-                    var endTile = entities.pxToTile(x, y);
-                    var startTile = entities.pxToTile(this.pos.x, this.pos.y);
-                    if(!(startTile.x==endTile.x && startTile.y==endTile.y)){
-                        var grid = me.game.collisionMap.collisionGrid.clone();
-                        var path = me.game.collisionMap.pathfinder.findPath(startTile.x, startTile.y, endTile.x, endTile.y, grid);
-                        path.forEach(function(coord, i){
-                            var tmp = entities.tileToPx(coord[0], coord[1]);
-                            path[i][0] = tmp.x;
-                            path[i][1] = tmp.y;
-                        });
-                        if(!path[0])
-                            path = [[x,y]];
-                    }
-                    this.path = path;
-                    this.cache_path = [this.path];
-                    //console.log(path);
-            
-                    // DEBUG - trace path points
-                    path.forEach(function(e){
-                        entities.drawPoint(e[0], e[1]);
+            if(x != this.pos.x && y != this.pos.y){
+                var endTile = entities.pxToTile(x, y);
+                var startTile = entities.pxToTile(this.pos.x, this.pos.y);
+                if(!(startTile.x==endTile.x && startTile.y==endTile.y)){
+                    var grid = me.game.collisionMap.collisionGrid.clone();
+                    var path = me.game.collisionMap.pathfinder.findPath(startTile.x, startTile.y, endTile.x, endTile.y, grid);
+                    path.forEach(function(coord, i){
+                        var tmp = entities.tileToPx(coord[0], coord[1]);
+                        path[i][0] = tmp.x;
+                        path[i][1] = tmp.y;
                     });
+                    if(!path[0])
+                        path = [[x,y]];
+                }
+                this.path = path;
+                this.cache_path = [this.path];
+                //console.log(path);
+                // DEBUG - trace path points
+                path.forEach(function(e){
+                    entities.drawPoint(e[0], e[1]);
+                });
             }
             else{
                 console.log("rejected");

@@ -10,6 +10,12 @@ define(['entities', 'lib/melon', 'server', 'entities/sos21Player'], function(ent
                     this.moveTo(me.input.touches[0].x, me.input.touches[0].y);
                 }).bind(this);
                 me.event.subscribe("mousedown", this.mouseDown);
+            },
+            moveTo: function(x, y){
+                y -= this.height/1.5;
+                if(server.updatePlayerPosition(this.servData, x, y) != null){
+                    this.parent(x, y);
+                }
             }
     }); //gestion de l'entité joueur
     return Player;
