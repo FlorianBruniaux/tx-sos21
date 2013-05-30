@@ -12,12 +12,17 @@ define(['maps', 'entities'], function(maps, entities){
             ressources.g_ressources.push({name : map.name, type : "tmx", src : maps.maps_folder+map.name+".tmx"}); // ajout de la carte TMX
         });
     }
-    if(entities){
+    if(entities.entities){
 		entities.entities.forEach(function(entity){
             ressources.g_ressources.push({name: entity.name, type: "image", src: entities.entities_folder+entity.name+".png"});
 		});
     };
     ressources.players = {"mainPlayer": {}, "otherPlayers": []};
+	ressources.objects = [];
+	
+	if(entities.objects){
+		entities.objects
+	}
     
     return ressources;
 });

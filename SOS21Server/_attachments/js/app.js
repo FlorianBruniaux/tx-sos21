@@ -15,8 +15,11 @@ require.config({
 require(['jquery', 'client/sos21'], function($, sos21){
     $("#form_login").submit(function(event){
         event.preventDefault();
-        sos21.login($(this).find("input[name='pseudo']").val());
-        $(this).fadeOut();
+		
+        if(sos21.login($(this).find("input[name='pseudo']").val())){
+			$("#sos21").show();
+			$(this).fadeOut();
+		}
     });
     $("#sos21").hide();
 });
