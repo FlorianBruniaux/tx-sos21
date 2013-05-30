@@ -1,5 +1,5 @@
 define(['lib/melon', 'maps', 'entities', 'server', 'client', 'client/playScreen', 'entities/player', 'entities/otherPlayer'],
-       function(melon, maps, entities, server, ressources, PlayScreen, Player, otherPlayer){
+       function(melon, maps, entities, server, ressources, PlayScreen, Player, OtherPlayer){
 //-----------------------------------------------------------
 // JEU
 //-----------------------------------------------------------
