@@ -7,7 +7,7 @@ require.config({
     //never includes a ".js" extension since
     //the paths config could be for a directory.
     paths: {
-        'jquery': 'lib/jquery-1.10.0.min'
+        'jquery': 'lib/jquery-1.6.1.min'
     },
     packages: ["client", "entities", "maps", "server"]
 });

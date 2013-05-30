@@ -1,4 +1,4 @@
-define(['lib/melon'], function(melon){
+define(['jquery', 'lib/melon'], function($, melon){
     var server = (function(){
         var out = {}; // public things
         var db_name = "sos21";
@@ -138,17 +138,24 @@ define(['lib/melon'], function(melon){
         };
         
         //must be binded to an obj type player (that is the point of view)
-        out.listen = function(){
-            console.log("listen !")
+        out.registerListeners = function(mainPlayer){
+            console.log("register !");
             if (window.EventSource) {
-                console.log("window.EventSource is defined !")
-                var _this = out;
-                _this.ports = _this.ports || {};
-                _this.ports.players = _this.ports.players || (function(){
-                    var source = new EventSource(serverUrl+"/_changes?feed=eventsource&filter=SOS21Server/other_players&pseudo="+this.servData.pseudo);
-                    source.addEventListener("message", _this.parseEventData, false)
+                console.log("window.EventSource is defined !");
+                this.listener = this.listener || {players: null};
+                this.listener.players = this.listener.players || (function(){
+                    var source = new EventSource(serverUrl+"/_changes?feed=eventsource&filter=SOS21Server/other_players&limit=1&descending=true&param="+mainPlayer.servData._id);
+                    console.log(this);
+                    source.addEventListener("message", this.parseEventData, false)
                     return source;
                 }.bind(this)());
+                //var _this = out;
+                //_this.ports = _this.ports || {};
+                //_this.ports.players = _this.ports.players || (function(){
+                //    var source = new EventSource(serverUrl+"/_changes?feed=eventsource&filter=SOS21Server/other_players&limit=1&descending=true&param="+entity.servData._id);
+                //    source.addEventListener("message", _this.parseEventData, false)
+                //    return source;
+                //}());
             }
         };
         out.parseEventData = function(event){
@@ -159,10 +166,11 @@ define(['lib/melon'], function(melon){
                 contentType: "application/json; charset=utf-8",
                 dataType: "json"
             });
-            retrieveInfo.done(function(dataPerso){
-                console.log(dataPerso);
-                console.log(dataPerso._id);
-                me.event.publish("moveTo", [dataPerso._id, dataPerso.x, dataPerso.y]);
+            retrieveInfo.done(function(couchData){
+                console.log(couchData);
+                console.log('move'+'.'+couchData._id);
+                $(out).trigger('move'+'.'+couchData._id, [couchData.x, couchData.y]);
+                //me.event.publish("moveTo", [couchData._id, couchData.x, couchData.y]);
             });
         };
         return out;    

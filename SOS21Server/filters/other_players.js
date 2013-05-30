@@ -1,3 +1,3 @@
 function(o, req) {
-  return (o.pseudo && o.pseudo != req.query.pseudo);
+  return (o._id && o._id != req.query.param);
 }
