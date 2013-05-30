@@ -15,14 +15,11 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'maps'], function(me
                     var otherPlayer = me.entityPool.newInstanceOf("otherPlayer", pos.x, pos.y, obj);
                     me.game.add(otherPlayer, 4);
             });
-			ressources.objects.forEach(function(obj){
-				var gameObject = me.entityPool.newInstanceOf("gameObject", obj.x, obj.y, obj);
-				me.game.add(gameObject, 5);
-			});
 			//--------------------------------------------
 			// add objects
 			ressources.objects.forEach(function(obj){
-					
+				var gameObject = me.entityPool.newInstanceOf("gameObject", obj.x, obj.y, obj);
+				me.game.add(gameObject, 5);
 			});
             me.game.sort();
             server.longpoll(0, ressources.players.mainPlayer.pseudo);
@@ -45,7 +42,6 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'maps'], function(me
                 i=0;
             });
             me.game.collisionMap.collisionGrid = new PF.Grid(matrice.length, matrice[0].length, matrice); // melon v0.9.7+
-            //me.game.collisionMap.collisionGrid = new PF.Grid(me.game.collisionMap.height, me.game.collisionMap.width, matrice); // melon-
             //me.game.collisionMap.pathfinder = new PF.AStarFinder({allowDiagonal: true, dontCrossCorners: true});
             me.game.collisionMap.pathfinder = new PF.JumpPointFinder();
         },

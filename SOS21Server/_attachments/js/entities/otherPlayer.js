@@ -29,7 +29,7 @@ define(['entities', 'server', 'lib/melon'], function(entities, server, melon){
             // check & update player movement
             this.updateMovement();
             if (this.renderUpdate()) {
-                        this.updateCacheVelocity();
+                this.updateCacheVelocity();
                 this.parent();
                 return true;
             }
