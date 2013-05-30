@@ -1,5 +1,18 @@
-define(['lib/melon', 'maps', 'entities', 'server', 'client', 'client/playScreen', 'entities/player', 'entities/otherPlayer'],
-       function(melon, maps, entities, server, ressources, PlayScreen, Player, OtherPlayer){
+define(['lib/melon',
+	'maps',
+	'entities',
+	'server',
+	'client',
+	'client/playScreen',
+	'entities/player', 'entities/otherPlayer', 'entities/gameObject'],
+       function(melon,
+		maps,
+		entities,
+		server,
+		ressources,
+		PlayScreen,
+		Player, OtherPlayer, GameObject
+	){
 //-----------------------------------------------------------
 // JEU
 //-----------------------------------------------------------

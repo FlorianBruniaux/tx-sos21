@@ -1,6 +1,6 @@
 define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
 
-	var GameObject = me.CollectableEntity.extends({
+	var GameObject = me.CollectableEntity.extend({
 		effects: {},
 		init: function(x, y, settings){
 			// effets {} dans settings
@@ -16,6 +16,6 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
 		applyEffect: function(){
 			console.log("effect");
 		}
-	);
+	});
 	return GameObject;
 });
