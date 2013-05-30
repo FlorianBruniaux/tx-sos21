@@ -58,7 +58,6 @@ $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
 ### Objets
 ```bash
   {
-     "_id": "cd62f1b2b43344baa13e7f5e000173c8",
      "name": "NOM_OBJET",
      "place": "NOM_PLACE",
      "visible" : true,
@@ -70,7 +69,6 @@ $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
 ### Action
 ```bash
   {
-     "_id": "cd62f1b2b43344baa13e7f5e000173c8",
      "character": "NOM_PERSONNAGE",
      "place": "NOM_PLACE",
      "verb": "NOM_ACTION",
