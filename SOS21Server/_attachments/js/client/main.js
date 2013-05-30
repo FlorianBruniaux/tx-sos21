@@ -21,7 +21,9 @@ define(['maps', 'entities'], function(maps, entities){
 	ressources.objects = [];
 	
 	if(entities.objects){
-		entities.objects
+		entities.objects.forEach(function(obj){
+			ressources.g_ressources.push({name: obj.name, type: "image", src: entities.objects_folder+obj.name+".png"});
+		});
 	}
     
     return ressources;
