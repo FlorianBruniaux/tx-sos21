@@ -7,7 +7,7 @@ define(['jquery', 'lib/melon', 'entities', 'server'], function($, melon, entitie
             this._id = this.GUID = this.servData._id ? this.servData._id : null;
             this._rev = this.servData._rev ? this.servData._rev: null;
             this.setVelocity(3, 3);
-            this.updateColRect(15, 25, 5, 55);
+            this.updateColRect(15, 25, 50, 10);
             this.tmp_pos = {"x":this.pos.x, "y":this.pos.y};
             //variables pour le déplacement en pathfinding 
             this.cache_vel = {"x": this.vel.x, "y": this.vel.y};

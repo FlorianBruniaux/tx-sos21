@@ -4,16 +4,8 @@ define(['lib/melon'], function(melon){
     //var serveurURL = "http://localhost:5984/sos21";
     api.entities_folder = "data/images/sprites/";
 	api.objects_folder = "data/images/objects/";
-    api.entities = [
-        {
-            name: "joueur"
-        }
-    ];
-	api.objects = [
-        {
-            name: "test"
-        }
-    ]; 
+    api.entities = [{name: "joueur"}];
+	api.objects = [{name: "test"}]; 
     
     //CALCUL ORTHO  
     api.pxToTile = function(x, y){ // TO DO 
