@@ -16,8 +16,7 @@ define(['jquery', 'lib/melon', 'entities', 'server'], function($, melon, entitie
             
             //Ecoute d'un message "goTo", qui déclanche le déplacement via le pathfinder
             //V_JQuery
-            console.log($("#body").on());
-            $(server).on("move"+"."+this.servData._id, function(e){alert(event.data);});
+            $(server).on("move"+"."+this.servData._id, function(event, x, y){this.moveTo(x, y)}.bind(this));
             //V_1
             //goTo_callback = (function(objId, x, y){
             //    console.log(objId+" == "+this.servData._id+" ?")
