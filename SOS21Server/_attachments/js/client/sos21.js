@@ -28,7 +28,7 @@ define(['lib/melon', 'maps', 'entities', 'server', 'client', 'client/playScreen'
 			// charge les classes de joueur
 			me.entityPool.add("mainPlayer", Player);
 			me.entityPool.add("otherPlayer", OtherPlayer, true);
-			me.entityPool.add("objectEntity", ObjectEntity, true);
+			me.entityPool.add("gameObject", GameObject, true);
 			
 			return true;
 	    },
