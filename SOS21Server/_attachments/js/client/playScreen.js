@@ -23,7 +23,7 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'maps'], function(me
 			});
             me.game.sort();
             server.longpoll(0, ressources.players.mainPlayer.pseudo);
-            server.listen.bind(player)();
+            server.registerListeners(player);
         },
         loadPathFinding: function(){
             // initialisation du pathfinding sur la carte chargée

@@ -1,4 +1,4 @@
-define(['entities', 'server', 'lib/melon'], function(entities, server, melon){
+define(['jquery', 'lib/melon', 'entities', 'server'], function($, melon, entities, server){
     // TODO : gérer le path finding pour les autres joueurs
     var OtherPlayer = me.ObjectEntity.extend({
         init: function(x, y, settings) {
@@ -15,14 +15,18 @@ define(['entities', 'server', 'lib/melon'], function(entities, server, melon){
             this.cache_path = [];
             
             //Ecoute d'un message "goTo", qui déclanche le déplacement via le pathfinder
-            goTo_callback = (function(objId, x, y){
-                console.log(objId+" == "+this.servData._id+" ?")
-                if (objId == this._id) {
-                    console.log("moveTo : "+x+" / "+y)
-                    this.moveTo(x, y);
-                }
-            }).bind(this); //on bind this à l'objet courrant, et non à l'objet global
-            me.event.subscribe("moveTo", goTo_callback);
+            //V_JQuery
+            $(server).on("move"+"."+this.servData._id, function(event, x, y){this.moveTo(x, y)}.bind(this));
+            //V_1
+            //goTo_callback = (function(objId, x, y){
+            //    console.log(objId+" == "+this.servData._id+" ?")
+            //    if (objId == this._id) {
+            //        console.log("moveTo : "+x+" / "+y)
+            //        this.moveTo(x, y);
+            //    }
+            //}).bind(this); //on bind this à l'objet courrant, et non à l'objet global
+            //me.event.subscribe("moveTo", goTo_callback);
+            
         },
         update: function() {
             this.computePath(); 
@@ -119,10 +123,8 @@ define(['entities', 'server', 'lib/melon'], function(entities, server, melon){
         renderUpdate: function(){
             return this.cache_vel.x!=0 || this.cache_vel.y!=0;
         }
-        
-        //longpollMvt: function(x, y){
-        //    this.tmp_pos.x = x;
-        //    this.tmp_pos.y = y;
+        //registerEvent: function(eventName, handler, eventData){
+        //    $.on(eventName+"."+this.servData._id, , )
         //}
     });
     return OtherPlayer;
