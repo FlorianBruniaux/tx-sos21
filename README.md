@@ -60,6 +60,7 @@ $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
   {
      "name": "NOM_OBJET",
      "place": "NOM_PLACE",
+     "type": "object",
      "visible" : true,
      "x": 29,
      "y": 18
