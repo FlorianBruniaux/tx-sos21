@@ -7,7 +7,7 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
             this._rev = this.servData._rev ? this.servData._rev: null;
             this.parent(x, y, {image: this.servData.image, spriteheight: this.servData.spriteheight, spritewidth: this.servData.spritewidth});
             this.setVelocity(2, 2);
-            this.updateColRect(15, 25, 50, 10);
+            this.updateColRect(25, 10, 50, 5);
             this.tmp_pos = {"x":this.pos.x, "y":this.pos.y};
             this.cache_vel = {"x": this.vel.x, "y": this.vel.y};
             this.path = [];
@@ -17,6 +17,11 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
             this.computePath();
             // check & update player movement
             this.updateMovement();
+            
+            // check for collision
+            var res = me.game.collide(this);
+            
+            
             if (this.renderUpdate()) {
                 this.updateCacheVelocity();
                 this.parent();
@@ -46,16 +51,20 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
                 this.cache_path = [this.path];
                 //console.log(path);
                 // DEBUG - trace path points
-                path.forEach(function(e){
-                    entities.drawPoint(e[0], e[1]);
-                });
+                if (typeof path != 'undefined') {
+                    path.forEach(function(e){
+                        entities.drawPoint(e[0], e[1]);
+                    });
+                }
+                
             }
             else{
                 console.log("rejected");
             }
         },
         computePath: function(){
-            if(this.path[0]){
+            if((typeof this.path[0] != 'undefined')){
+                if (this.path[0]) {
                     // maj de la position à atteindre
                     this.tmp_pos.x = this.path[0][0];
                     this.tmp_pos.y = this.path[0][1];
@@ -87,6 +96,7 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
                     else{
                             this.vel.y = 0;
                     }
+                }
             }
             else if(this.cache_path[0]){
                     this.endPath();

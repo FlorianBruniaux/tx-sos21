@@ -5,7 +5,7 @@ define(['lib/melon'], function(melon){
     api.entities_folder = "data/images/sprites/";
 	api.objects_folder = "data/images/objects/";
     api.entities = [{name: "joueur"}];
-	api.objects = [{name: "test"}]; 
+	api.objects = [{name: "obj1"}];
     
     //CALCUL ORTHO  
     api.pxToTile = function(x, y){ // TO DO 

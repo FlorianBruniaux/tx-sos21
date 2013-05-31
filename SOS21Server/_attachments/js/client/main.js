@@ -18,7 +18,21 @@ define(['maps', 'entities'], function(maps, entities){
 		});
     };
     ressources.players = {"mainPlayer": {}, "otherPlayers": []};
-	ressources.objects = [];
+	ressources.objects = [
+		{
+			"_id": "451c56e6b20f4499486c59034d12f25f",
+			"_rev": "1-5d122ad66c18b2f39f93a838f723f23a",
+			"name": "obj1",
+			"image": "obj1",
+			"place": "stage1",
+			"type": "object",
+			"visible": true,
+			"x": 330,
+			"y": 200,
+			"spriteheight": 90,
+			"spritewidth": 45
+		}
+	];
 	
 	if(entities.objects){
 		entities.objects.forEach(function(obj){

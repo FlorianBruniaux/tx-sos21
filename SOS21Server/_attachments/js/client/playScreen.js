@@ -21,6 +21,7 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'maps'], function(me
 				var gameObject = me.entityPool.newInstanceOf("gameObject", obj.x, obj.y, obj);
 				me.game.add(gameObject, 5);
 			});
+			
             me.game.sort();
             server.longpoll(0, ressources.players.mainPlayer.pseudo);
             server.registerListeners(player);

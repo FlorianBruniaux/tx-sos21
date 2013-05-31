@@ -32,7 +32,7 @@ define(['lib/melon',
 			me.sys.gravity = 0;
 			if(!me.video.init('sos21', 840, 420, false, 1.0)){
 				alert("Sorry but your browser does not support html 5 canvas. Please try with another one!");
-				return;
+				return false;
 			}
 			me.audio.init("mp3,ogg");// init audio
 			me.loader.onload = this.loaded.bind(this);// set all ressources to be loaded
