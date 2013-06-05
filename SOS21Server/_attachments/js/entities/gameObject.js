@@ -8,8 +8,6 @@ define(['entities', 'lib/melon', 'server', 'client'], function(entities, melon, 
 			this.parent(x, y, settings);
 			this.updateColRect(settings.colRect.x, settings.colRect.w, settings.colRect.y, settings.colRect.h);
 			this.setVelocity(0,0);
-			console.log(me.game.viewport);
-			console.log(this.collisionBox);
 			
 			me.input.registerMouseEvent("mousedown", this.collisionBox, function(e){
 				me.event.publish("objectClicked");
@@ -17,7 +15,7 @@ define(['entities', 'lib/melon', 'server', 'client'], function(entities, melon, 
 			this.mouseDown = (function(){
 				this.hasBeenClicked = true;
 			}).bind(this);
-			this.unregisterMouseClick = (function(x, y){
+			this.unregisterMouseClick = (function(){
 				var mouse = entities.getMouse();
 				if (!this.collisionBox.containsPoint(new me.Vector2d(mouse.x, mouse.y)) && this.hasBeenClicked) {
 					this.hasBeenClicked = false;

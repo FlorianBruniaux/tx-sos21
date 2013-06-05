@@ -40,6 +40,8 @@ define(['lib/melon'], function(melon){
     
     // DEBUG --- draw path jump points
     api.drawPoint = function(x, y){
+			//x -= me.game.viewport.pos.x;
+			//y -= me.game.viewport.pos.y;
             var context = me.video.getScreenContext();
             context.beginPath();
             context.arc(x, y, 5, 0, 2 * Math.PI, false);

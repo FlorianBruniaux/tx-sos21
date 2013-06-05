@@ -7,13 +7,17 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
             this._rev = this.servData._rev ? this.servData._rev: null;
             this.parent(x, y, {image: this.servData.image, spriteheight: this.servData.spriteheight, spritewidth: this.servData.spritewidth});
             this.setVelocity(2, 2);
-            this.updateColRect(25, 10, 50, 5);
+            this.updateColRect(25, 10, 55, 5);
             this.tmp_pos = {"x":this.pos.x, "y":this.pos.y};
             this.cache_vel = {"x": this.vel.x, "y": this.vel.y};
             this.path = [];
             this.cache_path = [];
+            console.log(this.collisionBox);
+            this.position = {x: this.collisionBox.pos.x + this.collisionBox.width/2, y: this.collisionBox.pos.y + this.collisionBox.height/2};
         },
         update: function() {
+            this.position.x = (this.collisionBox.pos.x + this.collisionBox.width/2) - me.game.viewport.pos.x;
+            this.position.y = (this.collisionBox.pos.y + this.collisionBox.height/2)- me.game.viewport.pos.y;
             this.computePath();
             // check & update player movement
             this.updateMovement();
@@ -31,25 +35,27 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
                 this.updateCacheVelocity();
                 return false; // else inform the engine we did not perform
             }
+            
         },
         moveTo: function(x, y){
             if(x != this.pos.x && y != this.pos.y){
                 var endTile = entities.pxToTile(x, y);
-                var startTile = entities.pxToTile(this.pos.x, this.pos.y);
+                //var endTile = me.game.collisionMap.getTile(x, y);
+                console.log(this.position);
+                var startTile = entities.pxToTile(this.position.x, this.position.y);
                 if(!(startTile.x==endTile.x && startTile.y==endTile.y)){
                     var grid = me.game.collisionMap.collisionGrid.clone();
                     var path = me.game.collisionMap.pathfinder.findPath(startTile.x, startTile.y, endTile.x, endTile.y, grid);
                     path.forEach(function(coord, i){
                         var tmp = entities.tileToPx(coord[0], coord[1]);
-                        path[i][0] = tmp.x;
-                        path[i][1] = tmp.y;
+                        path[i][0] = tmp.x-me.game.viewport.pos.x;
+                        path[i][1] = tmp.y-me.game.viewport.pos.y;
                     });
                     if(!path[0])
                         path = [[x,y]];
                 }
                 this.path = path;
                 this.cache_path = [this.path];
-                //console.log(path);
                 // DEBUG - trace path points
                 if (typeof path != 'undefined') {
                     path.forEach(function(e){
@@ -63,35 +69,41 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
             }
         },
         computePath: function(){
-            if((typeof this.path[0] != 'undefined')){
+            if((typeof this.path != 'undefined')){
                 if (this.path[0]) {
                     // maj de la position à atteindre
                     this.tmp_pos.x = this.path[0][0];
                     this.tmp_pos.y = this.path[0][1];
                     
-                    if( (Math.abs(this.tmp_pos.x-this.pos.x)<=(this.accel.x)) && (Math.abs(this.tmp_pos.y-this.pos.y)<=(this.accel.y)) ){ 
+                    if( (Math.abs(this.tmp_pos.x-this.position.x)<=(this.accel.x))
+                       && (Math.abs(this.tmp_pos.y-this.position.y)<=(this.accel.y)) ){ 
                             // arrivé à la position souhaité
-                            this.tmp_pos.x = this.pos.x;
-                            this.tmp_pos.y = this.pos.y;
+                            this.tmp_pos.x = this.position.x;
+                            this.tmp_pos.y = this.position.y;
                             // passage à la prochaine position à atteindre
                             this.path.shift();
+                            if (this.path[0]) {
+                                console.log("position : "+this.position.x+";"+this.position.y);
+                                console.log("next : "+this.path[0][0]+";"+this.path[0][1]);
+                            }
+                            
                     }
-                            // Calcul de la vélocité pour aller sur la position
-                    if(this.tmp_pos.x>this.pos.x){
-                            this.vel.x += this.accel.x * me.timer.tick;
+                    // Calcul de la vélocité pour aller sur la position // me.timer.tick
+                    if(this.tmp_pos.x>this.position.x){
+                            this.vel.x = this.tmp_pos.x - this.position.x;
                     }
-                    else if(this.tmp_pos.x<this.pos.x){
-                            this.vel.x -= this.accel.x * me.timer.tick;
+                    else if(this.tmp_pos.x<this.position.x){
+                            this.vel.x = this.tmp_pos.x - this.position.x;
                     }
                     else{
                             this.vel.x = 0;
                     }
                     
-                    if(this.tmp_pos.y>this.pos.y){
-                            this.vel.y += this.accel.y * me.timer.tick;
+                    if(this.tmp_pos.y>this.position.y){
+                            this.vel.y = this.tmp_pos.y - this.position.y;
                     }
-                    else if(this.tmp_pos.y<this.pos.y){
-                            this.vel.y -= this.accel.y * me.timer.tick;
+                    else if(this.tmp_pos.y<this.position.y){
+                            this.vel.y = this.tmp_pos.y - this.position.y;
                     }
                     else{
                             this.vel.y = 0;
@@ -105,6 +117,8 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
         endPath: function(){
             // reset cache path
             this.cache_path = [];
+            console.log(this.pos);
+            console.log(entities.getMouse());
         },
         updateCacheVelocity: function(){
             // update cache velocity

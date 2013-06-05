@@ -43,8 +43,8 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'maps'], function(me
                 i=0;
             });
             me.game.collisionMap.collisionGrid = new PF.Grid(matrice.length, matrice[0].length, matrice); // melon v0.9.7+
-            //me.game.collisionMap.pathfinder = new PF.AStarFinder({allowDiagonal: true, dontCrossCorners: true});
-            me.game.collisionMap.pathfinder = new PF.JumpPointFinder();
+            me.game.collisionMap.pathfinder = new PF.AStarFinder({allowDiagonal: true, dontCrossCorners: true});
+            //me.game.collisionMap.pathfinder = new PF.AStarFinder();
         },
         onDestroyEvent: function(){
             
