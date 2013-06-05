@@ -5,6 +5,11 @@
  </tileset>
  <tileset firstgid="2" name="collision_ortho2" tilewidth="30" tileheight="15">
   <image source="../images/tiles/collision_ortho2.png" width="30" height="15"/>
+  <tile id="0">
+   <properties>
+    <property name="type" value="solid"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="background" width="30" height="30">
   <data encoding="base64">
