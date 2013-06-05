@@ -4,10 +4,10 @@ define(['entities', 'lib/melon', 'server', 'entities/sos21Player'], function(ent
                 this.parent(x,y,settings);
                 // mouse controls 
                 me.input.registerMouseEvent("mousedown", me.game.viewport, function(e){
-                    me.event.publish("mousedown");
+                    me.event.publish("mousedown", [me.input.touches[0].x, me.input.touches[0].y]);
                 });
-                this.mouseDown = (function(){
-                    this.moveTo(me.input.touches[0].x, me.input.touches[0].y);
+                this.mouseDown = (function(x, y){
+                    this.moveTo(x, y);
                 }).bind(this);
                 me.event.subscribe("mousedown", this.mouseDown);
             },

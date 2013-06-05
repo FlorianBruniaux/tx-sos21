@@ -29,8 +29,9 @@ define(['maps', 'entities'], function(maps, entities){
 			"visible": true,
 			"x": 330,
 			"y": 200,
-			"spriteheight": 90,
-			"spritewidth": 45
+			"spriteheight": 93,
+			"spritewidth": 84,
+			"colRect": {"x": 5,"w": 35,"y": 5,"h":80}
 		}
 	];
 	

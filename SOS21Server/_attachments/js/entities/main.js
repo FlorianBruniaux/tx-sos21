@@ -49,7 +49,14 @@ define(['lib/melon'], function(melon){
             context.strokeStyle = '#003300';
             context.stroke();
             context.closePath();
-    } 
+    }
+	
+	api.getMouse = function(){
+		return {
+			x: me.input.touches[0].x + me.game.viewport.pos.x,
+			y: me.input.touches[0].y + me.game.viewport.pos.y
+		};
+}
     return api; 
 });
 
