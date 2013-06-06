@@ -12,15 +12,15 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
             this.cache_vel = {"x": this.vel.x, "y": this.vel.y};
             this.path = [];
             this.cache_path = [];
-            console.log(this.collisionBox);
-            this.position = {
-                x: (this.collisionBox.pos.x + this.collisionBox.width/2) - me.game.viewport.pos.x,
-                y: (this.collisionBox.pos.y + this.collisionBox.height/2)- me.game.viewport.pos.y
-            };
+            this.position = {x: 0, y: 0};
+            this.updatePosition();
+        },
+        updatePosition: function(){
+            this.position.x = ( (this.collisionBox.pos.x+this.collisionBox.colPos.x) + this.collisionBox.width/2);
+            this.position.y = ( (this.collisionBox.pos.y+this.collisionBox.colPos.y) + this.collisionBox.height/2);
         },
         update: function() {
-            this.position.x = (this.collisionBox.pos.x + this.collisionBox.width/2) - me.game.viewport.pos.x;
-            this.position.y = (this.collisionBox.pos.y + this.collisionBox.height/2)- me.game.viewport.pos.y;
+            this.updatePosition();
             this.computePath();
             // check & update player movement
             this.updateMovement();
