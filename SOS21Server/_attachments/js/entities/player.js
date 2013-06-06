@@ -19,6 +19,11 @@ define(['entities', 'lib/melon', 'server', 'entities/sos21Player'], function(ent
                 if(server.updatePlayerPosition(this.servData, x, y) != null){
                     this.parent(x, y);
                 }
+            },
+            update: function(){
+                me.game.HUD.setItemValue("playerX", Math.ceil(this.pos.x));
+                me.game.HUD.setItemValue("playerY", Math.ceil(this.pos.y));
+                this.parent();
             }
     }); //gestion de l'entité joueur
     return Player;

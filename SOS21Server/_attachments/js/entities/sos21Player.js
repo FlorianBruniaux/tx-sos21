@@ -22,8 +22,6 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
             this.position.x = (this.collisionBox.pos.x + this.collisionBox.width/2) - me.game.viewport.pos.x;
             this.position.y = (this.collisionBox.pos.y + this.collisionBox.height/2)- me.game.viewport.pos.y;
             this.computePath();
-            me.game.HUD.setItemValue("playerX", Math.ceil(this.pos.x));
-            me.game.HUD.setItemValue("playerY", Math.ceil(this.pos.y));
             // check & update player movement
             this.updateMovement();
             
@@ -87,11 +85,6 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
                             this.tmp_pos.y = this.position.y;
                             // passage à la prochaine position à atteindre
                             this.path.shift();
-                            if (this.path[0]) {
-                                console.log("position : "+this.position.x+";"+this.position.y);
-                                console.log("next : "+this.path[0][0]+";"+this.path[0][1]);
-                            }
-                            
                     }
                     // Calcul de la vélocité pour aller sur la position // me.timer.tick
                     if(this.tmp_pos.x>this.position.x){
