@@ -1,4 +1,5 @@
-define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'maps'], function(melon, pathfinding, ressources, server, maps){
+define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'maps', 'client/debugHUD'],
+	   function(melon, pathfinding, ressources, server, maps, DebugHUD){
     // écran de jeu
     var playScreen = me.ScreenObject.extend({
         onResetEvent: function(){ // changement de l'état (me.state.change)
@@ -22,9 +23,20 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'maps'], function(me
 				me.game.add(gameObject, 5);
 			});
 			
+			me.game.addHUD(0,0,100,50, "rgba(255,255,255, 0.5)");
+			me.game.HUD.addItem("mouseX", new DebugHUD(0, 0));
+			me.game.HUD.addItem("mouseY", new DebugHUD(50, 0));
+			me.game.HUD.addItem("playerX", new DebugHUD(0, 25));
+			me.game.HUD.addItem("playerY", new DebugHUD(50, 25));
+			
             me.game.sort();
             //server.longpoll(0, ressources.players.mainPlayer.pseudo);
             server.registerListeners(player);
+			
+			me.input.registerMouseEvent("mousemove", me.game.viewport, function(e){
+                me.game.HUD.setItemValue("mouseX", me.input.touches[0].x+me.game.viewport.pos.x);
+				me.game.HUD.setItemValue("mouseY", me.input.touches[0].y+me.game.viewport.pos.y);
+            });
         },
         loadPathFinding: function(){
             // initialisation du pathfinding sur la carte chargée
@@ -47,7 +59,7 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'maps'], function(me
             //me.game.collisionMap.pathfinder = new PF.AStarFinder();
         },
         onDestroyEvent: function(){
-            
+            me.game.disableHUD();
         }
     });
     return playScreen;

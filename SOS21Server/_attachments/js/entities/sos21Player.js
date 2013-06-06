@@ -13,12 +13,17 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
             this.path = [];
             this.cache_path = [];
             console.log(this.collisionBox);
-            this.position = {x: this.collisionBox.pos.x + this.collisionBox.width/2, y: this.collisionBox.pos.y + this.collisionBox.height/2};
+            this.position = {
+                x: (this.collisionBox.pos.x + this.collisionBox.width/2) - me.game.viewport.pos.x,
+                y: (this.collisionBox.pos.y + this.collisionBox.height/2)- me.game.viewport.pos.y
+            };
         },
         update: function() {
             this.position.x = (this.collisionBox.pos.x + this.collisionBox.width/2) - me.game.viewport.pos.x;
             this.position.y = (this.collisionBox.pos.y + this.collisionBox.height/2)- me.game.viewport.pos.y;
             this.computePath();
+            me.game.HUD.setItemValue("playerX", Math.ceil(this.pos.x));
+            me.game.HUD.setItemValue("playerY", Math.ceil(this.pos.y));
             // check & update player movement
             this.updateMovement();
             
