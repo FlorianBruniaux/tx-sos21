@@ -1,7 +1,7 @@
 TX SOS21 : Serious Game
 =================
 
-Projet benel : -[https://github.com/benel/SOS21Server](https://github.com/benel/SOS21Server)
+Projet benel : [https://github.com/benel/SOS21Server](https://github.com/benel/SOS21Server)
 
 
 ## Présentation:
