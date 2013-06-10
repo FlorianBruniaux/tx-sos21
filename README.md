@@ -1,6 +1,9 @@
 TX SOS21 : Serious Game
 =================
 
+Projet benel : -[https://github.com/benel/SOS21Server](https://github.com/benel/SOS21Server)
+
+
 ## Présentation:
 L’objectif est de développer un jeu sérieux multi-joueurs avec des technologies web récentes. 
 Etant 3 à travailler sur le projet nous avons chacun une mission spécifique. 
