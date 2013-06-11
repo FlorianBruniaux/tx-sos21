@@ -1,0 +1,113 @@
+/*
+    Feuille de style Forum
+    Revue et corrigée
+    @Florian BRUNIAUX ISI4 MPL
+    Printemps 2013
+*/
+
+/*GENERAL*/
+body{
+    font-family: arial, verdana, sans-serif;
+    width: 100%;
+    margin: 0 auto;
+}
+
+a {
+    color: #fa914b;
+}
+
+table {
+    border: 1px solid black;
+}
+
+table td {
+    text-align: center;
+}
+
+table thead {
+   font-size: 17px;
+   background-color: #fa914b;
+}
+
+/*HEADER*/
+#header{
+    position: relative;
+    height: 40px;
+    text-align: center;
+    color: white;
+    background-color: #2f314f;
+    -moz-box-shadow: 0px 2px 11px #2f314f;
+    -webkit-box-shadow: 0px 2px 11px #2f314f;
+    box-shadow: 0px 2px 11px #2f314f;
+}
+
+#titre{
+    font-size: 30px;
+    width: 100%;
+}
+
+/*CONTENT*/
+#content{
+    margin: 0 auto;
+    width: 960px;
+    min-height: 250px;
+}
+
+/*FOOTER*/
+#footer{
+    position: fixed;
+    bottom: 0px;
+    height: 30px;
+    text-align: center;
+    color: white;
+    background-color: #2f314f;
+    -moz-box-shadow: 10px 0px 10px #2f314f;
+    -webkit-box-shadow: 10px 0px 10px #2f314f;
+    box-shadow: 10px 0px 10px #2f314f;
+    width: 100%;
+}
+
+/*TABLEAU HONNEUR*/
+.array {
+    margin: 0 auto;
+    width: 100%;
+    margin-top: 40px;
+    border-collapse: collapse;
+}
+
+.array td{
+    border: 1px dashed grey;
+    padding-right: 5px;
+}
+
+.array tr{
+    border: 1px solid black;
+    padding-right: 5px;
+}
+
+
+.last{
+    
+}
+
+#classement {
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+
+.topsflops {
+    text-align: center;
+    border : 1px solid black;
+    padding: 5px;
+    float: left;
+    width : 48%;
+    height: 150px;
+    margin: 0 auto;
+    margin-top: 5px;
+    margin-right: 5px;
+}
+
+.hidden {
+    display: none;
+}
