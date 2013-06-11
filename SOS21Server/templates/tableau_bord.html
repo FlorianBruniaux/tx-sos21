@@ -1,0 +1,235 @@
+<html>
+    <head>
+	
+        <title>Tableau de bord</title>
+	
+	<!--CSS-->
+	<link rel="stylesheet" href="../style/style.css" type="text/css">
+	<link rel="stylesheet" href="../style/blue.css" type="text/css">
+	<link rel="stylesheet" href="../style/jquery.tablesorter.pager.css" type="text/css">
+	    
+	<!--SCRIPTS COUCHDB-->
+  	<script src="/_utils/script/json2.js"></script>
+  	<script src="/_utils/script/jquery.js"></script>
+  	<script src="/_utils/script/jquery.couch.js"></script>
+        <script src="/_utils/script/jquery.form.js"></script>
+	
+	<script src="../js/jquery-latest.js"></script>
+	<script src="../js/jquery.metadata.js"></script>
+	<script src="../js/jquery.tablesorter.js"></script>
+	<script src="../js/jquery.tablesorter.pager.js"></script>
+	
+	<script type="text/javascript">
+	    //Charge les parties html communes
+	    $(document).ready(function(){
+		$("#footer").load("../include/footer.html");
+		
+		$("#characters")
+			    .tablesorter({widthFixed: true, widgets: ['zebra']})
+			    .tablesorterPager({container: $("#characters-pagination")});
+		$("#actions")
+			    .tablesorter({widthFixed: true, widgets: ['zebra']})
+			    .tablesorterPager({container: $("#actions-pagination")});
+		$("#attributes")
+			    .tablesorter({widthFixed: true, widgets: ['zebra']})
+			    .tablesorterPager({container: $("#attributes-pagination")});
+			    
+		$("#characters").trigger("update");
+		$("#actions").trigger("update");
+		$("#attributes").trigger("update");
+		
+		show("characters");
+	    })
+	    
+	    var previous = "character";
+	    function show(_what) {
+
+		console.log("previous = "+previous);
+		console.log("show("+_what+")");
+		
+		$("#"+previous).addClass("hidden");
+		$("#"+previous+"-pagination").addClass("hidden");
+		
+		$("#"+_what).removeClass("hidden");
+		$("#"+_what+"-pagination").removeClass("hidden");
+		$("#"+_what+"-pagination .pagesize").change();
+		
+		previous = _what;
+	    }
+	</script>
+	
+	 
+    </head>
+    
+    <body>
+
+        <div id="header">
+	    <div id="titre">Tableau de Bord</div>
+	</div>
+	
+        <div id="content">
+	    
+            <div>
+		<h3>Veuillez choisir ce que vous voulez afficher : <h3>
+		<select onchange="show(this.options[this.selectedIndex].value)">
+		    <option selected="selected"  value="characters">Les personnages</option>
+		    <option value="actions">Les actions</option>
+		    <option value="attributes">Les attributs</option>
+		</select>
+	    </div>
+	    
+	    <table class="tablesorter" cellspacing="1" id="characters" >
+		<thead id="tab_head">
+		    <tr>
+			<th>
+			    <b>Pseudo</b>
+			</th>
+			{{#attributes}}
+			<th>
+			    <b>{{name}}</b>
+			</th>
+			{{/attributes}}
+		    </tr>
+		</thead>
+		
+		<tbody id="tab_body">
+		   {{#characters}}
+		    <tr>
+			<td>
+			    {{pseudo}}
+			</td>
+			{{#effects}}
+			<td>
+			    {{value}}
+			</td>
+			{{/effects}}
+		    </tr>
+		   {{/characters}}
+                </tbody>
+                   
+            </table>
+	    <div id="characters-pagination" class="pager" >
+		<form>
+		    <img src="../images/first.png" class="first"/>
+		    <img src="../images/prev.png" class="prev"/>
+		    <input type="text" class="pagedisplay"/>
+		    <img src="../images/next.png" class="next"/>
+		    <img src="../images/last.png" class="last"/>
+		    <select class="pagesize">
+			<option selected="selected" value="5">5</option>
+			<option value="10">10</option>
+			<option value="20">20</option>
+			<option  value="30">30</option>
+		    </select>
+		</form>
+	    </div>
+
+	    
+	    <table class="tablesorter hidden" cellspacing="1" id="actions" >
+		<thead>
+		    <tr>
+			<th>
+			    <b>Action</b>
+			</th>
+			<th>
+			    <b>Nb executions</b>
+			</th>
+			<th>
+			    <b>Nb executants</b>
+			</th>
+		    </tr>
+		</thead>
+		<tbody>
+		    {{#actions}}
+		    <tr>
+			<td>
+			    <a href="../../argile-forum/_rewrite/regle/{{id_regle}}">{{name}}</a><br />
+			    {{#effects}}[{{name}}:{{value}}]{{/effects}}
+			</td>
+			<td>
+			    {{nb_executions}}
+			</td>
+			<td>
+			    {{nb_executants}}<br />
+			    
+			    {{#executants}}
+				({{name}}:{{nb_executions}})
+			    {{/executants}}
+			    
+			</td>
+			
+			
+		    </tr>
+		    {{/actions}}
+		</tbody> 
+            </table>
+	    <div id="actions-pagination" class="pager hidden" >
+		<form>
+		    <img src="../images/first.png" class="first"/>
+		    <img src="../images/prev.png" class="prev"/>
+		    <input type="text" class="pagedisplay"/>
+		    <img src="../images/next.png" class="next"/>
+		    <img src="../images/last.png" class="last"/>
+		    <select class="pagesize">
+			<option selected="selected"  value="5">5</option>
+			<option value="10">10</option>
+			<option value="20">20</option>
+			<option  value="30">30</option>
+		    </select>
+		</form>
+	    </div>
+	    
+	    <table class="tablesorter hidden" cellspacing="1" id="attributes">
+		<thead>
+		    <tr>
+			<th>
+			    <b>Attribute</b>
+			</th>
+			<th>
+			    <b>Top</b>
+			</th>
+			<th>
+			    <b>Flop</b>
+			</th>
+		    </tr>
+		</thead>
+		<tbody>
+		    {{#attributes}}
+		    <tr>
+			<td>
+			    <a href="../../argile-forum/_rewrite/commentaires_attributes/{{id_attribute}}">{{name}}</a>
+			</td>
+			<td>
+			    {{top}} ({{topcharacter}})
+			</td>
+			<td>
+			    {{flop}} ({{flopcharacter}})
+			</td>
+		    </tr>
+		    {{/attributes}}
+		</tbody> 
+            </table>
+	    <div id="attributes-pagination" class="pager hidden">
+		<form>
+		    <img src="../images/first.png" class="first"/>
+		    <img src="../images/prev.png" class="prev"/>
+		    <input type="text" class="pagedisplay"/>
+		    <img src="../images/next.png" class="next"/>
+		    <img src="../images/last.png" class="last"/>
+		    <select class="pagesize">
+			<option selected="selected"  value="5">5</option>
+			<option value="10">10</option>
+			<option value="20">20</option>
+			<option  value="30">30</option>
+		    </select>
+		</form>
+	    </div>
+	    
+        </div>
+	
+        <div id="footer">
+            
+        </div>
+    
+    </body>
+</html>

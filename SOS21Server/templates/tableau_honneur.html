@@ -1,0 +1,53 @@
+<html>
+    <head>
+	
+        <title>Tableau d'honneur</title>
+	
+	<link rel="stylesheet" href="../style/style.css" type="text/css">
+	<link rel="stylesheet" href="../style/blue.css" type="text/css">
+	<link rel="stylesheet" href="../style/jquery.tablesorter.pager.css" type="text/css">
+	
+  	<script src="/_utils/script/json2.js"></script>
+  	<script src="/_utils/script/jquery.js"></script>
+  	<script src="/_utils/script/jquery.couch.js"></script>
+        <script src="/_utils/script/jquery.form.js"></script>
+	
+    	<script type="text/javascript">
+	    $(document).ready(function(){
+		$("#footer").load("../include/footer.html");
+	    })
+	</script>
+	
+    </head>
+    
+    <body>
+	
+        <div id="header">
+	    <div id="titre">Tableau d'honneur</div>
+	</div>
+	
+
+        <div id="content">
+	    
+	    <div id="classement" >
+		
+		{{#attributes}}
+		    <script type="text/javascript">
+			if ("{{topcharacter}}" != "{{flopcharacter}}") {
+			    $("#classement").append('<div class="topsflops">\
+							<h3>{{name}}</h3>\
+							<p><b>{{top}}</b> = {{topcharacter}} avec {{topvalue}} points</p>\
+							<p><b>{{flop}}</b> = {{flopcharacter}} avec {{flopvalue}} points</p>\
+						    </div>');
+			}
+		    </script>
+		{{/attributes}}
+	    </div>
+	    
+        </div>
+	
+	<div id="footer"></div>
+	
+	
+    </body>
+</html>
