@@ -1,1 +1,105 @@
-[{"to": "_view/effects", "from": "effects", "query": {"group": "true"}}, {"to": "_view/characters", "from": "characters"}, {"to": "_view/objects", "from": "objects"}, {"to": "_view/characters_by_level", "from": "characters_by_level/:level", "query": {"startkey": [":level"], "endkey": [":level", {}]}}, {"to": "_view/effects_by_place", "from": "effects_by_place/:place", "query": {"startkey": [":place"], "endkey": [":place", {}], "group": "true"}}, {"to": "_view/effects_by_character", "from": "effects_by_character/:character", "query": {"startkey": [":character"], "endkey": [":character", {}], "group": "true"}}, {"to": "_view/characters_by_place", "from": "characters_by_place/:place", "query": {"include_docs": "true", "key": [":place"]}}, {"to": "../../_changes", "from": "_changes_on_place/:place", "query": {"feed": "longpoll", "filter": "sos21/place"}}, {"to": "_update/travailler/*", "from": "action/*", "method": "POST"}, {"to": "_update/ramasser_objet", "from": "action/ramasser_objet", "method": "POST"}, {"to": "_update/playable_character/*", "from": "playable_character/*", "method": "PUT"}, {"to": "../../*", "from": "playable_character/*"}, {"to": "../../", "from": "", "method": "POST"}, {"to": "_view/away_from_keyboard", "from": "away_from_keyboard", "query": {"descending": "true"}}]
+[
+    {
+        "to": "../../",
+        "from": "",
+        "method": "POST"
+    },
+    {
+        "to": "../../_changes",
+        "from": "_changes_on_place/:place",
+        "query": {
+            "feed": "longpoll",
+            "filter": "sos21/place"
+        }
+    },
+    {
+        "to": "_update/action/*",
+        "from": "action/*",
+        "method": "POST"
+    },
+    {
+        "to": "_update/playable_character/*",
+        "from": "playable_character/*",
+        "method": "PUT"
+    },
+    {
+        "to": "../../*",
+        "from": "playable_character/*",
+        "method": "GET"
+    },
+    {
+        "to": "_view/effects",
+        "from": "effects",
+        "query": {
+            "group": "true"
+        }
+    },
+    {
+        "to": "_view/characters",
+        "from": "characters",
+        "query": {
+            "group": "true"
+        }
+    },
+    {
+        "to": "_view/effects-by-place",
+        "from": "effects-by-place/:place",
+        "query": {
+            "startkey": [":place"],
+            "endkey": [":place",{}],
+            "group": "true"
+        }
+    },
+    {
+        "to": "_view/effects_by-character",
+        "from": "effects-by-character/:character",
+        "query": {
+            "startkey": [":character"],
+            "endkey": [":character",{}],
+            "group": "true"
+        }
+    },
+    {
+        "to": "_view/characters-by-place",
+        "from": "characters-by-place/:place",
+        "query": {
+            "include_docs": "true",
+            "key": [":place"]
+        }
+    },
+    {
+        "to": "_view/away-from-keyboard",
+        "from": "away-from-keyboard",
+        "query": {
+            "descending": "true"
+        }
+    },
+    {
+        "to": "_view/characters-and-effects",
+        "from": "view/characters-and-effects/:pseudo",
+        "method": "GET",
+        "query": {
+            "group":"true",
+            "startkey":[":pseudo"],
+            "endkey":[":pseudo",{}]
+        } 
+    },
+    {
+        "to": "_list/tableau_honneur/tableau-honneur",
+        "from": "tableau_honneur",
+        "method": "GET", 
+        "query": {
+            "group":"true",
+            "descending":"false"
+        } 
+    },
+    {
+        "to": "_list/tableau_bord/tableau-bord",
+        "from": "tableau_bord",
+        "method": "GET",
+        "query": {
+            "group":"true",
+            "group_level": "5"
+        } 
+    }   
+]
