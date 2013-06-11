@@ -1,0 +1,65 @@
+[
+	{
+		"to": "../../", 
+		"from": "", "method": "POST"
+	},
+	{
+		"to": "_list/discussions/discussions-racine", 
+		"from": "",
+                "query":{
+                    "descending":"true"
+                }
+	},
+	{
+		"to": "_list/regles/regles", 
+		"from": "regles",
+                "query":{
+                    "descending":"true"
+                }
+	},
+        {
+		"to": "_list/mot_cle/discussions", 
+		"from": "mot-cle/:cle",
+                "query":{
+                    "cle":":cle"
+                }
+	},
+	{
+		"to": "_list/commentaires_discussions/commentaires-discussions", 
+		"from": "discussion/:id", 
+		"method": "GET", 
+		"query": {
+			"startkey": [":id"], 
+			"endkey": [":id",2],
+                        "descending":"false"
+		} 
+	},
+	{
+		"to": "_list/commentaires_regles/commentaires-regles", 
+		"from": "regle/:id", 
+		"method": "GET", 
+		"query": {
+			"startkey": [":id"], 
+			"endkey": [":id",2],
+                        "descending":"false"
+		} 
+	},
+		{
+		"to": "_list/commentaires_attributes/commentaires-attributes", 
+		"from": "commentaires_attributes/:id",
+                "method": "GET", 
+		"query": {
+			"startkey": [":id"], 
+			"endkey": [":id",2],
+                        "descending":"false"
+		} 
+	},
+        {
+		"to": "_list/utilisateur/utilisateurs", 
+		"from": "utilisateur/:nom", 
+		"method": "GET", 
+		"query": {
+			"key": ":nom"
+		} 
+	}
+]

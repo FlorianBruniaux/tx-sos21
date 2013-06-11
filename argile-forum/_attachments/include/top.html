@@ -1,0 +1,35 @@
+<div id="header">
+    <div id="titre">Argile-forum</div>
+    <div id="ident">
+        <a href="#" onclick="afficherFormConnexion()">Connexion</a> - <a href="#" onclick="afficherFormEnregistrement()">S'enregistrer</a>
+    </div>
+</div>
+
+<!-- Formulaire de connexion -->
+<div id="login" style="display: none">
+    <form id="form-login">
+        Connexion : <input type="text" name="login" id="connexionNom" autofocus required placeholder="Nom d'utilisateur?">
+        <input type="password" name="mdp" id="connexionMdp" required placeholder="Mot de passe?">
+        <a href="#" onclick="connexion()">
+            Valider
+        </a>
+    </form>
+</div>
+
+<!-- Formulaire de création de compte. -->
+<div id="register" style="display: none">
+    <form id="form-register">
+        Inscription : <input type="text" name="login" id="enregistrementNom" required placeholder="Nom d'utilisateur?">
+        <input type="password" name="mdp" id="enregistrementMdp" required placeholder="Mot de passe?">
+        <input type="email" name="email" id="enregistrementEmail" required placeholder="Email?">
+        Role : <select id="enregistrementRole">
+            <option value="basique">Basique</option>
+            <option value="moderateur">Modérateur</option>
+            <option value="administrateur">Administrateur</option>
+            <option value="recruteur">Recruteur</option>
+        </select>
+        <a href="#" onclick="enregistrement()">
+            Valider
+        </a>
+    </form>
+</div>

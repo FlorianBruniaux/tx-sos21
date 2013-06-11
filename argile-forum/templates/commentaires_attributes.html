@@ -1,0 +1,387 @@
+<html>
+    
+    <head>
+	
+        <title>Attribut : {{name}}</title>
+	
+	<!--CSS-->
+        <link rel="stylesheet" href="../../style/forum.css" type="text/css">
+	
+	<!--SCRIPTS COUCHDB-->
+	<script src="/_utils/script/sha1.js"></script>
+  	<script src="/_utils/script/json2.js"></script>
+  	<script src="/_utils/script/jquery.js"></script>
+  	<script src="/_utils/script/jquery.couch.js"></script>
+        <script src="/_utils/script/jquery.form.js"></script>
+	
+	<!--SCRIPTS PERSO-->
+        <script src="../../js/common.js"></script><!--FONCTIONS COMMUNES A TOUTES LES PAGES (IDENTIFICATION,REGISTER ETC..)-->
+	<script src="../../js/common_commentaires.js"></script><!--FONCTIONS COMMUNES AUX PAGES DE COMMENTAIRE (SYSTEME DE VOTE..)-->
+
+    </head>
+    
+    <body>
+	
+	<!--CHARGE AVEC $("#top").load()-->
+	<div id="top"></div>
+        
+        <div id="content">
+
+	    <div id="arborescence" class="arianne">
+		<h3>
+		    <span class="parent"><a href='../../_rewrite/regles'>Liste des attributs</a></span>
+		    >
+		    <span id="ici">{{name}}</span>
+		</h3>
+	    </div>
+	    
+            <div id="topic">
+		
+                <div id="resume">
+		    
+                    <div id="table-summary">              
+                        <div class="message-cell">
+			    {{name}}
+			</div>
+                    </div>
+		    
+                </div>
+		
+		<div id="logs" >
+		    <h3 id="showOrHideLogsLink">
+			<a href="#" onclick="showLogs()">Afficher les logs</a>
+		    </h3>
+		    <p id="logsList" class="hidden">
+			{{#logs}}
+			    <b>{{date}}</b><br />
+			    {{text}}<br />
+			    {{dateCom}} by {{authorCom}} : {{textCom}}<br/>
+			    {{top}} // {{flop}}<br /><br />
+			{{/logs}}	
+		    </p>
+		    
+		</div>
+		
+                <div id="answers">
+		    
+                    {{#commentaires}}
+		    <table class="answer">
+			<tr>
+			    <td class="vote-cell">
+				<span id="plus" onclick="vote_up('{{id}}')">+</span>
+				<span class="vote-plus" id="positif_{{id}}">{{vote_positif}}</span> /
+				<span class="vote-moins" id="negatif_{{id}}">{{vote_negatif}}</span>
+				<span id="minus" onclick="vote_down('{{id}}')">-</span></td>
+			    
+			    <td class="message-cell">
+				{{texte}}
+			    </td>
+			</tr>
+			
+			<tr>
+			    <td>
+				<b>Top </b>: {{top}}
+			    </td>
+			</tr>
+			
+			<tr>
+			    <td>
+				<b>Flop </b>: {{flop}}
+			    </td>
+			</tr>
+			
+			<tr>
+			    <td id="valid" class="valid" style="visibility: hidden" onclick="valider('{{id_attribute}}','{{id}}')">
+				<a href="#" style="text-decoration: none; color: white;"><div>Valider</div></a>
+			    </td>
+			    
+			    <td id="supprimer" class="supprimer" style="display:  none" onclick="supprimer('{{id}}','{{rev}}')">
+				<a href="#" style="text-decoration: none; color: white;"><div>Supprimer</div></a>
+			    </td>
+			    
+			    <td align="right" class="post-author">
+				{{auteur}}, {{date_modification}}
+			    </td>
+			 
+			</tr>
+		    </table>
+                    {{/commentaires}}
+		    
+                </div>
+                   
+		<div id="form-commentaire" style="display: none">
+		    
+		    <h3 class="header-answer">Définissez les Top et Flop:</h3>
+		    
+		    <table id="commentaire_form">
+			
+			<tbody>
+			    <tr>
+				<td class="left">
+				    Commentaire :
+				</td>
+				<td class="right">
+				    <textarea rows="5" cols="50" id="texte_commentaire" placeholder='Votre commentaire'></textarea>
+				</td>
+			    </tr>
+			    
+			    <tr>
+				<td class="left">
+				    Top :
+				</td>
+				<td class="right">
+				    <textarea rows="1" cols="50" id="letop" placeholder='top'></textarea>
+				</td>
+			    </tr>
+			    
+			    <tr>
+				<td class="left">
+				    Flop :
+				</td>
+				<td class="right">
+				    <textarea rows="1" cols="50" id="leflop" placeholder='flop'></textarea>
+				</td>
+			    </tr>
+			    
+			    <tr>
+				<td></td>
+				<td>
+				    <a href="#" class="send-button" onclick="ajouterCommentaire()" style="text-decoration: none">
+					Envoyer
+				    </a>
+				</td>
+			    </tr>
+			</tbody>
+		    </table>
+		    
+		</div>
+                
+            </div>
+	    
+        </div>
+	
+        <div id="footer"></div>
+	
+	<script type="text/javascript">
+	   
+	    /*Charge les div #top et #footer*/
+	    $(document).ready(function(){
+		
+		$("#top").load("../../include/top.html", function(){
+		    
+		    $("#ident").ready(function(){
+			var utilisateur = verifierConnexion();
+			if(utilisateur){                
+			   $("#ident").html('<a href="../utilisateur/' + utilisateur + '">' + utilisateur + '</a> - <a href="#" onclick="deconnecter()">Deconnexion</a>');
+			   var formulaire = $("#form-commentaire");
+			   formulaire.css('display','block'); 
+			    
+			   var role = verifierRole();
+			}
+		    });
+		});
+		
+		$("#footer").load("../../include/footer.html");	
+	    })
+	    
+	     /*
+	     *Affiche les logs (historique de validation/invalidation des commentaires)
+	     */
+	    function showLogs() {
+		$("#logsList").removeClass("hidden");
+		$("#showOrHideLogsLink").html('<a href="#" onclick="hideLogs()">Cacher les logs</a>');
+	    }
+	    
+	    /*
+	     *Affiche les logs (historique de validation/invalidation des commentaires)
+	     */
+	    function hideLogs() {
+		$("#logsList").addClass("hidden");
+		$("#showOrHideLogsLink").html('<a href="#" onclick="showLogs()">Afficher les logs</a>');
+	    }
+	    
+	    /*
+	     *Pour valider un commentaire et en faire la réponse selectionnée
+	     *@param {string} _id_attribute = id de l'attribut que l'on commente
+	     *@param {string} _id = id du commentaire à valider
+	     */
+	    function valider(_id_attribute, _id){
+		
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+		//Ouvre le document avec l'id correspondant
+		db.openDoc( _id, {
+		    success: function(com) {
+			db.openDoc( _id_attribute, {
+			    success: function(doc) {
+				//Enregistre les attributs dans l'obj attribut
+				doc.top = com.top;
+				doc.flop = com.flop;
+				doc.answered = _id;
+				doc.answered_date = new Date().toString();
+				//sauvegarder dans les logs (pour voir l'historique des validations/invalidations)
+				doc.logs.push({
+				    date : new Date().toString(),
+				    dateCom : "Answer proposed "+com.created,
+				    textCom : com.texte,
+				    authorCom : com.auteur,
+				    top : com.top,
+				    flop : com.flop,
+				    text : "VALIDATION"
+				});
+				//Sauvegarde les changements
+				db.saveDoc(doc, {
+				    success: function() {
+					//Affiche la réponse selectionnée
+					$(".valid-answer").css('display','block');
+					document.location.reload(true);
+				    }
+				});
+			    }
+			});
+		    }
+		});
+	        
+	    }
+	    
+	    /*
+	     *Pour invalider la réponse selectionnée (et donc pouvoir en valider une autre)
+	     *@param {string} _id_attribute = id de l'attribut pour lequel on souhaite effacer la réponse selectionnée
+	     */
+	    function invalider(_id_attribute){
+		
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+		//Ouvre le document avec l'id correspondant
+		db.openDoc( _id_attribute, {
+		    success: function(doc) {
+			//Remet les attributs à leur valeur par défault
+			doc.top = "top";
+			doc.flop = "flop";
+			doc.answered = "no";
+			doc.answered_date = "no";
+			//sauvegarder dans les logs (pour voir l'historique des validations/invalidations)
+			doc.logs.push({
+			    date : new Date().toString(),
+			    dateCom : "Validated {{answered_date}}",
+			    textCom : "{{answered_text}}",
+			    authorCom : "{{answered_author}}",
+			    text : "INVALIDATION"
+			});
+			db.saveDoc(doc, {
+			    success: function() {
+				//Supprime l'affichage de la réponse selectionnée
+				//car il n'y a plus de réponse selectionnée
+				$(".valid-answer").css('display','none');
+				document.location.reload(true);
+			    }
+			});
+		    }
+		});
+		
+	    }
+	    
+	    /*
+	    * Afficher le bouton Valider si on est administrateur
+	    */
+	    var role = verifierRole();
+	    var answered = '{{answered}}';
+	    
+	    if( (role == "administrateur") && (answered == 'no')){
+		$('.valid').css('visibility','visible');
+		$('.supprimer').css('display','block');
+	    }
+	    if( (role == "moderateur") && (answered == 'no')){
+		$('.valid').css('display','none');
+		$('.supprimer').css('display','block');
+	    }
+	   
+	    /*
+	     * Supprimer un commentaire
+	     * @param {string} _idCom = ID du commentaire à supprimer.
+	     * @param {string} _revCom = rev du commentaire à supprimer.
+	     */
+	    function supprimer(_idCom, _revCom){
+	    
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+		//Supprime le doc
+		db.removeDoc({_id : _idCom , _rev : _revCom}, {
+		    success: function(doc) {
+			document.location.reload(true);
+		    }
+		});
+	    }
+	    
+	    /*
+	    * Afficher la réponse validée en avant
+	    */
+	    $("#summary").ready(function(){
+	       
+	       var answered = '{{answered}}';
+	       
+	       if( (answered != "no") && (answered != "") ){
+		
+		   var tableau = document.getElementById("resume");
+		   var ligne = document.createElement("table");
+		   ligne.className = "valid-answer";
+		   
+		   var role = verifierRole();
+		   var text = "<tr><td class='valided'>Attribut</td>\
+			   <td class='message-cell'>\
+			       <table>\
+				   <tr>\
+				        <td class='valid-answer-text' id='top'><b>Top </b>: {{answered_top}}</td>\
+				   </tr>\
+				   <tr>\
+				        <td class='valid-answer-text' id='flop'><b>Flop </b> : {{answered_flop}}</td>\
+				   </tr>\
+			       </table>\
+			   </td></tr>";
+		    
+		    if(role=="administrateur"){
+		       //Si l'utilisateur est administrateur, il a accès au bouton invalider'
+		      text += "<tr><td class='invalid' onclick='invalider(\"{{id_attribute}}\")'><a href='#' style='text-decoration: none; color: white;'><div>Invalider</div></a></td>";
+		    }
+		    text += "<td align='right' class='post-author'>{{answered_author}}, validé le {{answered_date}}</td></tr>"
+		    
+		    ligne.innerHTML = text;
+		    tableau.appendChild(ligne);
+	       }
+				    
+	    });
+	   
+	    /*
+	    * Pour sauvegarder le commentaire en db
+	    */
+	    function ajouterCommentaire(){
+	    
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+		//Sauvegarde le doc
+		db.saveDoc({
+			texte : $("#texte_commentaire").val(),
+			auteur : verifierConnexion(),
+			target : '{{id_attribute}}',
+			top : $("#letop").val(),
+			flop: $("#leflop").val(),
+			created : new Date().toString(),
+			type :  "commentaire-attribute",
+			vote_negatif : 0,
+			vote_positif : 0
+		    },
+		    {success: function(data){
+			window.location.reload();
+		    }}
+		);
+	    }
+	   
+	</script>
+      
+    </body>
+    
+</html>

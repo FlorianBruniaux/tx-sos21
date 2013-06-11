@@ -1,0 +1,655 @@
+<html>
+    
+    <head>
+	
+        <title>Règle : {{titre_regle}}</title>
+	
+	<!--CSS-->
+        <link rel="stylesheet" href="../../style/forum.css" type="text/css">
+	
+	<!--SCRIPTS COUCHDB-->
+	<script src="/_utils/script/sha1.js"></script>
+  	<script src="/_utils/script/json2.js"></script>
+  	<script src="/_utils/script/jquery.js"></script>
+  	<script src="/_utils/script/jquery.couch.js"></script>
+        <script src="/_utils/script/jquery.form.js"></script>
+	
+	<!--SCRIPTS PERSO-->
+        <script src="../../js/common.js"></script><!--FONCTIONS COMMUNES A TOUTES LES PAGES (IDENTIFICATION,REGISTER ETC..)-->
+	<script src="../../js/common_commentaires.js"></script><!--FONCTIONS COMMUNES AUX PAGES DE COMMENTAIRE (SYSTEME DE VOTE..)-->
+
+    </head>
+    
+    <body>
+	
+	<!--CHARGE AVEC $("#top").load()-->
+	<div id="top"></div>
+	   
+        <div id="content">
+	    
+	    <div id="arborescence" class="arianne"s>
+		<h3>
+		    <span class="parent"><a href='../../_rewrite/regles'>Liste des règles</a></span>
+		    >
+		    <span id="ici">{{titre_regle}}</span>
+		</h3>
+	    </div>
+	    
+            <div id="topic">
+		
+                <div id="resume">
+		    
+                    <div id="table-summary">
+			
+                        <div class="message-cell">
+			    {{description_regle}}
+			</div>
+			
+                        <table id="table-summary">
+                            <tr>
+                                <td align="right" class="post-author">
+                                    <div>{{auteur_regle}}, {{date_creation_regle}}</div>
+                                </td>
+                            </tr>
+                        </table>
+			
+                    </div>
+		    
+                </div>
+		
+		<div id="logs" >
+		    <h3 id="showOrHideLogsLink">
+			<a href="#" onclick="showLogs()">Afficher les logs</a>
+		    </h3>
+		    <p id="logsList" class="hidden">
+			{{#logs}}
+			    <b>{{date}}</b><br />
+			    {{text}}<br />
+			    {{dateCom}} by {{authorCom}} : {{textCom}}<br/>
+			    {{#effects}}[{{name}}:{{value}}]{{/effects}}<br /><br />
+			{{/logs}}	
+		    </p>
+		    
+		</div>
+		
+                <div id="answers">
+		    
+                    {{#commentaires}}
+		    <table class="answer">
+			<tr>
+			    <td class="vote-cell">
+				<span id="plus" onclick="vote_up('{{id}}')">+</span>
+				<span class="vote-plus" id="positif_{{id}}">{{vote_positif}}</span> /
+				<span class="vote-moins" id="negatif_{{id}}">{{vote_negatif}}</span>
+				<span id="minus" onclick="vote_down('{{id}}')">-</span>
+			    </td>
+			    
+			    <td class="message-cell">
+				{{texte}}
+			    </td>
+			    
+			</tr>
+			
+			{{#effects}}
+			<tr>
+			    <td>
+				{{name}}: {{value}}
+			    </td>
+			</tr>
+			{{/effects}}
+			
+			<tr>
+			    <td id="valid" class="valid" style="visibility: hidden" onclick="valider('{{id_regle}}','{{id}}')">
+				<a href="#" style="text-decoration: none; color: white;"><div>Valider</div></a>
+			    </td>
+			    <td id="supprimer" class="supprimer" style="display:  none" onclick="supprimer('{{id}}','{{rev}}')">
+				<a href="#" style="text-decoration: none; color: white;"><div>Supprimer</div></a>
+			    </td>
+			    <td align="right" class="post-author">
+				{{auteur}}, {{date_modification}}
+			    </td>
+			</tr>
+		    </table>
+                    {{/commentaires}}
+		    
+                </div>
+                   
+		<div id="form-commentaire" style="display: none">
+		    
+		    <h3 class="header-answer">
+			Définissez les effets de l'action:
+		    </h3>
+		    
+		    <table id="commentaire_form">
+			<tbody>
+			    <tr>
+				<td class="left">
+				    Commentaire :
+				</td>
+				<td class="right">
+				    <textarea rows="5" cols="50" id="texte_commentaire" placeholder='Votre commentaire'></textarea>
+				</td>
+			    </tr>
+			</tbody>
+		    </table>
+		    
+		</div>
+                
+            </div>
+        </div>
+	
+        <div id="footer"></div>
+	
+	<script type="text/javascript">
+	   
+	    /*Charge les div #top et #footer*/
+	    $(document).ready(function(){
+		
+		$("#top").load("../../include/top.html", function(){
+		    
+		    $("#ident").ready(function(){
+			var utilisateur = verifierConnexion();
+			if(utilisateur){                
+			   $("#ident").html('<a href="utilisateur/' + utilisateur + '">' + utilisateur + '</a> - <a href="#" onclick="deconnecter()">Deconnexion</a>');
+			   var formulaire = $("#form-commentaire");
+			   formulaire.css('display','block'); 
+			    
+			   var role = verifierRole();
+			}
+		    });
+		    
+		});
+		
+		$("#footer").load("../../include/footer.html");	
+	    })
+	    
+	    /*
+	     *Affiche les logs (historique de validation/invalidation des commentaires)
+	     */
+	    function showLogs() {
+		$("#logsList").removeClass("hidden");
+		$("#showOrHideLogsLink").html('<a href="#" onclick="hideLogs()">Cacher les logs</a>');
+	    }
+	    
+	    /*
+	     *Affiche les logs (historique de validation/invalidation des commentaires)
+	     */
+	    function hideLogs() {
+		$("#logsList").addClass("hidden");
+		$("#showOrHideLogsLink").html('<a href="#" onclick="showLogs()">Afficher les logs</a>');
+	    }
+	    
+	    /*
+	     *Affiche le nombre d'execution de l'action
+	     */
+	    $("#execution_counter").ready(function(){
+		
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+		//Charger les données générée par la vue
+		db.view("argile-forum/actions-executed", {
+		    descending: true,
+		    group: true,
+		    group_level:1,
+		    success: function(data) {
+			for(i in data.rows){
+			    if (data.rows[i].key[0] == "{{titre_regle}}") {
+				$("#execution_counter").append(" Action executée <b>" + data.rows[i].value + "</b> fois");
+			    }
+			}
+		    }
+		});
+		
+	    });
+	    
+	    /*
+	     *Affiche le nombre d'executants de l'action (car peut être != du nombre d'execution)
+	     */
+	    $("#executors").ready(function(){
+		
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+		//Charger les données générée par la vue
+		db.view("argile-forum/actions-executed", {
+		    descending: true,
+		    group: true,
+		    startkey:["{{titre_regle}}",{}],
+		    endkey:["{{titre_regle}}"],
+		    success: function(data) {
+			var count = data.rows.length;
+			if (count > 0) {
+			    $("#executors").append(" Nombre d'executants : <b>" + count + "</b>");  
+			}  
+		    }
+		});
+		
+	    });
+	    
+	    /*
+	     * Pour compléter le formulaire de commentaire :
+	     * - ajout d'une ligne pour chaque attribut déjà créé
+	     * - possibilité d'ajouter un nouvel attribut
+	     */
+	    $("#commentaire_form").ready(function(){
+		
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+		//Charger les données générée par la vue
+		db.view("argile-forum/effects-attributes", {
+		    descending: true,
+		    success: function(data) {
+			//ajout d'une ligne pour chaque attribut déjà créé
+			for(i in data.rows){
+			    $("#commentaire_form").append(
+				    "<tr>\
+					<td>"+data.rows[i].key[1]+" : </td>\
+					<td class='effect_attribute' id='"+data.rows[i].key[1]+"'>\
+					   <select id='"+data.rows[i].key[1]+"_sign'>\
+						<option>+</option>\
+						<option>-</option>\
+					    </select>\
+					    <input type='text' id='"+data.rows[i].key[1]+"_value' placeholder='0'/>\
+					</td>\
+				    </tr>");
+			}
+			
+			//Ajout d'un mini formulaire d'ajout de nouvel attribut
+			$("#commentaire_form").append(
+				    "<tr id='new_effect_form'>\
+					<td>Nouvel effet ?</td>\
+					<td><input type='text' id='new_effect' placeholder='Nom'/>\
+					<a style='color:#FA914B;text-decoration:underline;cursor:pointer;' onclick=\"ajouterAttribut($('#new_effect').val())\">Ajouter</a></td>\
+				     </tr>");
+			
+			//Bouton de validation du commentaire
+			$("#commentaire_form").append(
+				    "<tr>\
+					<td></td>\
+					<td>\
+					    <a href='#' style='text-decoration: none'>\
+						<div class='send-button' onclick='ajouterCommentaire()'>\
+						    Envoyer\
+						</div>\
+					    </a>\
+					<td>\
+				    </tr>");
+		    }
+		});
+		
+	    });
+	    
+	    /*
+	     * Pour ajouter le nouvel attribut dans la liste des attributs déjà ajoutés
+	     * @param {string} _name = le nom du nouvel attribut
+	     */
+	    function ajouterAttribut(_name){
+		//Si le nom n'est pas nul
+		if (_name !="") {
+		    $("#new_effect_form").before(
+			    "<tr id='"+_name+"_form'>\
+				<td>"+_name+" : </td>\
+				<td class='effect_attribute' id='"+_name+"'>\
+				   <select id='"+_name+"_sign'>\
+					<option>+</option>\
+					<option>-</option>\
+				    </select>\
+				    <input type='text' id='"+_name+"_value' placeholder='0'/>\
+				</td>\
+			    </tr>");
+		    //Vider champs d'ajout
+		    $("#new_effect").val("");
+		    //Supprimer les erreurs (s'il y en a)
+		    $(".err").remove();
+		    //Ajouter l'attibut en bdd
+		    addToEffectsAttributes(_name);
+		}
+		else{
+		    $("#new_effect").after("<span class='err' style='color:red;'> Can't be empty !</span>");
+		}
+	    }
+	    
+	    /*
+	     * Pour sauvegarder le nouvel attribut dans la bdd
+	     * @param {string} _name = le nom du nouvel attribut
+	     */
+	    function addToEffectsAttributes(_name) {
+		
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+	        db.saveDoc({		
+			effects_attribute: _name,
+			top : "top",
+			flop : "flop",
+			answered : "no",
+			logs : []
+		    },
+		    {success: function(data){
+			//Possibilité de supprimer l'attribut récémment ajouté.
+			//Rq: cela le supprime de la bdd ET de l'écran
+			$("#"+_name).append("<a style='text-decoration:underline;cursor:pointer;' onclick='delFromEffectsAttributes(\""+_name+"\", \""+data.id+"\", \""+data.rev+"\")'>X</a>");
+		    }}
+		);  
+	    }
+	    
+	    /*
+	     * Pour sauvegarder le nouvel attribut dans la bdd
+	     * @param {string} _name = le nom du nouvel attribut
+	     * @param {string} _idAtt = id de l'attribut à supprimer
+	     * @parem {string} _revAtt = rev de l'attribut à supprimer
+	     */
+	    function delFromEffectsAttributes(_name, _idAtt, _revAtt) {
+		
+		//Supprime la ligne de l'attribut de l'écran
+		$('#'+_name+'_form').remove();
+		
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+		db.removeDoc({_id: _idAtt, _rev: _revAtt}, {
+		    success: function(doc) {
+			console.log("Attribute "+_name+" deleted");
+		    }
+		});
+	    }
+	    
+	    /*
+	     *Pour valider un commentaire et en faire la réponse selectionnée
+	     * + créer une action avec les effets du commentaire validé
+	     *@param {string} _id_regle = id de la regle que l'on commente
+	     *@param {string} _id = id du commentaire à valider
+	     */
+	    function valider(_id_regle, _idCom){
+		
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+		//ouvrir doc
+		db.openDoc( _idCom, {
+		    success: function(com) {
+			//créer une action avec les effets choisi
+			//On pourra effectuer un POST directement sur cette action
+			//afin d'en reprendre les caractéristiques
+			db.saveDoc({		
+				_id: "{{titre_regle}}",
+				created: new Date().toString() ,
+				description_action : "{{description_regle}}",
+				effects: com.effects,
+				id_regle: "{{id_regle}}"
+			    },
+			    {
+				success: function(data){
+				    var rev = data.rev;
+				    var id = data.id;
+				    db.openDoc( _id_regle, {
+					success: function(doc) {
+					    doc.answered = _idCom;
+					    doc.answered_date = new Date().toString();
+					    doc.answered_action_rev = rev;
+					    doc.answered_action_id = id;
+					    //sauvegarder dans les logs (pour voir l'historique des validations/invalidations)
+					    doc.logs.push({
+						date : new Date().toString(),
+						dateCom : "Answer proposed "+com.created,
+						textCom : com.texte,
+						authorCom : com.auteur,
+						effects : com.effects,
+						text : "VALIDATION"
+					    });
+					    //sauvegarder changements
+					    db.saveDoc(doc, {
+						success: function(data) {
+						    //Afficher la réponse validée
+						    $(".valid-answer").css('display','block');
+						    document.location.reload(true);
+						}
+					    });
+					}
+				    });
+				}
+			    }
+			);  
+		    }
+		});
+	        
+	    }
+
+	    /*
+	     *Pour invalider la réponse selectionnée (et donc pouvoir en valider une autre)
+	     *  + supprimer l'action liée au commentaire que l'on supprime
+	     *@param {string} _id_attribute = id de l'attribut pour lequel on souhaite effacer la réponse selectionnée
+	     */
+	    function invalider(_id_regle, _id_action, _rev_action){
+	    
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+		//Supprimer l'action qui avaité été créé lors de la validation du commentaire
+		//RQ: une fois supprimer, tant qu'un autre commentaire n'est pas validé, on ne
+		//peut plus faire de POST sur l'action (car elle n'existe plus...)
+		db.removeDoc({_id: _id_action, _rev: _rev_action}, {
+		    success: function(doc) {
+			console.log("Action "+_id_action+" deleted");
+		    }
+		});
+		
+		db.openDoc( _id_regle, {
+		    success: function(doc) {
+			//sauvegarder dans les logs (pour voir l'historique des validations/invalidations)
+			doc.logs.push({
+			    date : new Date().toString(),
+			    dateCom : "Validated {{answered_date}}",
+			    textCom : "{{answered_text}}",
+			    authorCom : "{{answered_author}}",
+			    text : "INVALIDATION"
+			});
+			//Remettre les paramètre à leur valeur par défault
+			doc.answered = "no";
+			doc.answered_date = "no";
+			doc.answered_action_rev = "no";
+			doc.answered_action_id = "no";
+			db.saveDoc(doc, {
+			    success: function() {
+				//Supprime l'affichage de la réponse selectionnée
+				//car il n'y a plus de réponse selectionnée
+				$(".valid-answer").css('display','none');
+				document.location.reload(true);
+			    }
+			});
+		    }
+		});
+	    }
+	    
+	    /*
+	    * Afficher le bouton Valider si on est administrateur
+	    */
+	    var role = verifierRole();
+	    var answered = '{{answered}}';
+	    if( (role == "administrateur") && (answered == 'no')){
+		$('.valid').css('visibility','visible');
+		$('.supprimer').css('display','block');
+	    }
+	   
+	   /*
+	    * Afficher le bouton Supprimer si on est modérateur
+	    */
+	    var role = verifierRole();
+	    var answered = '{{answered}}';
+	    if( (role == "moderateur") && (answered == 'no')){
+		$('.valid').css('display','none');
+		$('.supprimer').css('display','block');
+	    }
+	   
+	    /*
+	     * Supprimer un commentaire
+	     * @param {string} _idCom  = ID du commentaire à supprimer.
+	     * @param {string} _revCom  = ID du commentaire à supprimer.
+	     */
+	    function supprimer(_idCom, _revCom){
+		
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+		db.removeDoc({_id:_idCom, _rev: _revCom}, {
+		    success: function(doc) {
+			document.location.reload(true);
+		    }
+		});
+	    }
+	    
+	    /*
+	    * Afficher la réponse validée en avant ou pas dans la description de la regle
+	    */
+	    $("#summary").ready(function(){
+		
+		var answered = '{{answered}}';
+		
+		if( (answered != "no") && (answered != "") ){
+		 
+		    var tableau = document.getElementById("resume");
+		    var ligne = document.createElement("table");
+		    ligne.className = "valid-answer";
+		    
+		    var role = verifierRole();
+		    var text = "<tr><td class='valided'>Effets action</td>\
+			    <td class='message-cell'>\
+				<table>\
+				    <tr>\
+					 <td class='valid-answer-text' id='execution_counter'></td>\
+				    </tr>\
+				    <tr>\
+					 <td class='valid-answer-text' id='executors'></td>\
+				    </tr>\
+				    <tr>\
+					 <td class='valid-answer-text'>{{answered_text}}</td>\
+				    </tr>\
+				    <tr>\
+					<td  id='answered_effects' class='valid-answer-text'><b>Effets</b>:<span>{{#answered_effects}}[{{name}}:{{value}}]{{/answered_effects}}</span>\</td>\
+				    </tr>\
+				</table>\
+			    </td></tr>";
+		     
+		    if(role=="administrateur"){
+		       //Si l'utilisateur est administrateur, il a accès au bouton invalider'
+		      text += "<tr><td class='invalid' onclick='invalider(\"{{id_regle}}\",\"{{answered_action_id}}\",\"{{answered_action_rev}}\")'><a href='#' style='text-decoration: none; color: white;'><div>Invalider</div></a></td>";
+		    }
+		    text += "<td align='right' class='post-author'>{{answered_author}}, validé le {{answered_date}}</td></tr>"
+		    
+		    ligne.innerHTML = text;
+		    tableau.appendChild(ligne);
+		    
+		    //Si l'action n'a aucun effet
+		    if ( $("#answered_effects").text() == "Effets:" ) {
+			$("#answered_effects").append("Cette action n'a aucun effet..."); 
+		    }
+		    
+		}	     
+	    });
+	   
+	    /**
+	    * Pour ajouter le commentaire saisi dans la base de données
+	    */
+	    function ajouterCommentaire(){
+	     
+		var effects_list = [];
+		var validated = true;
+		
+		//Pour chacun des attributs (identifiés par une class "effect_attribute")
+		$(".effect_attribute").each(function(){
+		    var id =  this.id;
+		    
+		    //On vérifie que les valeurs saisies sont bien des entiers
+		    if(check(id) == false){
+			validated = false;
+		    }
+		    
+		    //S'il y a une valeur pour l'attribut et que cette valeur est != 0
+		    if ($("#"+id+"_value").val() && $("#"+id+"_value").val() != 0) {
+			//On push dans le tableau effects_list
+			//Rq : setSignValue permet d'éliminer le + pour les valeurs positives (cf notation json)
+			effects_list.push({
+			    name : id,
+			    value : setSignValue(id)
+			});
+		    }
+		});
+		
+		//S'il y a ne serait ce qu'un attribut on ne va pas plus loin 
+		if ( !validated) {
+		    return;
+		}
+		
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+		//On enregistre le commentaire
+		db.saveDoc({
+			texte : $("#texte_commentaire").val(),
+			auteur : verifierConnexion(),
+			target : '{{id_regle}}',
+			effects : effects_list,
+			created : new Date().toString(),
+			type :  "commentaire-regle",
+			vote_negatif : 0,
+			vote_positif : 0
+		    },
+		    {success: function(data){
+			window.location.reload();
+		    }}
+		);
+		 
+		 
+	    }
+	   
+	    /**
+	    * Pour vérifier si les valeurs saisies sont bien des entiers
+	    * @param {string} _id = id de l'attribut
+	    *
+	    * @returns {boolean} ok = true si pas de soucis, false si la valeur n'est pas un entier
+	    */
+	    function check(_id) {
+		 
+		var ok = true;
+		
+		//S'il y a une valeur
+		if ($("#"+_id+"_value").val()) {
+		    //Si la valeur n'est pas un entier
+		    if ( is_int($("#"+_id+"_value").val()) == false ) {
+			//Afficher une erreur pour le champs correspondant
+			$("#"+_id).append("<span style='color:red;'>Not an int!</span>");
+			//on renverra false (= il y a une erreur)
+			ok = false;
+		    }	
+		}
+		
+		return ok;
+	    }
+	   
+	    /**
+	    * Renvoie une concaténation du signe et de la valeur
+	    * RQ: si l'entier est positif on ne met pas le "+" (cf notation json)
+	    * @param {string} _id = id de l'attribut
+	    *
+	    * @returns {string} le signe suivi de la valeur
+	    * ex: -21 si négatif et 21 si positif
+	    */
+	    function setSignValue(_id) {
+ 
+		 var sign = $("#"+_id+"_sign").val();
+		 var value = $("#"+_id+"_value").val();
+		 
+		 if (sign == "+") {
+		    return parseInt(value);
+		 }
+		 
+		 return parseInt(sign+value);
+	    }
+ 
+	</script>
+      
+    </body>
+    
+</html>

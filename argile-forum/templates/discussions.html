@@ -1,0 +1,286 @@
+<html>
+    
+    <head>
+	
+        <title>Liste des discussions</title>
+	
+	<!--CSS-->
+	<link rel="stylesheet" href="style/forum.css" type="text/css">
+	
+	<!--SCRIPTS COUCHDB-->
+        <script src="/_utils/script/sha1.js"></script>
+  	<script src="/_utils/script/json2.js"></script>
+  	<script src="/_utils/script/jquery.js"></script>
+  	<script src="/_utils/script/jquery.couch.js"></script>
+        <script src="/_utils/script/jquery.form.js"></script>
+	
+	<!--SCRIPTS PERSO-->
+        <script src="js/common.js"></script><!--FONCTIONS COMMUNES A TOUTES LES PAGES (IDENTIFICATION,REGISTER ETC..)-->
+	
+    </head>
+    
+    <body>
+
+	<!--CHARGE AVEC $("#top").load()-->
+        <div id="top"></div>
+        
+        <div id="content">
+	    
+	    <div class="arianne">
+		<h3>
+		    Fils de discussion / <a href='_rewrite/regles'> Règles </a>
+		</h3>
+	    </div>
+	      
+            <div class="topic" id="topic">
+                
+                <table id="topic-summary">
+                    <tr class="topic-row-header">
+                        <td class="topic-summary-row-title">
+                            Titre
+                        </td>
+                        <td class="topic-summary-row">
+                            Date de modifitcation
+                        </td>
+                    </tr>
+
+		    {{#discussions}}
+		    <tr>
+			<td class="topic-summary-row">
+			    <a href='_rewrite/discussion/{{id}}'>{{titre}}</a>
+			</td>
+			<td class="topic-date-row">
+			    {{date_modification}}
+			</td>
+		    </tr>
+		    {{/discussions}}
+                </table>
+                                
+                <div id="nouveau-sujet" class="nouveau-sujet" style="display: none">
+		    
+		    <table>
+			<h4>
+			    Nouveau fil de discussion
+			</h4>
+			
+			<tr>
+			    <td>
+				Titre
+			    </td>
+			    <td>
+				<input type="text" name="title" id="title" value=""/>
+			    </td>
+			</tr>
+			
+			<tr>
+			    <td>
+				Type :
+			    </td>
+			    <td>
+				<select id="select-type">
+				    <option value="scene">Scène</option>
+				    <option value="action">Action</option>
+				    <option value="objet">Objet</option>
+				</select>
+			    </td>
+			</tr>
+			
+			<tr>
+			    <td>
+				Résumé :
+			    </td>
+			    <td>
+				<textarea rows="5" cols="65" id="textarea-sum"></textarea>
+			    </td>
+			</tr>
+			
+			<tr>
+			    <td>Mots-clé (séparés par une virgule)</td>
+			    <td><input type="text" name="mots_cle" id="mots_cle" value=""/></td>
+			</tr>
+			
+			<tr>
+			    <td>
+				Image (1Mo max) :
+			    </td>
+			    <td>
+				<form class="imageForm" method="post" action="" enctype="multipart/form-data">
+				    <input type="text" name="_rev" id="_rev" placeholder="rev)" style="display:none;" />
+				    <input type="file" name="_attachments" id="_attachments" multiple="multiple" />
+				</form>
+			    </td>
+			</tr>
+			
+			<tr>
+			    <td></td>
+			    <td>
+				<a href="#" class="send-button" onclick="creerDiscussion()" style="text-decoration: none">
+				    Créer la discussion
+				</a>
+			    </td>
+			</tr>
+		    </table>
+		    
+                </div>
+		
+            </div>
+	    
+            <!-- Les dix dernières discussions créées -->
+            <div id="discussionsRecentes" class="related">
+		
+                <h4 class="header-related">
+                    Derniers objets créés
+                </h4>
+		
+                <div id="objet-nouveau"></div>
+		
+            </div>
+	    
+        </div>
+	
+        <div id="footer"></div>
+	
+	<script type="text/javascript">
+	    
+	    /*Charge les div #top et #footer*/
+	    $(document).ready(function(){
+		
+		$("#top").load("include/top.html", function(){
+		    
+		    $("#ident").ready(function(){
+			var utilisateur = verifierConnexion();
+			if(utilisateur){                
+			   $("#ident").html('<a href="_rewrite/utilisateur/' + utilisateur + '">' + utilisateur + '</a> - <a href="#" onclick="deconnecter()">Deconnexion</a>');
+			   var formulaire = $("#nouveau-sujet");
+			   formulaire.css('display','block'); 
+			    
+			   var role = verifierRole();
+			}
+		    });
+		    
+		});
+		
+		$("#footer").load("include/footer.html");	
+	    })
+	    
+	    /*
+	    * Créer une nouvelle page de discussion
+	    */
+	    function creerDiscussion(){
+		//On récupère les valeurs du formulaire
+		var titre = $("input#title").val();
+		
+		var mots_cle = $("input#mots_cle").val();
+		mots_cle = mots_cle.split(",");
+		
+		var texte = $("#textarea-sum").val();
+		
+		var typeObjet = document.getElementById("select-type");
+		
+		var val_type_objet = typeObjet.options[typeObjet.selectedIndex].value;
+		
+		//On récupère le nom de l'auteur'
+		var auteur = verifierConnexion();
+		//On crée la nouvelle conversation (fonction dans script.js)
+		nouvelleDiscussion(auteur, titre, texte, val_type_objet, mots_cle, null);       
+	    }
+	   
+	    /*
+	    * Créer une nouvelle discussion
+	    * @param {string}  auteur   Nom de l'auteur
+	    * @param {string}  titre    Titre (ou nom de l'objet) de la nouvelle discussion
+	    * @param {string}  texte    Texte descriptif de la discussion
+	    * @param {string}  type     Type de l'objet de la discussion : scene, objet, action...
+	    * @param {string}  mots_cle Liste des mots-clés associés à une discussion
+	    * @param {array}   lien     Tableau contenant les ID et titres des parents de la discussion
+	    * 
+	    * @return {string}          Retourne l'ID de la disccusion créée
+	    */
+	    function nouvelleDiscussion(auteur, titre, texte, type, mots_cle, lien){
+		
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+		var reload = false;
+		
+		//S'il s'agit d'une nouvelle discussion sans parent/lien'
+		if(lien==null){
+		    var lien = [];
+			    
+		    var rediriger = true;
+		}
+		    
+		var laDate = new Date();
+		
+		db.saveDoc(
+		    {
+			type : "topic", 
+			created: laDate.toString(),
+			modified: laDate.toString(),
+			title: titre, 
+			text: texte,
+			type_objet: type,
+			answered:"no",
+			answered_date:"no",
+			//parents_id:lien,
+			//parents_titre:titres,
+			parents: lien,
+			auteur: auteur,
+			mots_cle: mots_cle
+		    },
+		    {
+			success: function(data){
+			    //Une fois la discution créée, on peut attacher l'image
+			    $('input#_rev').val(data.rev);
+			    $('form.imageForm').ajaxSubmit({
+			      url: "/tx/"+ data.id,
+			      //async:false,
+			      success: function(response) {
+	    
+			      }
+			    })
+			    if(rediriger==true){
+				//On affiche la discussion nouvelle créée (sauf si créée depuis un commentaire
+				window.location = "_rewrite/discussion/" + data.id;
+			    }
+			    //return data.id;
+			}
+		    }
+		);
+	    }
+	   
+	    /*
+	    * Afficher la liste des discussions dernièrement créées
+	    */
+	    $("#discussionsRecentes").ready(function(){
+	     
+		 //Sélectionne la bdd
+		 db = $.couch.db("tx");
+		
+		 db.view("argile-forum/discussions-nouvelles", {
+		    limit: 10,
+		    descending: true,
+		    success: function(data) {
+			var nouveau_titre = [];
+			var nouveau_id = [];
+			for(i in data.rows){
+				//Récupérer les titres et id des discussions liées
+				nouveau_titre.unshift(data.rows[i].value.title);
+				nouveau_id.unshift(data.rows[i].value._id);
+			}
+			//Afficher les discussions récupérées
+			var listeNouveau = document.getElementById("objet-nouveau");
+			for(i in nouveau_titre){
+			    var nouveau = document.createElement("div");
+			    if (nouveau_titre[i]!=undefined) {
+				nouveau.innerHTML = "<a href='_rewrite/discussion/"+nouveau_id[i]+"'>"+nouveau_titre[i]+"</a>";
+			    }
+			    listeNouveau.appendChild(nouveau);
+			}
+		    }
+		});
+	    }); 
+	</script>
+        
+    </body>
+</html>

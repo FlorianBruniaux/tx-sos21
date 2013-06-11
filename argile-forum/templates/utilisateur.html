@@ -1,0 +1,167 @@
+<html>
+    
+    <head>
+	
+        <title>Profil de : {{nomUtilisateur}}</title>
+	
+	<!--CSS-->
+	<link rel="stylesheet" href="../../style/forum.css" type="text/css">
+	
+	<!--SCRIPTS COUCHDB-->
+        <script src="/_utils/script/sha1.js"></script>
+  	<script src="/_utils/script/json2.js"></script>
+  	<script src="/_utils/script/jquery.js"></script>
+  	<script src="/_utils/script/jquery.couch.js"></script> 
+        <script src="/_utils/script/jquery.form.js"></script>
+	
+	<!--SCRIPTS PERSO-->
+        <script src="../../js/common.js"></script><!--FONCTIONS COMMUNES A TOUTES LES PAGES (IDENTIFICATION,REGISTER ETC..)-->
+
+    </head>
+    
+    <body>
+	
+	<!--CHARGE AVEC $("#top").load()-->
+        <div id="top"></div>
+    
+	<div id="content">
+	    
+	    <div id="arborescence" class="arianne">
+		<h3>
+		    <span class="parent"><a href='../../_rewrite'>Accueil</a></span> ><span class="ici"> {{nomUtilisateur}}</span>
+		</h3>
+	    </div>
+	  
+	    <!-- Tableau récapitulatif de l'utiisateur -->  
+	    <div class="topic" id="topic">
+		
+		<table id="topic-summary">
+		    
+		    <tr class="topic-row-header">
+			<td class="topic-summary-row-title">
+    
+			</td>
+			<td class="topic-summary-row">
+    
+			</td>
+		    </tr>
+		    
+		    <tr>
+			<td class="topic-summary-row">
+			    Nom utilisateur :
+			</td>
+			<td class="topic-date-row">
+			    {{nomUtilisateur}}
+			</td>
+		    </tr>
+		    
+		    <tr>
+			<td class="topic-summary-row">
+			    Email :
+			</td>
+			<td class="topic-date-row">
+			    {{email}}
+			</td>
+		    </tr>
+		    
+		    <tr>
+			<td class="topic-summary-row">
+			    Type d'utilisateur :
+			</td>
+			<td class="topic-date-row">
+			    {{type}}
+			</td>
+		    </tr>
+		    
+		</table>
+    
+	    </div>
+	  
+	    <!-- Formulaire de création de compte, réservé au recruteur -->
+	    <div id="ajouter-membres">
+		
+		<h2>
+		    Enregistrer de nouveaux membres :
+		</h2>
+		
+		<form id="form-ajouter-membres">
+		    <input type="text" name="login" id="nouveauNom" required placeholder="Nom d'utilisateur?">
+		    <input type="password" name="mdp" id="nouveauMdp" required placeholder="Mot de passe?">
+		    <input type="email" name="email" id="nouveauEmail" required placeholder="Email?">
+		   
+		    Role :
+		    <select id="nouveauRole">
+			<option value="basique">Basique</option>
+			<option value="moderateur">Modérateur</option>
+			<option value="administrateur">Administrateur</option>
+			<option value="recruter">Recruteur</option>
+		    </select>
+		    
+		    <br /><br />
+		    
+		    <a href="#" class="send-button" onclick="ajouterMembre()" style="text-decoration: none">
+			S'enregistrer
+		    </a>
+		</form>
+		
+	    </div>
+	    
+	</div>
+	
+        <div id="footer"></div>
+        
+	<script type="text/javascript">
+	    
+	    /*Charge les div #top et #footer*/
+	    $(document).ready(function(){
+		
+		$("#top").load("../../include/top.html", function(){
+		    $("#ident").ready(function(){
+			var utilisateur = verifierConnexion();
+			if(utilisateur){                
+			   $("#ident").html('<a href="utilisateur/' + utilisateur + '">' + utilisateur + '</a> - <a href="#" onclick="deconnecter()">Deconnexion</a>');
+			    
+			   var role = verifierRole();
+			}
+		    });
+		});
+		
+		$("#footer").load("../../include/footer.html");
+		
+		/*Pour le lien de retour*/
+		var utilisateur_actuel = verifierConnexion();
+		var utilisateur_lien = "{{nomUtilisateur}}"; 
+		if((!utilisateur_actuel)||(utilisateur_actuel != utilisateur_lien)){
+		    window.location = "../../_rewrite";
+		}
+	    })
+	    
+	    //Si recruteur possibilité d'ajouter des membres
+	    var role = verifierRole();
+	    if(role=="recruteur" || role == "administrateur"){
+		$('#ajouter-membres').css("display","block");
+	    }
+			
+	    
+	    //Enregistrer un nouvel utilisateur
+	    function ajouterMembre(){
+		
+		var login = $('#nouveauNom').val();
+		var mdp = $('#nouveauMdp').val();
+		var email = $('#nouveauEmail').val();
+		var role = $('#nouveauRole').val();
+		
+		//On crée le compte et on réinitialise le formulaire
+		enregistrer(login,mdp,email,role,true);
+		
+		alert("Utilisateur ajouté");
+		
+		$('#nouveauNom').val() == "";
+		$('#nouveauMdp').val() == "";
+		$('#nouveauEmail').val() == "";
+	    }
+
+	</script>
+        
+    </body>
+</html>

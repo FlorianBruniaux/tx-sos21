@@ -1,0 +1,275 @@
+<html>
+    
+    <head>
+	
+        <title>Liste des règles</title>
+	
+	<!--CSS-->
+	<link rel="stylesheet" href="../style/forum.css" type="text/css">
+	
+	<!--SCRIPTS COUCHDB-->
+        <script src="/_utils/script/sha1.js"></script>
+  	<script src="/_utils/script/json2.js"></script>
+  	<script src="/_utils/script/jquery.js"></script>
+  	<script src="/_utils/script/jquery.couch.js"></script>
+        <script src="/_utils/script/jquery.form.js"></script>
+	
+	<!--SCRIPTS PERSO-->
+        <script src="../js/common.js"></script><!--FONCTIONS COMMUNES A TOUTES LES PAGES (IDENTIFICATION,REGISTER ETC..)-->
+	
+    </head>
+    
+    <body>
+	
+	<!--CHARGE AVEC $("#top").load()-->
+	<div id="top"></div>
+        
+        <div id="content">
+	    
+	    <div class="arianne">
+		<h3>
+		    <a href='../_rewrite'>Fils de discussion</a> / Règles
+		</h3>
+	    </div>
+	    
+            <div class="topic" id="topic">
+                
+                <table id="topic-summary">
+                    <tr class="topic-row-header">
+                        <td>
+                            Titre
+                        </td>
+			<td>
+                            Description
+                        </td>
+                        <td>
+                            Date de modification
+                        </td>
+			<td>
+			    Auteur
+			</td>
+                    </tr>
+		    
+		    <!-- Boucle pour afficher les regles  -->
+		    {{#regles}}
+			<tr>
+			    <td>
+				<a href='regle/{{id}}'>{{title}}</a>
+			    </td>
+			    
+			    <td class="description">
+				{{description}}
+			    </td>
+			    
+			    <td>
+				{{date_modification}}
+			    </td>
+			    
+			    <td>
+				{{auteur}}
+			    </td>
+			</tr>
+		    {{/regles}}
+                </table>
+		
+		<table id="attributes" >
+		    
+		    <thead id="attributes_head">
+			<tr class="topic-row-header">
+			    <td>
+				Attribut
+			    </td>
+			    <td>
+				Top
+			    </td>
+			    <td>
+				Flop
+			    </td>
+			</tr>
+		    </thead>
+		    
+		    <tbody id="attributes_body"></tbody>
+		    
+                </table>
+                                
+                <div id="nouvelle-regle" class="nouveau-sujet" style="display: none">
+		    <h4>Nouvelle règle</h4>
+		    <table >
+			<tr>
+			    <td>
+				Nom de l'action :
+			    </td>
+			    <td>
+				<input type="text" name="title" id="title" value=""/>
+			    </td>
+			</tr>
+			
+			<tr>
+			    <td>
+				Description :
+			    </td>
+			    <td>
+				<textarea rows="5" cols="65" id="description"></textarea>
+			    </td>
+			</tr>
+			<tr>
+			    <td></td>
+			    <td>
+				<a href="#" class="send-button" onclick="creerRegle()" style="text-decoration: none">
+				    Créer la règle
+				</a>
+			    </td>
+			</tr>
+		    </table> 
+		</div>
+		
+            </div>
+	    
+            <div id="reglesRecentes" class="related">
+		
+                <h4 class="header-related">
+                    Dernieres regles créés
+                </h4>
+		
+                <div id="objet-nouveau"></div>
+		
+            </div>
+	    
+        </div>
+	
+        <div id="footer"></div>
+    
+	<script type="text/javascript">
+	    
+	    /*Charge les div #top et #footer*/
+	    $(document).ready(function(){
+		
+		$("#top").load("../include/top.html", function(){
+		    
+		    $("#ident").ready(function(){
+			var utilisateur = verifierConnexion();
+			if(utilisateur){                
+			   $("#ident").html('<a href="utilisateur/' + utilisateur + '">' + utilisateur + '</a> - <a href="#" onclick="deconnecter()">Deconnexion</a>');
+			   var formulaire = $("#nouvelle-regle");
+			   formulaire.css('display','block'); 
+			    
+			   var role = verifierRole();
+			}
+		    });
+		    
+		});
+		
+		$("#footer").load("../include/footer.html");	
+	    })
+	    
+	    /*
+	    * Créer une nouvelle règle
+	    */
+	    function creerRegle(){
+	    
+	       //On récupère les valeurs du formulaire
+	       var title = $("input#title").val();
+	       
+	       var description = $("#description").val();
+	       
+	       //On récupère le nom de l'auteur'
+	       var auteur = verifierConnexion();
+	       
+	       //alert(environment +"/"+ energy+"/"+ money+"/"+ reputation);
+	       nouvelleRegle(auteur, title, description );       
+	    }
+		
+	    /*
+	    * Insère la règle en db
+	    * @param {string} _auteur = l'auteur de la règle
+	    * @param {string} _title = le titre de la règle
+	    * @param {string} _description = la description de la règle
+	    */
+	    function nouvelleRegle(_auteur, _title, _description){
+	       
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+		db.saveDoc({
+			type : "regle", 
+			created: new Date().toString(),
+			modified: new Date().toString(),
+			title: _title, 
+			description: _description,
+			answered:"no",
+			answered_date:"no",
+			auteur: _auteur,
+			logs: []
+		    },
+		    {
+			success: function(data){
+			    //On affiche la regle créée 
+			    window.location = "regle/" + data.id;
+			    //return data.id;
+			}
+		    }
+		);
+	    }       
+				
+	    /*
+	     * Afficher la liste des regles dernièrement créées
+	     */
+	    $("#reglesRecentes").ready(function(){
+		
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+		db.view("argile-forum/regles-nouvelles", {
+		    limit: 10,
+		    descending: true,
+		    success: function(data) {
+			
+			var nouveau_titre = [];
+			var nouvel_id = [];
+			
+			for(i in data.rows){
+			    //Récupérer les titres et id des discussions liées
+			    nouveau_titre.unshift(data.rows[i].value.title);
+			    nouvel_id.unshift(data.rows[i].value._id);
+			}
+			
+			//Afficher les discussions récupérées
+			var listeNouveau = document.getElementById("objet-nouveau");
+			for(i in nouveau_titre){
+			    var nouveau = document.createElement("div");
+			    if (nouveau_titre[i]!=undefined) {
+				nouveau.innerHTML = "<a href='regle/"+nouvel_id[i]+"'>"+nouveau_titre[i]+"</a>";
+			    }
+			    listeNouveau.appendChild(nouveau);
+			}
+		    }
+		});
+	    });
+	    
+	    /*Rempli le tableau présentant les attributs avec leur top/flop */
+	    $("#attributs_body").ready(function(){
+		
+		//Sélectionne la bdd
+		db = $.couch.db("tx");
+		
+		db.view("argile-forum/effects-attributes", {
+		    descending: true,
+		    success: function(data) {
+			for(i in data.rows){
+			    $("#attributes_body").append(
+				"<tr>\
+				   <td><a href='commentaires_attributes/"+data.rows[i].value._id+"'>"+data.rows[i].key[1]+"</a></td>\
+				   <td>"+data.rows[i].value.top+"</td>\
+				   <td>"+data.rows[i].value.flop+"</td>\
+				</tr>"
+			    )
+			}
+		    }
+	      });
+	    })
+
+	</script>
+	
+    </body>
+    
+</html>

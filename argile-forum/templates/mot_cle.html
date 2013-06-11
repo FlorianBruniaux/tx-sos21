@@ -1,0 +1,138 @@
+<html>
+    
+    <head>
+	
+        <title>Discussions ayant le mot-clé : {{cle}}</title>
+	
+	<!--CSS-->
+	<link rel="stylesheet" href="../../style/forum.css" type="text/css">
+	
+	<!--SCRIPTS COUCHDB-->
+        <script src="/_utils/script/sha1.js"></script>
+  	<script src="/_utils/script/json2.js"></script>
+  	<script src="/_utils/script/jquery.js"></script>
+  	<script src="/_utils/script/jquery.couch.js"></script>
+        <script src="/_utils/script/jquery.form.js"></script>
+	
+	<!--SCRIPTS PERSO-->
+        <script src="../../js/common.js"></script><!--FONCTIONS COMMUNES A TOUTES LES PAGES (IDENTIFICATION,REGISTER ETC..)-->
+	
+    </head>
+    
+    <body>
+	
+	<!--CHARGE AVEC $("#top").load()-->
+	<div id="top"></div>
+          
+        <div id="arborescence">
+	    
+            <div class="menus">
+		
+                <h3>
+                    <span class="parent"><a href='../../_rewrite'>Accueil</a></span>
+                    >
+                    <span class="ici"><a href="#">Mot-clé : {{cle}}</a></span>
+                </h3>
+		
+            </div>
+	    
+        </div>
+	
+        <div id="content">
+	    
+            <div class="topic" id="topic">
+		
+                <table id="topic-summary">
+		    
+                    <tr class="topic-row-header">
+                        <td class="topic-summary-row-title">
+                            Titre
+                        </td>
+                        <td class="topic-summary-row">
+                            Date de modifitcation
+                        </td>
+                    </tr>
+		    
+		    {{#discussions}}
+		    <tr>
+			<td class="topic-summary-row">
+			    <a href='../discussion/{{id}}'>{{titre}}</a>
+			</td>
+			<td class="topic-date-row">
+			    {{date_modification}}
+			</td>
+		    </tr>
+		    {{/discussions}}
+                </table>
+		
+            </div>
+	    
+            <div id="discussionsRecentes">
+		
+                <h4 class="header-related">
+                    Derniers objets créés
+                </h4>
+		
+                <div id="objet-nouveau"></div>
+		
+            </div>
+	    
+        </div>
+	
+        <div id="footer"></div>
+	
+	<script type="text/javascript">
+	    
+	    /*Charge les div #top et #footer*/
+	    $(document).ready(function(){
+		
+		$("#top").load("../../include/top.html", function(){
+		    
+		    $("#ident").ready(function(){
+			var utilisateur = verifierConnexion();
+			if(utilisateur){                
+			   $("#ident").html('<a href="utilisateur/' + utilisateur + '">' + utilisateur + '</a> - <a href="#" onclick="deconnecter()">Deconnexion</a>');
+			   var role = verifierRole();
+			}
+		    });
+		    
+		});
+		
+		$("#footer").load("../../include/footer.html");	
+	    })
+	    
+	    /*
+	    * Afficher la liste des discussions dernièrement créées
+	    */
+	    $("#discussionsRecentes").ready(function(){
+	    
+		//Sélectionne la bdd
+	        db = $.couch.db("tx");
+		
+	        db.view("argile-forum/discussions-nouvelles", {
+		   limit: 10,
+		   success: function(data) {
+		       var nouveau_titre = [];
+		       var nouveau_id = [];
+		       for(i in data.rows){
+			       //Récupérer les titres et id des discussions liées
+			       nouveau_titre.unshift(data.rows[i].value.title);
+			       nouveau_id.unshift(data.rows[i].value._id);
+		       }
+	   
+		       var listeNouveau = document.getElementById("objet-nouveau");
+		       for(i in nouveau_titre){
+			   var nouveau = document.createElement("div");
+			   if (nouveau_titre[i]!=undefined) {
+			       nouveau.innerHTML = "<a href='../discussion/"+nouveau_id[i]+"'>"+nouveau_titre[i]+"</a>";
+			   }
+			   listeNouveau.appendChild(nouveau);
+		       }
+		   }
+	       });
+	   });
+		   
+	</script>
+	
+    </body>
+</html>
