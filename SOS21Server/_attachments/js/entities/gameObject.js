@@ -9,7 +9,7 @@ define(['entities', 'lib/melon', 'server', 'client'], function(entities, melon, 
 			this.updateColRect(settings.colRect.x, settings.colRect.w, settings.colRect.y, settings.colRect.h);
 			this.setVelocity(0,0);
 			
-			me.input.registerMouseEvent("mousedown", this.collisionBox, function(e){
+			me.input.registerPointerEvent("mousedown", this.collisionBox, function(e){
 				me.event.publish("objectClicked");
 			});
 			this.mouseDown = (function(){
@@ -17,7 +17,7 @@ define(['entities', 'lib/melon', 'server', 'client'], function(entities, melon, 
 			}).bind(this);
 			this.unregisterMouseClick = (function(){
 				var mouse = entities.getMouse();
-				if (!this.collisionBox.containsPoint(new me.Vector2d(mouse.x, mouse.y)) && this.hasBeenClicked) {
+				if (!this.collisionBox.containsPoint(mouse.x, mouse.y) && this.hasBeenClicked) {
 					this.hasBeenClicked = false;
 				}
 			}).bind(this);
@@ -45,7 +45,7 @@ define(['entities', 'lib/melon', 'server', 'client'], function(entities, melon, 
 		},
 		mouseOver: function(){
 			var mouse = entities.getMouse();
-			if (this.collisionBox.containsPoint(new me.Vector2d(mouse.x, mouse.y))) {
+			if (this.collisionBox.containsPoint(mouse.x, mouse.y)) {
 				this.renderable.flicker(10);
 			}
 		},

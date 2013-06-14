@@ -17,8 +17,8 @@ define(['lib/melon'], function(melon){
     
     api.tileToPx = function(x, y){
             var obj = {};
-            obj.x = Math.ceil(x*me.game.collisionMap.tilewidth);
-            obj.y = Math.ceil(y*me.game.collisionMap.tileheight);
+            obj.x = Math.ceil(x*me.game.collisionMap.tilewidth) + me.game.collisionMap.tilewidth;
+            obj.y = Math.ceil(y*me.game.collisionMap.tileheight) + me.game.collisionMap.tileheight;
             return obj;
     } 
     
@@ -55,8 +55,8 @@ define(['lib/melon'], function(melon){
 	
 	api.getMouse = function(){
 		return {
-			x: me.input.touches[0].x + me.game.viewport.pos.x,
-			y: me.input.touches[0].y + me.game.viewport.pos.y
+			x: me.input.mouse.pos.x+me.game.viewport.pos.x,
+			y: me.input.mouse.pos.y+me.game.viewport.pos.y
 		};
 }
     return api; 

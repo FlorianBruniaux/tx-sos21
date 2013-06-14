@@ -32,10 +32,10 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'maps', 'client/debu
             me.game.sort();
             //server.longpoll(0, ressources.players.mainPlayer.pseudo);
             server.registerListeners(player);
-			
-			me.input.registerMouseEvent("mousemove", me.game.viewport, function(e){
-                me.game.HUD.setItemValue("mouseX", me.input.touches[0].x+me.game.viewport.pos.x);
-				me.game.HUD.setItemValue("mouseY", me.input.touches[0].y+me.game.viewport.pos.y);
+			// DEBUG
+			me.input.registerPointerEvent("mousemove", me.game.viewport, function(e){
+                me.game.HUD.setItemValue("mouseX", me.input.mouse.pos.x+me.game.viewport.pos.x);
+				me.game.HUD.setItemValue("mouseY", me.input.mouse.pos.y+me.game.viewport.pos.y);
             });
         },
         loadPathFinding: function(){

@@ -9,7 +9,7 @@ define(['maps', 'entities'], function(maps, entities){
             map.bg.forEach(function(bg){ // ajout des ressources tiles
                 ressources.g_ressources.push({name : bg, type : "image", src : maps.bg_folder+bg+".png"});
             });
-            ressources.g_ressources.push({name : map.name, type : "tmx", src : maps.maps_folder+map.name+".tmx"}); // ajout de la carte TMX
+            ressources.g_ressources.push({name : map.name, type : "tmx", src : maps.maps_folder+map.name+".json"}); // ajout de la carte TMX
         });
     }
     if(entities.entities){
@@ -31,7 +31,7 @@ define(['maps', 'entities'], function(maps, entities){
 			"y": 200,
 			"spriteheight": 93,
 			"spritewidth": 84,
-			"colRect": {"x": 5,"w": 35,"y": 5,"h":80}
+			"colRect": {"x": 5,"w": 35,"y": 65,"h":20}
 		}
 	];
 	

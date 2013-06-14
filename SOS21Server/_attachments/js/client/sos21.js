@@ -50,7 +50,7 @@ define(['lib/melon',
 			// debug renders
 			me.debug.renderHitBox = true; // debug - hitbox
 			me.debug.renderVelocity = true; // melon v0.9.7+
-			me.debug.renderCollisionMap = true; // melon v0.9.7+
+			//me.debug.renderCollisionMap = true; // melon v0.9.7+
 			//-------------------------------------------------
 			// init play screen
 			me.state.set(me.state.PLAY, new PlayScreen()); // définir l'écran de jeu

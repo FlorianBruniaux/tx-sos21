@@ -44,7 +44,6 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
             if(x != this.pos.x && y != this.pos.y){
                 var endTile = entities.pxToTile(x, y);
                 //var endTile = me.game.collisionMap.getTile(x, y);
-                console.log(this.position);
                 var startTile = entities.pxToTile(this.position.x, this.position.y);
                 if(!(startTile.x==endTile.x && startTile.y==endTile.y)){
                     var grid = me.game.collisionMap.collisionGrid.clone();

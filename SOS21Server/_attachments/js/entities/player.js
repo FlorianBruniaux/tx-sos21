@@ -3,7 +3,7 @@ define(['entities', 'lib/melon', 'server', 'entities/sos21Player'], function(ent
             init: function(x, y, settings){
                 this.parent(x,y,settings);
                 // mouse controls 
-                me.input.registerMouseEvent("mousedown", me.game.viewport, function(e){
+                me.input.registerPointerEvent("mousedown", me.game.viewport, function(e){
                     me.event.publish("mousedown");
                 });
                 this.mouseDown = (function(){
@@ -12,7 +12,6 @@ define(['entities', 'lib/melon', 'server', 'entities/sos21Player'], function(ent
                     this.moveTo(mouse.x, mouse.y);
                 }).bind(this);
                 me.event.subscribe("mousedown", this.mouseDown);
-                console.log(this.collisionBox);
             },
             moveTo: function(x, y){
                 //y -= this.height*0.8;
