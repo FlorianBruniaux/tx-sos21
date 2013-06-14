@@ -1,7 +1,7 @@
 define(['entities', 'lib/melon', 'server', 'client'], function(entities, melon, server, client){
 
 	var GameObject = me.CollectableEntity.extend({
-		effets: {},
+		action: [],
 		hasBeenClicked: false,
 		init: function(x, y, settings){
 			this.servData = (settings.image != null) ? settings : {image: settings.name};
