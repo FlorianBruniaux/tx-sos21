@@ -32,7 +32,14 @@ define(['lib/melon', 'client/scene'],
             resData["src"] = scene.getResFolder() + res.image.substr(2, res.image.length);
             g_ressources.push(resData);
          });
-         g_ressources.push({name : currentMap.name, type : "tmx", src : scene.getResFolder() + "/maps/" + currentMap.name+".tmx"})
+         currentMap.players.forEach(function(player){
+            var playerData = {};
+            playerData["name"] = player.image;
+            playerData["type"] = "image";
+            playerData["src"] = scene.getResFolder() + player.file;
+            g_ressources.push(playerData);
+         });
+         g_ressources.push({name : currentMap.name, type : "tmx", src : scene.getResFolder() + "/maps/" + currentMap.file})
          console.log(g_ressources);
          me.loader.preload(g_ressources);
          //me.loader.load(tileset,
