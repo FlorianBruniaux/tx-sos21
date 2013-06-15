@@ -12,7 +12,7 @@ require.config({
     packages: ["client", "entities", "event", "maps", "gui", "screen", "server"]
 });
 
-require(['jquery', 'client/sos21'], function($, sos21){
+require(['jquery', 'client/game'], function($, sos21){
     //formulaire d'upload des maps
     $("#form_addMap").submit(function(event){
         event.preventDefault();
