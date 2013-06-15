@@ -3,7 +3,6 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator'], f
     var api = {};
     api.map = null;
     api.mainPlayer = {};
-    api.players = [];
     api.objects = []
     
     api.getResFolder = function(){
@@ -14,6 +13,9 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator'], f
         if (!this.map) {
             console.log("server.getCurrentMap("+this.mainPlayer.place+")")
             this.map = server.getCurrentMap(this.mainPlayer.place);
+        }
+        if (this.mainPlayer._id && this.map.name) {
+            this.map["players"] = server.getOtherPlayers(this.map.name, this.mainPlayer._id);   
         }
         return this.map;
     }
