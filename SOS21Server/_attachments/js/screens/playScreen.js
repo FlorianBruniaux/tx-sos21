@@ -66,6 +66,20 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'gui/debugHUD', 'cli
             //me.game.collisionMap.pathfinder = new PF.AStarFinder();
 	    me.game.collisionMap.pathfinder = new PF.JumpPointFinder();
         },
+	initEntities: function(){
+            //var player = me.entityPool.newInstanceOf("mainPlayer", ressources.players.mainPlayer.x, ressources.players.mainPlayer.y, ressources.players.mainPlayer);
+            //me.game.add(player, 3);
+            //ressources.players.otherPlayers.forEach(function(obj){
+            //    var pos = (obj.x && obj.y) ? {"x":obj.x, "y":obj.y} : {"x":me.game.viewport.limits.x/2, "y":me.game.viewport.limits.y/2};
+            //    var otherPlayer = me.entityPool.newInstanceOf("otherPlayer", pos.x, pos.y, obj);
+            //    me.game.add(otherPlayer, 4);
+            //});
+            //// add objects
+            //ressources.objects.forEach(function(obj){
+            //    var gameObject = me.entityPool.newInstanceOf("gameObject", obj.x, obj.y, obj);
+            //    me.game.add(gameObject, 5);
+            //});
+        },
         onDestroyEvent: function(){
             me.game.disableHUD();
         }
