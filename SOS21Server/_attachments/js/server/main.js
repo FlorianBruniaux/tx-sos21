@@ -105,44 +105,49 @@ define(['jquery', 'lib/melon'], function($, melon){
             return output
         };
         
-        out.longpoll = function (lastseq, pseudo){
-            var _this = this;
-            data = {"feed":"longpoll","since": lastseq, "heartbeat": 3000};
-            req = $.ajax({
-                url: serverUrl+"/_changes?filter=SOS21Server/other_players&pseudo="+pseudo, // ~
-                type: "GET",
-                data: data,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json"
-            });
-
-            req.done(function(dataChange){
-                var maj = $.ajax({
-                    url: serverUrl+"/"+dataChange.results[0].id,
-                    type: "GET",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json"
-                });
-            
-                maj.done(function(dataPerso){
-                    /*if (me.game.getEntityByGUID(dataChange.results[0].id)) {
-                            me.game.getEntityByGUID(dataChange.results[0].id).longpollMvt(dataPerso.x, dataPerso.y);
-                    }*/
-                    
-                    _this.longpoll(dataChange.results[dataChange.results.length-1].seq, pseudo);
-                    
-                });
-            // maj.fail();
-            });  
-        // req.fail();
-        };
+        //out.longpoll = function (lastseq, pseudo){
+        //    var _this = this;
+        //    data = {"feed":"longpoll","since": lastseq, "heartbeat": 3000};
+        //    req = $.ajax({
+        //        url: serverUrl+"/_changes?filter=SOS21Server/other_players&pseudo="+pseudo, // ~
+        //        type: "GET",
+        //        data: data,
+        //        contentType: "application/json; charset=utf-8",
+        //        dataType: "json"
+        //    });
+        //
+        //    req.done(function(dataChange){
+        //        var maj = $.ajax({
+        //            url: serverUrl+"/"+dataChange.results[0].id,
+        //            type: "GET",
+        //            contentType: "application/json; charset=utf-8",
+        //            dataType: "json"
+        //        });
+        //    
+        //        maj.done(function(dataPerso){
+        //            /*if (me.game.getEntityByGUID(dataChange.results[0].id)) {
+        //                    me.game.getEntityByGUID(dataChange.results[0].id).longpollMvt(dataPerso.x, dataPerso.y);
+        //            }*/
+        //            
+        //            _this.longpoll(dataChange.results[dataChange.results.length-1].seq, pseudo);
+        //            
+        //        });
+        //    // maj.fail();
+        //    });  
+        //// req.fail();
+        //};
         
         //must be binded to an obj type player (that is the point of view)
         out.registerListeners = function(mainPlayer){
             if (window.EventSource) {
                 this.listener = this.listener || {players: null};
                 this.listener.players = this.listener.players || (function(){
-                    var source = new EventSource(serverUrl+"/_changes?feed=eventsource&filter=SOS21Server/other_players&limit=1&descending=true&param="+mainPlayer.servData._id);
+                    var source = new EventSource(serverUrl+("/_changes?feed=eventsource&filter=SOS21Server/other_players"
+                                                            +"&limit=1"
+                                                            +"&include_docs=true"
+                                                            +"&descending=true"
+                                                            +"&mainPlayer="+mainPlayer.servData._id)
+                                );
                     source.addEventListener("message", this.parseEventData, false)
                     return source;
                 }.bind(this)());
@@ -161,6 +166,28 @@ define(['jquery', 'lib/melon'], function($, melon){
                 //me.event.publish("moveTo", [couchData._id, couchData.x, couchData.y]);
             });
         };
+        
+        out.getCurrentMap = function(mapName){
+            var output = null;
+            var req = $.ajax({
+                url : serverUrl + "/" + "_design/SOS21Server/_view/places_by_name",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({"key": mapName}),
+                dataType: "json",
+                async: false
+            });
+            req.done(function(data){
+                console.log(data);
+                output = data.rows[0].value;
+            });
+            return output;
+        };
+        
+        out.getAttachmentsURL = function(){
+            return serverUrl+"/_design/SOS21Server";
+        }
+        
         return out;    
     })();
     return server;
