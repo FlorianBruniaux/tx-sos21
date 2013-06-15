@@ -51,7 +51,7 @@ $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
        16,
        20
    ],
-   "image": "joueur",
+   "image": "default",
    "spriteheight": 70,
    "spritewidth": 60,
    "type": "character"
