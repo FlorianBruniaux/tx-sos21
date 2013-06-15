@@ -13,6 +13,28 @@ require.config({
 });
 
 require(['jquery', 'client/sos21'], function($, sos21){
+    //formulaire d'upload des maps
+    $("#form_addMap").submit(function(event){
+        event.preventDefault();
+        var fileMap = $("#mapChooser").get(0).files[0];
+        console.log(fileMap);
+        var reader = new FileReader();
+        reader.readAsBinaryString(fileMap);
+        reader.onloadend = function(e){
+            dataToSend = JSON.parse(e.target.result);
+            dataToSend["file"] = fileMap.name;
+            dataToSend["name"] = fileMap.name.substr(0, fileMap.name.length - fileMap.name.match(/\..*/)[0].length);
+            dataToSend["type"] = "place";
+            console.log(dataToSend["name"]);
+            $.ajax({
+                url: "http://localhost:5984/sos21",
+                method: "POST",
+                contentType: "application/json; charset=UTF-8",
+                data: JSON.stringify(dataToSend)
+            });
+        }
+    });
+    //formulaire de connexion au jeu
     $("#form_login").submit(function(event){
         event.preventDefault();
 		
