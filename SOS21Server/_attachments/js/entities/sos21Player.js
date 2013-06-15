@@ -2,11 +2,12 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
     
     var Sos21Player = me.ObjectEntity.extend({
         
-        init: function(x, y, settings){  
-            this.servData = (settings.image != null) ? settings : {image: entities.defaultPlayer.skin, spriteheight: entities.defaultPlayer.height, spritewidth: entities.defaultPlayer.width};
-            this._id = this.GUID = this.servData._id ? this.servData._id : null;
+        init: function(x, y, settings){
+            this.servData = settings;
+            this.skin = (settings.image != null)?entities.getSkin(settings.image):entities.getSkin("default");
+            this._id = this.servData._id ? this.servData._id : null;
             this._rev = this.servData._rev ? this.servData._rev: null;
-            this.parent(x, y, {image: this.servData.image, spriteheight: this.servData.spriteheight, spritewidth: this.servData.spritewidth});
+            this.parent(x, y, {image: this.skin.name, spriteheight: this.skin.height, spritewidth: this.skin.width});
             this.setVelocity(2, 2);
             this.updateColRect(25, 10, 55, 5);
             this.tmp_pos = {"x":this.pos.x, "y":this.pos.y};
@@ -16,8 +17,8 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
             this.position = {x: 0, y: 0};
             this.updatePosition();
             //animationSheet
-            for(var name in entities.defaultPlayer.animationSheet){
-                this.renderable.addAnimation(name, entities.defaultPlayer.animationSheet[name]);
+            for(var name in this.skin.animationSheet){
+                this.renderable.addAnimation(name, this.skin.animationSheet[name]);
             }
             this.direction = {x: "", y:""};
             this.currentAnimation = {action: "stand", x: "", y:""};

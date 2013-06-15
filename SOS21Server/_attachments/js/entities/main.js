@@ -4,11 +4,11 @@ define(['lib/melon'], function(melon){
     //var serveurURL = "http://localhost:5984/sos21";
     api.entities_folder = "data/images/player/";
 	api.objects_folder = "data/images/objects/";
-    api.entities = [{name: "default"}];
+    api.entities = [{name: "default"},{name:"skinPersoTest"}];
 	api.objects = [{name: "obj1"}];
 		
-	api.defaultPlayer = {
-		skin: "default",
+	api.defaultSkin = {
+		name: "default",
 		height: 70,
 		width: 60,
 		animationSheet: {
@@ -21,7 +21,6 @@ define(['lib/melon'], function(melon){
 			"stand-down-right": [2],
 			"stand-up-right":   [0],
 			"stand-up-left":   	[6],
-			
 			"run-down":         [3,11,19,27,35,43,51,59,67],
 			"run-up":           [7,15,23,31,39,47,55,63,71],
 			"run-left":         [5,13,21,29,37,45,53,61,69],
@@ -31,6 +30,22 @@ define(['lib/melon'], function(melon){
 			"run-up-right":     [0,8,16,24,32,40,48,56,64],
 			"run-up-left":     	[6,14,22,30,38,46,54,62,70]
 		}
+	};
+	
+	api.getSkin = function(skinName){ // revoir la condition (erreur 404 à éviter)
+		var img = new Image();
+		img.src = this.entities_folder+skinName+".png"; // ~ genère erreur 404 si fichier inexistant
+		var skin = {};
+		if (img.height != 0) { // TODO : récupérer un vrai skin depuis la DB
+			skin.name = skinName;
+			skin.height = this.defaultSkin.height;
+			skin.width = this.defaultSkin.width;
+			skin.animationSheet = this.defaultSkin.animationSheet;
+		}
+		else{
+			skin = this.defaultSkin;
+		}
+		return skin;
 	};
     
     //CALCUL ORTHO  
