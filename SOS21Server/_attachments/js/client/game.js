@@ -45,10 +45,10 @@ define(['lib/melon',
 	
 	// set all resources to be loaded (callback for ressources loaded event)
 	me.loader.onload = this.loaded.bind(this); //why nunu ?
-	//g_ressources vient de la scene
-	//console.log(ressources.g_ressources)
-	//me.loader.preload(ressources.g_ressources);
-	
+	//init entitypool (travail de entities/main.js ?)
+	me.entityPool.add("mainPlayer", Player);
+	me.entityPool.add("otherPlayer", OtherPlayer, true);
+	me.entityPool.add("gameObject", GameObject, true);
 	// set the "Loading" Screen Object
 	me.state.set(me.state.LOADING, new LoadingScreen());
 	scene.setMainPlayer(mainPlayerPseudo);
