@@ -9,7 +9,7 @@ require.config({
     paths: {
         'jquery': 'lib/jquery-1.10.0.min'
     },
-    packages: ["client", "entities", "maps", "server"]
+    packages: ["client", "entities", "event", "maps", "gui", "screen", "server"]
 });
 
 require(['jquery', 'client/sos21'], function($, sos21){
