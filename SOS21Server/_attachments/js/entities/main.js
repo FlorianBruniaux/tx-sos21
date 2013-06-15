@@ -2,7 +2,7 @@ define(['lib/melon'], function(melon){
     var api = api || {};
     
     //var serveurURL = "http://localhost:5984/sos21";
-    api.entities_folder = "data/images/sprites/";
+    api.entities_folder = "data/images/player/";
 	api.objects_folder = "data/images/objects/";
     api.entities = [{name: "default"}];
 	api.objects = [{name: "obj1"}];
