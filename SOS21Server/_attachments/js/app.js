@@ -12,7 +12,7 @@ require.config({
     packages: ["client", "entities", "event", "maps", "gui", "screen", "server"]
 });
 
-require(['jquery', 'client/game'], function($, sos21){
+require(['jquery', 'client/game'], function($, Game){
     //formulaire d'upload des maps
     $("#form_addMap").submit(function(event){
         event.preventDefault();
@@ -37,7 +37,7 @@ require(['jquery', 'client/game'], function($, sos21){
     //formulaire de connexion au jeu
     $("#form_login").submit(function(event){
         event.preventDefault();
-		
+	var sos21 = new Game("sos21"); 	
         if(sos21.login($(this).find("input[name='pseudo']").val())){
 			$("#sos21").show();
 			$(this).fadeOut();
