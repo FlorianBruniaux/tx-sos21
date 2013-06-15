@@ -1,8 +1,9 @@
 define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
     
     var Sos21Player = me.ObjectEntity.extend({
+        
         init: function(x, y, settings){  
-            this.servData = (settings.image != null) ? settings : {image: "joueur", spriteheight: 70, spritewidth: 60};
+            this.servData = (settings.image != null) ? settings : {image: entities.defaultPlayer.skin, spriteheight: entities.defaultPlayer.height, spritewidth: entities.defaultPlayer.width};
             this._id = this.GUID = this.servData._id ? this.servData._id : null;
             this._rev = this.servData._rev ? this.servData._rev: null;
             this.parent(x, y, {image: this.servData.image, spriteheight: this.servData.spriteheight, spritewidth: this.servData.spritewidth});
@@ -14,14 +15,42 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
             this.cache_path = [];
             this.position = {x: 0, y: 0};
             this.updatePosition();
+            //animationSheet
+            for(var name in entities.defaultPlayer.animationSheet){
+                this.renderable.addAnimation(name, entities.defaultPlayer.animationSheet[name]);
+            }
+            this.direction = {x: "", y:""};
+            this.currentAnimation = {action: "stand", x: "", y:""};
+            this.renderable.setCurrentAnimation(this.getCurrentAnimation());
         },
         updatePosition: function(){
             this.position.x = ( (this.collisionBox.pos.x+this.collisionBox.colPos.x) + this.collisionBox.width/2);
             this.position.y = ( (this.collisionBox.pos.y+this.collisionBox.colPos.y) + this.collisionBox.height/2);
         },
+        updateAnimation: function(){
+            var animation = {};
+            if (this.direction.x || this.direction.y) {
+                animation.action = "run";
+                animation.y = (this.direction.y)?this.direction.y:"";
+                animation.x = (this.direction.x)?this.direction.x:"";
+            }else{
+                animation.action = "stand";
+                animation.y = this.currentAnimation.y;
+                animation.x = this.currentAnimation.x;
+            }
+            this.currentAnimation = animation;
+            this.renderable.setCurrentAnimation(this.getCurrentAnimation());
+        },
+        getCurrentAnimation: function(){
+            str = (this.currentAnimation.action)?this.currentAnimation.action:"stand";
+            str += (this.currentAnimation.y)?"-"+this.currentAnimation.y:"";
+            str += (this.currentAnimation.x)?"-"+this.currentAnimation.x:"";
+            return str;
+        },
         update: function() {
             this.updatePosition();
             this.computePath();
+            this.updateAnimation();
             // check & update player movement
             this.updateMovement();
             
@@ -88,22 +117,28 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
                     // Calcul de la vélocité pour aller sur la position // me.timer.tick
                     if(this.tmp_pos.x>this.position.x){
                             this.vel.x = this.tmp_pos.x - this.position.x;
+                            this.direction.x = "right";
                     }
                     else if(this.tmp_pos.x<this.position.x){
                             this.vel.x = this.tmp_pos.x - this.position.x;
+                            this.direction.x = "left";
                     }
                     else{
                             this.vel.x = 0;
+                            this.direction.x = "";
                     }
                     
                     if(this.tmp_pos.y>this.position.y){
                             this.vel.y = this.tmp_pos.y - this.position.y;
+                            this.direction.y = "down";
                     }
                     else if(this.tmp_pos.y<this.position.y){
                             this.vel.y = this.tmp_pos.y - this.position.y;
+                            this.direction.y = "up";
                     }
                     else{
                             this.vel.y = 0;
+                            this.direction.y = "";
                     }
                 }
             }
