@@ -12,14 +12,15 @@ define(['lib/melon'], function(melon){
 		height: 70,
 		width: 60,
 		animationSheet: {
-			"stand-down":       [35],
-			"stand-up":         [39],
-			"stand-left":       [37],
-			"stand-right":      [33],
-			"stand-down-left":  [36],
-			"stand-down-right": [34],
-			"stand-up-left":    [32],
-			"stand-up-right":   [38],
+			"stand":			[3], // default stand animation
+			"stand-down":       [3],
+			"stand-up":         [7],
+			"stand-left":       [5],
+			"stand-right":      [1],
+			"stand-down-left":  [4],
+			"stand-down-right": [2],
+			"stand-up-right":   [0],
+			"stand-up-left":   	[6],
 			
 			"run-down":         [3,11,19,27,35,43,51,59,67],
 			"run-up":           [7,15,23,31,39,47,55,63,71],
