@@ -67,6 +67,8 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'gui/debugHUD', 'cli
 	    me.game.collisionMap.pathfinder = new PF.JumpPointFinder();
         },
 	initEntities: function(){
+	    var mainPlayer = me.entityPool.newInstanceOf("mainPlayer", ressources.players.mainPlayer.x, ressources.players.mainPlayer.y, ressources.players.mainPlayer);
+	    me.game.add(mainPlayer, 3);
 	    var players = scene.players;
 	    players.forEach(function(obj){
 	        var pos = (obj.x && obj.y) ? {"x":obj.x, "y":obj.y} : {"x":me.game.viewport.limits.x/2, "y":me.game.viewport.limits.y/2};
