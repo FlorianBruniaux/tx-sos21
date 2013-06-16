@@ -86,24 +86,42 @@ define(['jquery', 'lib/melon', 'entities'], function($, melon, entities){
         
         out.getMapData = function(map){
             var mapData = [];
-            var get_otherPlayers_info = $.ajax({
+            var get_mapData_info = $.ajax({
                 url: serverUrl+"/_design/SOS21Server/_view/data_by_place?key="+JSON.stringify(map),
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
                 async: false,
                 dataType: "json"
             });
-            get_otherPlayers_info.done(function(data){
+            get_mapData_info.done(function(data){
                 data.rows.forEach(function(row){
-                    if (row.id == map) {
-                        mapData.push(row.value);
-                    }
+                    mapData.push(row.value);
                 });
             });
-            get_otherPlayers_info.fail(function(){
+            get_mapData_info.fail(function(){
                 return null;
             });
             return mapData;
+        };
+        
+        out.getMapObjects = function(map){
+            var mapObjects = [];
+            var getMapObjects_info = $.ajax({
+                url: serverUrl+"/_design/SOS21Server/_view/objects_by_place?key="+JSON.stringify(map),
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                async: false,
+                dataType: "json"
+            });
+            getMapObjects_info.done(function(data){
+                data.rows.forEach(function(row){
+                    mapObjects.push(row.value);
+                });
+            });
+            getMapObjects_info.fail(function(){
+                return null;
+            });
+            return mapObjects;
         };
         
         out.updatePlayerPosition = function(playerData, x, y){

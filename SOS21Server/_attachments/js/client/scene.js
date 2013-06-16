@@ -23,6 +23,12 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator'], f
             this.players = server.getOtherPlayers(this.mainPlayer.place, this.mainPlayer._id);   
         }
     }
+    
+    api.setObjects = function(){
+        if (this.mainPlayer.place && this.mainPlayer._id ) {
+            this.objects = server.getMapObjects(this.mainPlayer.place);   
+        }
+    }
 
     api.getMapUrl = function(){
         return server.getServerUrl() + "/" + "_design/SOS21Server/_rewrite/getMap/"+this.mainPlayer.place+"/.json";

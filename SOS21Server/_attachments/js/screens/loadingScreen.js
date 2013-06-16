@@ -23,6 +23,7 @@ define(['lib/melon', 'client/scene', 'entities'],
          me.loader.unloadAll();
          scene.setPlayers();
          scene.setMapData();
+         scene.setObjects();
          var g_ressources = [];
          var mainPlayerData = {};
          mainPlayerData["name"] = scene.mainPlayer.image;
