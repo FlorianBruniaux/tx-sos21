@@ -1,16 +1,28 @@
 define(['lib/melon'], function(melon){
     var api = api || {};
     
-    //var serveurURL = "http://localhost:5984/sos21";
     api.entities_folder = "data/images/player/";
 	api.objects_folder = "data/images/objects/";
+	
+	
+	// ~~~~ TEMP --- chargement depuis le server à valider ~~~~
     api.entities = [{name: "default"},{name:"skinPersoTest"}];
 	api.objects = [{name: "obj1"}];
-		
+	
+	//--------------------------------------
+	// Player - paramètres & fonctions
+	//--------------------------------------
+	api.playerSpeed = 1;
 	api.defaultSkin = {
 		name: "default",
 		height: 70,
 		width: 60,
+		colBox: {
+			x: 25,
+			y: 55,
+			w: 10,
+			h: 5
+		},
 		animationSheet: {
 			"stand":			[3], // default stand animation
 			"stand-down":       [3],
@@ -31,15 +43,20 @@ define(['lib/melon'], function(melon){
 			"run-up-left":     	[6,14,22,30,38,46,54,62,70]
 		}
 	};
-	
+	skinExists = function(skinName){
+		var url = api.entities_folder+skinName+".png";
+		var http = new XMLHttpRequest();
+		http.open('HEAD', url, false);
+		http.send();
+		return http.status==200;
+	};
 	api.getSkin = function(skinName){ // revoir la condition (erreur 404 à éviter)
-		var img = new Image();
-		img.src = this.entities_folder+skinName+".png"; // ~ genère erreur 404 si fichier inexistant
 		var skin = {};
-		if (img.height != 0) { // TODO : récupérer un vrai skin depuis la DB
+		if (skinExists(skinName)) { // TODO : récupérer un vrai skin depuis la DB
 			skin.name = skinName;
 			skin.height = this.defaultSkin.height;
 			skin.width = this.defaultSkin.width;
+			skin.colBox = this.defaultSkin.colBox;
 			skin.animationSheet = this.defaultSkin.animationSheet;
 		}
 		else{
@@ -47,59 +64,32 @@ define(['lib/melon'], function(melon){
 		}
 		return skin;
 	};
-    
-    //CALCUL ORTHO  
-    api.pxToTile = function(x, y){ // TO DO 
-            var obj = {};
-            obj.x = Math.ceil(x/me.game.collisionMap.tilewidth);
-        obj.y = Math.ceil(y/me.game.collisionMap.tileheight);
-        return obj;
-    }
-    
-    api.tileToPx = function(x, y){
-            var obj = {};
-            obj.x = Math.ceil(x*me.game.collisionMap.tilewidth) + me.game.collisionMap.tilewidth;
-            obj.y = Math.ceil(y*me.game.collisionMap.tileheight) + me.game.collisionMap.tileheight;
-            return obj;
-    } 
-    
-    /*// CALCUL ISO
-    var angle = Math.sqrt(3)/2;
-    function pxToTile(x, y){ // TO DO 
-            var obj = {};
-            obj.x = ( (x-(me.game.collisionMap.width/2)) * angle - (y-(me.game.collisionMap.height/2)) * (-angle) ) + me.game.collisionMap.width/2;
-        obj.y = ( (x-(me.game.collisionMap.width/2)) * (-angle) + (y-(me.game.collisionMap.height/2)) * angle ) + me.game.collisionMap.height/2;
-        return obj;
-    }
-    
-    function tileToPx(x, y){
-            var obj = {};
-            obj.x = Math.ceil(x*me.game.collisionMap.tilewidth);
-            obj.y = Math.ceil(y*me.game.collisionMap.tileheight);
-            return obj;
-    } */
-    
-    // DEBUG --- draw path jump points
-    api.drawPoint = function(x, y){
-			//x -= me.game.viewport.pos.x;
-			//y -= me.game.viewport.pos.y;
-            var context = me.video.getScreenContext();
-            context.beginPath();
-            context.arc(x, y, 5, 0, 2 * Math.PI, false);
-            context.fillStyle = 'green';
-            context.fill();
-            context.lineWidth = 1;
-            context.strokeStyle = '#003300';
-            context.stroke();
-            context.closePath();
-    }
-	
+	/**
+	 * Donne la position de la souris sur la carte
+	 * @returns {Object} objet contenant la position de la souris (x,y)
+	 */
 	api.getMouse = function(){
 		return {
 			x: me.input.mouse.pos.x+me.game.viewport.pos.x,
 			y: me.input.mouse.pos.y+me.game.viewport.pos.y
 		};
-}
+	};
+    
+    // DEBUG --- draw path jump points
+    api.drawPoint = function(x, y){
+		x -= me.game.viewport.pos.x;
+		y -= me.game.viewport.pos.y;
+		var context = me.video.getScreenContext();
+		context.beginPath();
+		context.arc(x, y, 5, 0, 2 * Math.PI, false);
+		context.fillStyle = 'green';
+		context.fill();
+		context.lineWidth = 1;
+		context.strokeStyle = '#003300';
+		context.stroke();
+		context.closePath();
+    };
+	
     return api; 
 });
 
