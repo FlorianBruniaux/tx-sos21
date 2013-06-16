@@ -117,7 +117,7 @@ define(['lib/melon',
 	console.log("init debuuuuug");
 	me.debug.renderHitBox = true; // debug - hitbox
 	me.debug.renderVelocity = true; // melon v0.9.7+
-	me.debug.renderCollisionMap = true; // melon v0.9.7+
+	//me.debug.renderCollisionMap = true; // melon v0.9.7+
 	//-------------------------------------------------
     }
     
