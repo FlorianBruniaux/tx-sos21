@@ -24,11 +24,16 @@ define(['lib/melon', 'client/scene', 'entities'],
          scene.setPlayers();
          scene.setMapData();
          var g_ressources = [];
+         var mainPlayerData = {};
+         mainPlayerData["name"] = scene.mainPlayer.image;
+         mainPlayerData["type"] = "image";
+         mainPlayerData["src"] = entities.entities_folder+scene.mainPlayer.image+".png";
+         g_ressources.push(mainPlayerData);
          scene.players.forEach(function(player){
             var playerData = {};
             playerData["name"] = player.image;
             playerData["type"] = "image";
-            playerData["src"] = entities.entities_folder + player.image + ".png";
+            playerData["src"] = entities.entities_folder + player.image+".png";
             g_ressources.push(playerData);
          });         
          scene.mapData.forEach(function(res){
@@ -39,7 +44,6 @@ define(['lib/melon', 'client/scene', 'entities'],
             g_ressources.push(resData);
          });
          g_ressources.push({name : scene.mainPlayer.place, type : "tmx", src : scene.getMapUrl()});
-         console.log(g_ressources);
          me.loader.preload(g_ressources);
          //me.loader.load(tileset,
          //               me.loader.onResourceLoaded.bind(me.loader),

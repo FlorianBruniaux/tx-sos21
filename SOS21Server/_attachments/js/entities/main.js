@@ -12,6 +12,7 @@ define(['lib/melon'], function(melon){
 	//--------------------------------------
 	// Player - paramètres & fonctions
 	//--------------------------------------
+	var skins = ["default"];
 	api.playerSpeed = 1;
 	api.defaultSkin = {
 		name: "default",
@@ -43,14 +44,24 @@ define(['lib/melon'], function(melon){
 			"run-up-left":     	[6,14,22,30,38,46,54,62,70]
 		}
 	};
-	skinExists = function(skinName){
-		var url = api.entities_folder+skinName+".png";
-		var http = new XMLHttpRequest();
-		http.open('HEAD', url, false);
-		http.send();
-		return http.status==200;
+	skinExists = function(skinName){// revoir la condition (erreur 404 à éviter
+		if (skins.indexOf(skinName)>-1) {
+			return true;
+		}
+		else{
+			var url = api.entities_folder+skinName+".png";
+			var http = new XMLHttpRequest();
+			http.open('HEAD', url, false);
+			http.send();
+			if (http.status==200 || http.status==304) {
+				skins.push(skinName);
+				return true;
+			}
+			else
+				return false;
+		}
 	};
-	api.getSkin = function(skinName){ // revoir la condition (erreur 404 à éviter)
+	api.getSkin = function(skinName){ 
 		var skin = {};
 		if (skinExists(skinName)) { // TODO : récupérer un vrai skin depuis la DB
 			skin.name = skinName;
@@ -61,6 +72,16 @@ define(['lib/melon'], function(melon){
 		}
 		else{
 			skin = this.defaultSkin;
+		}
+		return skin;
+	};
+	api.getSkinName = function(skinName){
+		var skin = "";
+		if (skinExists(skinName)) { // TODO : récupérer un vrai skin depuis la DB
+			skin = skinName;
+		}
+		else{
+			skin = this.defaultSkin.name;
 		}
 		return skin;
 	};

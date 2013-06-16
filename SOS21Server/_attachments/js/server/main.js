@@ -1,4 +1,4 @@
-define(['jquery', 'lib/melon'], function($, melon){
+define(['jquery', 'lib/melon', 'entities'], function($, melon, entities){
     var server = (function(){
         var out = {}; // public things
         var db_name = "sos21";
@@ -51,6 +51,7 @@ define(['jquery', 'lib/melon'], function($, melon){
             get_player_info.fail(function(){
                 player_info = "error";
             });
+            player_info.image = entities.getSkinName(player_info.image);
             return player_info;
         };
         
@@ -75,6 +76,10 @@ define(['jquery', 'lib/melon'], function($, melon){
             
             get_otherPlayers_info.fail(function(){
                 return null;
+            });
+            
+            players.forEach(function(p){
+                p.image = entities.getSkinName(p.image);
             });
             return players;
         };
