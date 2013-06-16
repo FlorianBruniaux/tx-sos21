@@ -82,8 +82,8 @@ $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
     2. Utiliser le formulaire d'upload d'une carte (en bas de la page index)
 ```bash
 {
-   "_id": "ed78748a843191d9c9c5e50887581b77",
-   "_rev": "1-f1a4d1ff4a8315ef509518db6a194dde",
+   "name": "ortho",
+   "type": "place",
    "height": 30,
    "layers": [
        {
@@ -159,9 +159,7 @@ $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
    ],
    "tilewidth": 30,
    "version": 1,
-   "width": 30,
-   "name": "ortho",
-   "type": "place"
+   "width": 30
 }
 
 ```
