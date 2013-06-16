@@ -75,6 +75,96 @@ $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
 ```
 
     Type : ["collectable_object", "changemap_object"]
+    
+### Maps
+    Pour ajouter une carte :
+    1. Sauvegarder la carte en format JSON dans Tiled Map Editor
+    2. Utiliser le formulaire d'upload d'une carte (en bas de la page index)
+```bash
+{
+   "_id": "ed78748a843191d9c9c5e50887581b77",
+   "_rev": "1-f1a4d1ff4a8315ef509518db6a194dde",
+   "height": 30,
+   "layers": [
+       {
+           "data": [0,0,0,...],
+           "height": 30,
+           "name": "ref",
+           "opacity": 1,
+           "type": "tilelayer",
+           "visible": true,
+           "width": 30,
+           "x": 0,
+           "y": 0
+       },
+       {
+           "data": [0,0,0,.....],
+           "height": 30,
+           "name": "background",
+           "opacity": 1,
+           "type": "tilelayer",
+           "visible": true,
+           "width": 30,
+           "x": 0,
+           "y": 0
+       },
+       {
+           "data": [0,0,0,.....],
+           "height": 30,
+           "name": "collision",
+           "opacity": 0.419999986886978,
+           "type": "tilelayer",
+           "visible": true,
+           "width": 30,
+           "x": 0,
+           "y": 0
+       }
+   ],
+   "orientation": "orthogonal",
+   "properties": {
+   },
+   "tileheight": 15,
+   "tilesets": [
+       {
+           "firstgid": 1,
+           "image": "../images/backgrounds/fond.png",
+           "imageheight": 480,
+           "imagewidth": 843,
+           "margin": 0,
+           "name": "fond",
+           "properties": {
+           },
+           "spacing": 0,
+           "tileheight": 420,
+           "tilewidth": 840
+       },
+       {
+           "firstgid": 2,
+           "image": "../images/tiles/collision_ortho2.png",
+           "imageheight": 15,
+           "imagewidth": 30,
+           "margin": 0,
+           "name": "collision_ortho2",
+           "properties": {
+           },
+           "spacing": 0,
+           "tileheight": 15,
+           "tileproperties": {
+               "0": {
+                   "type": "solid"
+               }
+           },
+           "tilewidth": 30
+       }
+   ],
+   "tilewidth": 30,
+   "version": 1,
+   "width": 30,
+   "name": "ortho",
+   "type": "place"
+}
+
+```
 
 ### Action
 ```bash
