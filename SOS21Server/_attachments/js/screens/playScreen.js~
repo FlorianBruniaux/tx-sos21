@@ -51,7 +51,7 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'gui/debugHUD', 'cli
 			});
 			var objects = scene.objects;
 			objects.forEach(function(obj){
-				var newObject = me.entityPool.newInstanceOf(obj.type, obj.x, obj.y, obj);
+				var newObject = me.entityPool.newInstanceOf("Object", obj.x, obj.y, obj);
 				me.game.add(newObject, 5);
 			});
 		},

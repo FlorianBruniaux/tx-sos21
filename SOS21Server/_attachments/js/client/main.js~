@@ -28,6 +28,7 @@ define(['lib/melon'], function(melon){
 	 * @returns {Object} objet contenant la position de la souris (x,y)
 	 */
 	api.getMouse = function(){
+		console.log(me.input);
 		return {
 			x: me.input.mouse.pos.x+me.game.viewport.pos.x,
 			y: me.input.mouse.pos.y+me.game.viewport.pos.y

@@ -2,7 +2,7 @@ define(['entities', 'lib/melon', 'server', 'client', 'entities/gameObject'], fun
 
     var CollectableObject = GameObject.extend({
         applyEffect: function(){
-            console.log("collectable");
+            
             me.game.remove(this);
         }
     });

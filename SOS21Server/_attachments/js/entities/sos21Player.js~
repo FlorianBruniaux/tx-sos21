@@ -91,7 +91,7 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
                     /*if(!path[0]) // cas où le pathfind ne trouve pas de chemin : avancer en ligne droite (ex: demande à aller dans un mur)
                         path = [[x,y]];
                     */
-                    path.shift();
+                    //path.shift();
                     this.path = path;
                 }
             }
