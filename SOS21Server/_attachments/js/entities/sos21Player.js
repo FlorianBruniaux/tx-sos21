@@ -92,12 +92,6 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
                         path = [[x,y]];
                     */
                     this.path = path;
-                    // DEBUG --- trace path points
-                    if (typeof path != 'undefined') {
-                        path.forEach(function(e){
-                            entities.drawPoint(e[0], e[1]);
-                        });
-                    }
                 }
             }
         },
