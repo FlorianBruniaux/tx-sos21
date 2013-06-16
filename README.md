@@ -64,7 +64,7 @@ $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
 		"name": "obj1",
 		"image": "obj1",
 		"place": "ed78748a843191d9c9c5e50887581b77",
-		"type": "object",
+		"type": "Object",
 		"visible": true,
 		"x": 330,
 		"y": 200,
@@ -74,7 +74,7 @@ $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
   }
 ```
 
-    Type : ["collectable_object", "changemap_object"]
+    Type : ["collectableObject", "changeMapObject", "informationObject", "Object"]
     
 ### Maps
     Pour ajouter une carte :
