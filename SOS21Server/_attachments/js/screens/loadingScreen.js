@@ -1,5 +1,5 @@
-define(['lib/melon', 'client/scene'],
-	   function(melon, scene){
+define(['lib/melon', 'client/scene', 'entities'],
+	   function(melon, scene, entities){
     // écran de chargement
     var CustomLoadingScreen = me.ScreenObject.extend({
        // constructor
@@ -28,7 +28,7 @@ define(['lib/melon', 'client/scene'],
             var playerData = {};
             playerData["name"] = player.image;
             playerData["type"] = "image";
-            playerData["src"] = scene.getResFolder() + player.file;
+            playerData["src"] = entities.entities_folder + player.image + ".png";
             g_ressources.push(playerData);
          });         
          scene.mapData.forEach(function(res){
