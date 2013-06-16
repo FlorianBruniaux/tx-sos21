@@ -96,28 +96,6 @@ $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
            "width": 30,
            "x": 0,
            "y": 0
-       },
-       {
-           "data": [0,0,0,.....],
-           "height": 30,
-           "name": "background",
-           "opacity": 1,
-           "type": "tilelayer",
-           "visible": true,
-           "width": 30,
-           "x": 0,
-           "y": 0
-       },
-       {
-           "data": [0,0,0,.....],
-           "height": 30,
-           "name": "collision",
-           "opacity": 0.419999986886978,
-           "type": "tilelayer",
-           "visible": true,
-           "width": 30,
-           "x": 0,
-           "y": 0
        }
    ],
    "orientation": "orthogonal",
