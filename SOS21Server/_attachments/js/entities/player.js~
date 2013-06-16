@@ -22,12 +22,8 @@ define(['entities', 'lib/melon', 'client', 'server', 'entities/sos21Player'], fu
                 me.game.HUD.setItemValue("playerX", Math.ceil(this.position.x));
                 me.game.HUD.setItemValue("playerY", Math.ceil(this.position.y));
                 
-                var mouse = client.getMouse();
-				if(me.game.collisionMap.getTile(mouse.x, mouse.y)!=null){
-					me.video.getScreenCanvas().style.cursor="crosshair";
-				}else{
-					me.video.getScreenCanvas().style.cursor="pointer";
-				}
+                me.game.collide(this);
+                
                 this.parent();
             },
             onCollision: function(res, obj){

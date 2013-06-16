@@ -28,7 +28,8 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'gui/debugHUD', 'cli
 			i=0;
 			me.game.collisionMap.layerData.forEach(function(col){
 				col.forEach(function(li){
-					tmp = (li) ? 1 : 0;
+					tmp = (
+li) ? 1 : 0;
 					matrice[i].push(tmp);
 					i++;
 				});

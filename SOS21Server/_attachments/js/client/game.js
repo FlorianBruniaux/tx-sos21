@@ -3,13 +3,15 @@ define(['lib/melon',
 	'server',
 	'client',
 	'client/scene',
+	'gui/cursor',
 	'screens/playScreen', 'screens/loadingScreen',
 	'entities/player', 'entities/otherPlayer', 'entities/gameObject', 'entities/changeMapObject', 'entities/collectableObject'],
        function(melon,
 		entities,
 		server,
-		ressources,
+		client,
 		scene,
+		Cursor,
 		PlayScreen,
 		LoadingScreen,
 		Player, OtherPlayer, GameObject, ChangeMapObject, CollectableObject
@@ -66,6 +68,7 @@ define(['lib/melon',
     
     var initEntityPool = function(){
     	//init entitypool (travail de entities/main.js ?)
+    	me.entityPool.add("cursor", Cursor);
 		me.entityPool.add("mainPlayer", Player);
 		me.entityPool.add("otherPlayer", OtherPlayer, true);
 		me.entityPool.add("Object", GameObject, true);
