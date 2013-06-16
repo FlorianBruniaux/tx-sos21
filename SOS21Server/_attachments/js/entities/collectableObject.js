@@ -1,10 +1,11 @@
 define(['entities', 'lib/melon', 'server', 'client', 'entities/gameObject'], function(entities, melon, server, client, GameObject){
 
-    var ChangeMapObject = GameObject.extend({
+    var CollectableObject = GameObject.extend({
         applyEffect: function(){
-            //mediator.trigger("gotToPlace", function(event, this.effets.placeName){});
+            
+            me.game.remove(this);
         }
     });
     
-    return ChangeMapObject;
+    return CollectableObject;
 });

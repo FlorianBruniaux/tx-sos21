@@ -4,7 +4,7 @@ define(['lib/melon',
 	'client',
 	'client/scene',
 	'screens/playScreen', 'screens/loadingScreen',
-	'entities/player', 'entities/otherPlayer', 'entities/gameObject'],
+	'entities/player', 'entities/otherPlayer', 'entities/gameObject', 'entities/changeMapObject', 'entities/collectableObject'],
        function(melon,
 		entities,
 		server,
@@ -12,7 +12,7 @@ define(['lib/melon',
 		scene,
 		PlayScreen,
 		LoadingScreen,
-		Player, OtherPlayer, GameObject
+		Player, OtherPlayer, GameObject, ChangeMapObject, CollectableObject
 ){
 //-----------------------------------------------------------
 // JEU
@@ -44,10 +44,7 @@ define(['lib/melon',
 		
 		// set all resources to be loaded (callback for ressources loaded event)
 		me.loader.onload = this.loaded.bind(this); //why nunu ?
-		//init entitypool (travail de entities/main.js ?)
-		me.entityPool.add("mainPlayer", Player);
-		me.entityPool.add("otherPlayer", OtherPlayer, true);
-		me.entityPool.add("gameObject", GameObject, true);
+		initEntityPool();
 		// set the "Loading" Screen Object
 		me.state.set(me.state.LOADING, new LoadingScreen());
 		scene.setMainPlayer(mainPlayerPseudo);
@@ -58,7 +55,7 @@ define(['lib/melon',
     
     api.loaded = function(){
 		if (debug==true) {
-			api.initDebug();
+			initDebug();
 		}
 		// définir l'écran de jeu
 		me.state.set(me.state.PLAY, new PlayScreen()); 
@@ -67,14 +64,21 @@ define(['lib/melon',
 		me.state.change(me.state.PLAY); 
     }
     
+    var initEntityPool = function(){
+    	//init entitypool (travail de entities/main.js ?)
+		me.entityPool.add("mainPlayer", Player);
+		me.entityPool.add("otherPlayer", OtherPlayer, true);
+		me.entityPool.add("Object", GameObject, true);
+		me.entityPool.add("changeMapObject", ChangeMapObject, true);
+		me.entityPool.add("collectableObject", CollectableObject, true);
+    }
     
-    api.initDebug = function(){
-		//-------------------------------------------------
+    
+    var initDebug = function(){
 		// debug renders
 		me.debug.renderHitBox = true; // debug - hitbox
 		me.debug.renderVelocity = true; // melon v0.9.7+
 		//me.debug.renderCollisionMap = true; // melon v0.9.7+
-		//-------------------------------------------------
     }
     
 	

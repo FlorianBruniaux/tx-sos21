@@ -34,7 +34,6 @@ define(['entities', 'lib/melon', 'server', 'client'], function(entities, melon, 
 		onCollision : function(res, obj) {
 			if (obj.servData.pseudo == client.players.mainPlayer.pseudo && this.hasBeenClicked) {
 				this.applyEffect();
-				me.game.remove(this);
 			}
 		},
 		onOtherPlayerPick: function(){
@@ -42,6 +41,7 @@ define(['entities', 'lib/melon', 'server', 'client'], function(entities, melon, 
 		},
 		applyEffect: function(){
 			console.log("effect");
+			me.game.remove(this);
 		},
 		isMouseOver: function(){
 			var mouse = entities.getMouse();

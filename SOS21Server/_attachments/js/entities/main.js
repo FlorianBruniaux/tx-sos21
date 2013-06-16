@@ -95,21 +95,6 @@ define(['lib/melon'], function(melon){
 			y: me.input.mouse.pos.y+me.game.viewport.pos.y
 		};
 	};
-    
-    // DEBUG --- draw path jump points
-    api.drawPoint = function(x, y){
-		x -= me.game.viewport.pos.x;
-		y -= me.game.viewport.pos.y;
-		var context = me.video.getScreenContext();
-		context.beginPath();
-		context.arc(x, y, 5, 0, 2 * Math.PI, false);
-		context.fillStyle = 'green';
-		context.fill();
-		context.lineWidth = 1;
-		context.strokeStyle = '#003300';
-		context.stroke();
-		context.closePath();
-    };
 	
     return api; 
 });
