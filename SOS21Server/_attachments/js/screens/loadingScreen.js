@@ -44,6 +44,12 @@ define(['lib/melon', 'client/scene', 'entities'],
             resData["src"] = scene.getResFolder() + res.image.substr(2, res.image.length);
             g_ressources.push(resData);
          });
+         scene.objects.forEach(function(obj){
+            var resData = {};
+            resData["name"] = res.name;
+            resData["type"] = "image";
+            resData["src"] = entities.objects_folder + obj.image+".png";
+         });
          g_ressources.push({name : scene.mainPlayer.place, type : "tmx", src : scene.getMapUrl()});
          me.loader.preload(g_ressources);
          //me.loader.load(tileset,
