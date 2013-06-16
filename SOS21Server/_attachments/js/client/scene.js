@@ -1,29 +1,32 @@
 define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator'], function(melon, pathfinding, ressources, server, mediator){
     
     var api = {};
-    api.map = null;
+    api.mapData = {};
     api.mainPlayer = {};
-    api.objects = []
+    api.players = [];
+    api.objects = [];
     
     api.getResFolder = function(){
-        return server.getAttachmentsURL() + "/data"
+        return server.getServerUrl() + "/_design/SOS21Server/data"
     }
 
-    api.getMap = function(){
-        if (!this.map) {
-            console.log("server.getCurrentMap("+this.mainPlayer.place+")")
-            this.map = server.getCurrentMap(this.mainPlayer.place);
-        }
-        if (this.mainPlayer._id && this.map.name) {
-            this.map["players"] = server.getOtherPlayers(this.map.name, this.mainPlayer._id);   
-        }
-        return this.map;
+    api.setMapData = function(){
+        this.mapData = server.getMapData(this.mainPlayer.place);
     }
     
     api.setMainPlayer = function(pseudo){
         this.mainPlayer = server.login(pseudo);
     }
+    
+    api.setPlayers = function(){
+        if (this.mainPlayer.place && this.mainPlayer._id ) {
+            this.players = server.getOtherPlayers(this.mainPlayer.place, this.mainPlayer._id);   
+        }
+    }
 
+    api.getMapUrl = function(){
+        return server.getServerUrl() + "/" + "_design/SOS21Server/_rewrite/getMap/"+this.mainPlayer.place+"/.json";
+    }
     /*initilalisation des écouteurs d’évènement client via jquery :
         - écoute des entrée/sortie des joueurs
         - écoute des actions des joueurs

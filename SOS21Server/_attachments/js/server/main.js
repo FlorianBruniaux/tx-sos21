@@ -79,6 +79,29 @@ define(['jquery', 'lib/melon'], function($, melon){
             return players;
         };
         
+        out.getMapData = function(map){
+            var mapData = [];
+            var get_otherPlayers_info = $.ajax({
+                url: serverUrl+"/_design/SOS21Server/_view/data_by_place",
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({"key": map}),
+                async: false,
+                dataType: "json"
+            });
+            get_otherPlayers_info.done(function(data){
+                data.rows.forEach(function(row){
+                    if (row.id == map) {
+                        mapData.push(row.value);
+                    }
+                });
+            });
+            get_otherPlayers_info.fail(function(){
+                return null;
+            });
+            return mapData;
+        };
+        
         out.updatePlayerPosition = function(playerData, x, y){
             var output = null;
             if(playerData._id && playerData._rev && playerData.type == "character"){
@@ -167,26 +190,30 @@ define(['jquery', 'lib/melon'], function($, melon){
             });
         };
         
-        out.getCurrentMap = function(mapName){
-            var output = null;
-            var req = $.ajax({
-                url : serverUrl + "/" + "_design/SOS21Server/_view/places_by_name",
-                type: "GET",
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify({"key": mapName}),
-                dataType: "json",
-                async: false
-            });
-            req.done(function(data){
-                console.log(data);
-                output = data.rows[0].value;
-            });
-            return output;
-        };
+        //out.getCurrentMap = function(mapName){
+        //    var output = null;
+        //    var req = $.ajax({
+        //        url : serverUrl + "/" + "_design/SOS21Server/_view/places_by_name",
+        //        type: "GET",
+        //        contentType: "application/json; charset=utf-8",
+        //        data: JSON.stringify({"key": mapName}),
+        //        dataType: "json",
+        //        async: false
+        //    });
+        //    req.done(function(data){
+        //        console.log(data);
+        //        output = data.rows[0].value;
+        //    });
+        //    return output;
+        //};
         
-        out.getAttachmentsURL = function(){
-            return serverUrl+"/_design/SOS21Server";
+        out.getServerUrl = function(){
+            return serverUrl;
         }
+        
+        //out.getAttachmentsURL = function(){
+        //    return serverUrl+"/_design/SOS21Server";
+        //}
         
         return out;    
     })();

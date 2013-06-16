@@ -21,25 +21,24 @@ define(['lib/melon', 'client/scene'],
        onResetEvent: function(){
          //clear memory
          me.loader.unloadAll();
-         var currentMap = scene.getMap();
-         console.log(currentMap);
+         scene.setPlayers();
+         scene.setMapData();
          var g_ressources = [];
-         //load current map (tileset + background)
-         currentMap.tilesets.forEach(function(res){
+         scene.players.forEach(function(player){
+            var playerData = {};
+            playerData["name"] = player.image;
+            playerData["type"] = "image";
+            playerData["src"] = scene.getResFolder() + player.file;
+            g_ressources.push(playerData);
+         });         
+         scene.mapData.forEach(function(res){
             var resData = {};
             resData["name"] = res.name;
             resData["type"] = "image";
             resData["src"] = scene.getResFolder() + res.image.substr(2, res.image.length);
             g_ressources.push(resData);
          });
-         currentMap.players.forEach(function(player){
-            var playerData = {};
-            playerData["name"] = player.image;
-            playerData["type"] = "image";
-            playerData["src"] = scene.getResFolder() + player.file;
-            g_ressources.push(playerData);
-         });
-         g_ressources.push({name : currentMap.name, type : "tmx", src : scene.getResFolder() + "/maps/" + currentMap.file})
+         g_ressources.push({name : scene.mainPlayer.place, type : "tmx", src : scene.getMapUrl()});
          console.log(g_ressources);
          me.loader.preload(g_ressources);
          //me.loader.load(tileset,
