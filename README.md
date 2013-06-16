@@ -41,7 +41,7 @@ $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
    "name": "player_name",
    "pseudo": "player_account",
    "loggedOn": true,
-   "place": "current_place",
+   "place": "ed78748a843191d9c9c5e50887581b77",
    "x": 231,
    "y": 155.33333333333334,
    "updatedAt": [
@@ -63,7 +63,7 @@ $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
   {
 		"name": "obj1",
 		"image": "obj1",
-		"place": "stage1",
+		"place": "ed78748a843191d9c9c5e50887581b77",
 		"type": "object",
 		"visible": true,
 		"x": 330,
