@@ -26,7 +26,7 @@ define(['entities', 'lib/melon', 'server', 'client'], function(entities, melon, 
 			me.event.subscribe("objectClicked", this.mouseDown);
 		},
 		update: function(){
-			this.mouseOver();
+			this.isMouseOver();
 			this.updateMovement();
             this.parent();
             return true;
@@ -43,11 +43,14 @@ define(['entities', 'lib/melon', 'server', 'client'], function(entities, melon, 
 		applyEffect: function(){
 			console.log("effect");
 		},
-		mouseOver: function(){
+		isMouseOver: function(){
 			var mouse = entities.getMouse();
 			if (this.collisionBox.containsPoint(mouse.x, mouse.y)) {
-				this.renderable.flicker(10);
+				this.onMouseOver();
 			}
+		},
+		onMouseOver: function(){
+			this.renderable.flicker(10);
 		},
 		onDestroyEvent: function(){
 			me.event.unsubscribe(this.mouseHandler);
