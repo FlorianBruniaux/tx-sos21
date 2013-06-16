@@ -46,7 +46,7 @@ define(['lib/melon', 'client/scene', 'entities'],
          });
          scene.objects.forEach(function(obj){
             var resData = {};
-            resData["name"] = res.name;
+            resData["name"] = obj.name;
             resData["type"] = "image";
             resData["src"] = entities.objects_folder + obj.image+".png";
          });
