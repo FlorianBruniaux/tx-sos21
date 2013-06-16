@@ -82,10 +82,9 @@ define(['jquery', 'lib/melon'], function($, melon){
         out.getMapData = function(map){
             var mapData = [];
             var get_otherPlayers_info = $.ajax({
-                url: serverUrl+"/_design/SOS21Server/_view/data_by_place",
+                url: serverUrl+"/_design/SOS21Server/_view/data_by_place?key="+JSON.stringify(map),
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
-                data: JSON.stringify({"key": map}),
                 async: false,
                 dataType: "json"
             });
