@@ -61,14 +61,20 @@ $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
 ### Objets
 ```bash
   {
-     "name": "NOM_OBJET",
-     "place": "NOM_PLACE",
-     "type": "object",
-     "visible" : true,
-     "x": 29,
-     "y": 18
+		"name": "obj1",
+		"image": "obj1",
+		"place": "stage1",
+		"type": "object",
+		"visible": true,
+		"x": 330,
+		"y": 200,
+		"spriteheight": 93,
+		"spritewidth": 84,
+		"colRect": {"x": 5,"w": 35,"y": 65,"h":20}
   }
 ```
+
+    Type : ["collectable_object", "changemap_object"]
 
 ### Action
 ```bash
