@@ -101,5 +101,9 @@
             "group":"true",
             "group_level": "5"
         } 
-    }   
+    },
+    {
+        "to" : "_show/getJSONMap/:id",
+        "from" : "getMap/:id/.json"
+    }
 ]
