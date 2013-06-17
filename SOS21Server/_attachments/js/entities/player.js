@@ -30,9 +30,6 @@ define(['entities', 'lib/melon', 'client', 'server', 'entities/sos21Player'], fu
 					me.video.getScreenCanvas().style.cursor="pointer";
 				}
                 this.parent();
-            },
-            onCollision: function(res, obj){
-            	console.log("player collide");
             }
     }); //gestion de l'entité joueur
     return Player;

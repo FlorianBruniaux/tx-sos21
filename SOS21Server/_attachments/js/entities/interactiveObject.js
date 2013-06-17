@@ -1,7 +1,8 @@
-define(['entities', 'lib/melon', 'server', 'client', 'entities/gameObject'], function(entities, melon, server, client, GameObject){
+define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'], function(entities, melon, scene, client, GameObject){
 
     var InteractiveObject = GameObject.extend({
         hasBeenClicked: false,
+        effectTriggered: false,
         init: function(x, y, settings){
             this.parent(x,y,settings);
             me.input.registerPointerEvent("mousedown", this.collisionBox, function(e){
@@ -22,8 +23,38 @@ define(['entities', 'lib/melon', 'server', 'client', 'entities/gameObject'], fun
         },
         update: function(){
             this.isMouseOver();
+            this.checkInteraction();
             this.parent();
         },
+        onCollision : function(res, obj) {
+			if (obj.servData.pseudo == scene.mainPlayer.pseudo && this.hasBeenClicked) {
+				this.triggerEffect();
+			}
+		},
+        triggerEffect: function(){
+			if (!this.effectTriggered) {
+				this.effectTriggered = true;
+				this.applyEffect();
+			}
+		},
+		applyEffect: function(){
+			// EXTENDS
+		},
+        checkInteraction: function(){
+            var collision = me.game.collide(this);
+            if (!collision && this.effectTriggered) {
+                this.effectTriggered = false;
+            }
+        },
+        isMouseOver: function(){
+			var mouse = client.getMouse();
+			if (this.collisionBox.containsPoint(mouse.x, mouse.y)) {
+				this.onMouseOver();
+			}
+			else{
+				this.onMouseOut();
+			}
+		},
         onMouseOver: function(){
             me.video.getScreenCanvas().style.cursor="move"; // BETA TEST
 			this.renderable.setCurrentAnimation("mouseover");
@@ -31,6 +62,9 @@ define(['entities', 'lib/melon', 'server', 'client', 'entities/gameObject'], fun
 		onMouseOut: function(){
 			me.video.getScreenCanvas().style.cursor="auto"; // BETA TEST
 			this.renderable.setCurrentAnimation("default");
+		},
+        onOtherPlayerPick: function(){
+			me.game.remove(this);
 		}
     });
     
