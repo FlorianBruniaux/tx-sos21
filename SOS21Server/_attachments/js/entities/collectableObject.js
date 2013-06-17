@@ -7,9 +7,14 @@ define(['entities', 'lib/melon', 'server', 'client', 'entities/gameObject'], fun
         },
         onMouseOver: function(){
             me.video.getScreenCanvas().style.cursor="move"; // BETA TEST
-			this.renderable.flicker(10);
-        }
+			//this.renderable.flicker(10);
+			this.renderable.setCurrentAnimation("mouseover");
+        },
+		onMouseOut: function(){
+			me.video.getScreenCanvas().style.cursor="auto"; // BETA TEST
+			this.renderable.setCurrentAnimation("default");
+		}
     });
-    
+	
     return CollectableObject;
 });

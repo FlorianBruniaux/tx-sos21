@@ -13,9 +13,7 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'gui/debugHUD', 'cli
 			this.loadPathFinding();
 			// add entities
 			this.initEntities();
-		
 			this.initHUD();
-
 			me.game.sort();
 		},
 		loadPathFinding: function(){
@@ -42,7 +40,7 @@ li) ? 1 : 0;
 		},
 		initEntities: function(){
 			var mainPlayer = me.entityPool.newInstanceOf("mainPlayer", scene.mainPlayer.x, scene.mainPlayer.y, scene.mainPlayer);
-			me.game.add(mainPlayer, 3);
+			me.game.add(mainPlayer, 5);
 			var players = scene.players;
 			players.forEach(function(obj){
 				var pos = (obj.x && obj.y) ? {"x":obj.x, "y":obj.y} : {"x":me.game.viewport.limits.x/2, "y":me.game.viewport.limits.y/2};
@@ -53,7 +51,7 @@ li) ? 1 : 0;
 			var objects = scene.objects;
 			objects.forEach(function(obj){
 				var newObject = me.entityPool.newInstanceOf(obj.type, obj.x, obj.y, obj);
-				me.game.add(newObject, 5);
+				me.game.add(newObject, 3);
 			});
 		},
 		initHUD: function(){

@@ -7,6 +7,9 @@ define(['entities', 'lib/melon', 'server', 'client', 'client/scene'], function(e
 			this.parent(x, y, settings);
 			this.updateColRect(settings.colRect.x, settings.colRect.w, settings.colRect.y, settings.colRect.h);
 			this.setVelocity(0,0);
+			for(var name in settings.animationSheet){
+                this.renderable.addAnimation(name, settings.animationSheet[name]);
+            }
 			
 			me.input.registerPointerEvent("mousedown", this.collisionBox, function(e){
 				me.event.publish("objectClicked");
@@ -23,6 +26,8 @@ define(['entities', 'lib/melon', 'server', 'client', 'client/scene'], function(e
 			
 			this.mouseHandler = me.event.subscribe("mousedown", this.unregisterMouseClick);
 			me.event.subscribe("objectClicked", this.mouseDown);
+			
+			this.renderable.setCurrentAnimation("default");
 		},
 		update: function(){
 			this.isMouseOver();
@@ -44,9 +49,15 @@ define(['entities', 'lib/melon', 'server', 'client', 'client/scene'], function(e
 			if (this.collisionBox.containsPoint(mouse.x, mouse.y)) {
 				this.onMouseOver();
 			}
+			else{
+				this.onMouseOut();
+			}
 		},
 		onMouseOver: function(){
 			// extends
+		},
+		onMouseOut: function(){
+			//extends
 		},
 		onDestroyEvent: function(){
 			me.event.unsubscribe(this.mouseHandler);
@@ -54,6 +65,11 @@ define(['entities', 'lib/melon', 'server', 'client', 'client/scene'], function(e
 		},
 		onOtherPlayerPick: function(){
 			me.game.remove(this);
+		},
+		setAnimation: function(name){
+			if (this.renderable) {
+				//code
+			}
 		}
 	});
 	return GameObject;

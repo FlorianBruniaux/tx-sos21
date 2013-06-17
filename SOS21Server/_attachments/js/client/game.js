@@ -80,8 +80,8 @@ define(['lib/melon',
     
     var initDebug = function(){
 		// debug renders
-		//me.debug.renderHitBox = true; // debug - hitbox
-		//me.debug.renderVelocity = true; // melon v0.9.7+
+		me.debug.renderHitBox = true; // debug - hitbox
+		me.debug.renderVelocity = true; // melon v0.9.7+
 		//me.debug.renderCollisionMap = true; // melon v0.9.7+
     }
     
