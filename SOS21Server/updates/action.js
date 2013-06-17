@@ -4,7 +4,7 @@ function(old, req) {
   
   action_object.verb = old._id;
   action_object.description_action = old.description_action;
-  action_object.effects = old.effects;
+  action_object.effets = old.effets;
   action_object.id_regle = old.id_regle;
   
   //old.execution_counter = old.execution_counter+1;

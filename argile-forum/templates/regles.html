@@ -252,7 +252,7 @@
 		//Sélectionne la bdd
 		db = $.couch.db("sos21");
 		
-		db.view("argile-forum/effects-attributes", {
+		db.view("argile-forum/effets-attributes", {
 		    descending: true,
 		    success: function(data) {
 			for(i in data.rows){

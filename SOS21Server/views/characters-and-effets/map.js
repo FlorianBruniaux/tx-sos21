@@ -1,8 +1,8 @@
 function (obj){
 
     if(obj.character ){
-        for (var e in obj.effects) {
-            emit([obj.character, "effect", obj.effects[e].name], obj.effects[e].value);
+        for (var e in obj.effets) {
+            emit([obj.character, "effet", obj.effets[e].name], obj.effets[e].value);
         }
     }
     

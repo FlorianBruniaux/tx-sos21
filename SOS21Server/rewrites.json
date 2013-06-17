@@ -28,8 +28,8 @@
         "method": "GET"
     },
     {
-        "to": "_view/effects",
-        "from": "effects",
+        "to": "_view/effets",
+        "from": "effets",
         "query": {
             "group": "true"
         }
@@ -42,8 +42,8 @@
         }
     },
     {
-        "to": "_view/effects-by-place",
-        "from": "effects-by-place/:place",
+        "to": "_view/effets-by-place",
+        "from": "effets-by-place/:place",
         "query": {
             "startkey": [":place"],
             "endkey": [":place",{}],
@@ -51,8 +51,8 @@
         }
     },
     {
-        "to": "_view/effects_by-character",
-        "from": "effects-by-character/:character",
+        "to": "_view/effets_by-character",
+        "from": "effets-by-character/:character",
         "query": {
             "startkey": [":character"],
             "endkey": [":character",{}],
@@ -75,8 +75,8 @@
         }
     },
     {
-        "to": "_view/characters-and-effects",
-        "from": "view/characters-and-effects/:pseudo",
+        "to": "_view/characters-and-effets",
+        "from": "view/characters-and-effets/:pseudo",
         "method": "GET",
         "query": {
             "group":"true",
