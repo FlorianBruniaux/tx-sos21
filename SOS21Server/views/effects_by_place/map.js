@@ -2,7 +2,7 @@ function(obj) {
   
   for (var e in obj.effects) {
     
-    emit([obj.place, e], obj.effects[e]);
+    emit([obj.place, obj.effects[e].name], obj.effects[e].value);
     
   }
   
