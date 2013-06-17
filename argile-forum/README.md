@@ -1,4 +1,4 @@
-###Rappel :
+##Rappel :
 
 Le forum Argile est un outil développé par le laboratoire Tech-Cico. 
 Ce forum repose sur l’architecture ARGILE (Architecture for Representations, Games, Interactions, and Learning among Experts) adaptée au jeu sérieux « participatif et intensif en connaissances ».
@@ -26,7 +26,7 @@ Le fichier rewrites.json a aussi était modifié afin de faciliter l’accès au
 
 Nous avons également ajouté des listes, templates et vues. Attention, nous ne présentons ici que la fonction de chacun de ces fichiers. Si vous souhaitez découvrir leur fonctionnement veuillez-vous reporter au code source et aux commentaires qu’il contient. 
 
-###Nouvelles listes et templates :
+##Nouvelles listes et templates :
 
 >**RQ** : nous présentons ici les listes en même temps que le template qu’elles utilisent dans la mesure où ces derniers sont complémentaires. Retenez juste que la liste traite des données récupérées via une vue et les affiche via un template. Le rendu final est présenté en III.2.B.ii et III.2.C.ii.
 
@@ -41,7 +41,7 @@ Nous avons également ajouté des listes, templates et vues. Attention, nous ne 
 
   * **Regles** : Affiche une page web présentant les règles et attributs déjà créés ainsi qu’un formulaire de création de règle.
 
-###Nouvelles vues :
+##Nouvelles vues :
 
   * **Actions-executed** : Permet de récupérer le nom des actions qui ont déjà été exécutées ainsi que le nom du personnage qui l’a exécuté.
 
@@ -53,4 +53,106 @@ Nous avons également ajouté des listes, templates et vues. Attention, nous ne 
 
   * **Regles** : Récupère les objets « règle » uniquement
 
+##Les différents objets
+
+###Règles
+Chaque règle est définie par les mêmes champs (mais ces champs ont des valeurs différentes) : 
+
+- answered : 
+ - Type : String
+ - Valeur par défaut : « no » 
+ - Description : Lorsqu’un commentaire est validé, l’attribut prend pour valeur l’id de ce dernier. On peut ainsi effectuer des jointures. 
+
+- answered_action_id :
+ - Type : String
+ - Valeur par défaut : « no »
+ - Description : Lorsqu’un commentaire est validé, un objet « action » est créé (décrit plus bas). Cet attribut à pour valeur l’id de l’objet action. 
+
+>RQ : Attention, lorsque l’on invalide la réponse choisie (pour la règle) cela va supprimer l’objet action et remettre tous les attributs précédés de « answered_ » à leur valeur par défaut.
+
+- answered_action_rev :
+ - Type : String
+ - Valeur par défaut : « no »
+ - Description : Valeur de l’attribut _rev de l’objet « action » créé lors de la validation du commentaire.
+
+- answered_date :
+ - Type : String (Timestamp)
+ - Valeur par défaut : « no »
+ - Description : Date à laquelle le commentaire a été validé.
+
+- auteur :
+ - Type : String
+ - Description : Prénom de l’auteur de la règle
+
+- created :
+ - Type : String (Timestamp)
+ - Description : Date de création de la règle
+
+- description :
+ - Type : String
+ - Description : Description de la règle. (Celle donnée lors de la création de celle-ci)
+
+- logs :
+ - Type : objects array
+ - Description : Chaque objet inclus dans le tableau « logs » correspond à une validation / invalidation de commentaire.
+
+- modified :
+ - Type : String (Timestamp)
+ - Description : Date de la dernière modification (différente de la date de création…)
+
+- title :
+ - Type : String
+ - Description : Titre de la règle, nom d’une action en général. (Ex : Marcher, Courir etc…)
+
+- type :
+ - Type : String
+ - Description : Permet de faciliter le traitement effectué par les fonctions map.
+
+###Commentaires de règles
+Comme son nom l’indique, il s’agit d’un commentaire attribué à une règle par un utilisateur.
+
+Composition d’un commentaire de règle :
+
+- texte :
+ -	Type : String
+ -	Description : Texte du commentaire.
+
+- auteur :
+ -	Type : String
+ -	Description : Prénom de l’auteur du commentaire.
+
+- target :
+ -	Type : String
+ -	Description : Id de la règle cible. (Par exemple, ici vous pouvez voir que cette valeur est identique à l’attribut _id de la règle « Ramasser »)
+
+-	effects :
+ -	Type : objects array
+ -	Description : Chaque objet de ce tableau correspond à un effet défini par l’auteur du commentaire validé/invalidé.
+
+-	value : 
+ -	Type : int
+ -	Description : Valeur associée à l’attribut (effet)
+
+- created :
+ -	Type : String (Timestamp)
+ -	Description : Date de création de la règle
+
+-	type :
+ -	Type : String
+ -	Description : Permet de faciliter le traitement effectué par les fonctions map.
+
+-	vote_negatif :
+ -	Type : int
+ -	Description : Nombre de votes négatifs donnés au commentaire (par les autres utilisateurs)
+
+-	vote_positif :
+ -	Type : int
+ -	Description : Nombre de votes positifs donnés au commentaire (par les autres utilisateurs)
+
+
+###Attributs
+
+###Commentaires d'attributs
+
+###Actions
 
