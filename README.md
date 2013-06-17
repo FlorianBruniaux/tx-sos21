@@ -53,7 +53,6 @@ $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
 ```json
 {
    "name": "player_name",
-   "pseudo": "player_account",
    "loggedOn": true,
    "place": "ed78748a843191d9c9c5e50887581b77",
    "x": 231,
