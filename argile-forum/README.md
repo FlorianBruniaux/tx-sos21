@@ -183,6 +183,34 @@ Composition d’un attribut :
 
 
 ###Commentaires d'attributs
+Comme son nom l’indique, il s’agit d’un commentaire attribué à un attribut par un utilisateur
+
+Composition d’un commentaire d’attribut :
+
+>RQ : Tous les attributs sont identiques à ceux des commentaires de règles hormis les 2 suivants.
+
+- top :
+ -	Type : String 
+ -	Description : Adjectif donné au joueur ayant le meilleur score pour cet attribut
+
+-	flop :
+ -	Type : String 
+ -	Description : Adjectif donné au joueur ayant le moins bon score pour cet attribut
 
 ###Actions
+Lorsqu’un commentaire est validé, il devient la « solution choisie » pour définir la règle et donc l’action que cette règle défini. Cette validation entraine la création d’un objet « action » qui sera utilisé par la partie jeu (les personnages pourront exécuter les actions disponibles). 
+
+Composition d’un objet action :
+
+- created :
+ -	Type : String (Timestamp)
+ -	Description : Date de création de la règle
+
+- description_action : Description de la règle mère.
+
+- effects : Effets du commentaire validé (cf effets règle)
+
+- id_regle :
+ -	Type : String 
+ -	Description : _id de la règle mère
 
