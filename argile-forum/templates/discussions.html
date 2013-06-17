@@ -257,7 +257,7 @@
 		 //Sélectionne la bdd
 		 db = $.couch.db("sos21");
 		
-		 db.view("argile-forum/discussions-nouvelles", {
+		 db.view("argile-forum/discussions_nouvelles", {
 		    limit: 10,
 		    descending: true,
 		    success: function(data) {

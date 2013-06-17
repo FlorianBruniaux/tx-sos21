@@ -1,5 +1,9 @@
-function(o) {
-  if (o.type == "place") {
-    emit([o.name], o);
+function(obj) {
+  
+  if (obj.type == "place") {
+    
+    emit([obj.name], obj);
+    
   }
+  
 }

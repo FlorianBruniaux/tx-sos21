@@ -4,7 +4,7 @@
 		"from": "", "method": "POST"
 	},
 	{
-		"to": "_list/discussions/discussions-racine", 
+		"to": "_list/discussions/discussions_racine", 
 		"from": "",
                 "query":{
                     "descending":"true"
@@ -25,7 +25,7 @@
                 }
 	},
 	{
-		"to": "_list/commentaires_discussions/commentaires-discussions", 
+		"to": "_list/commentaires_discussions/commentaires_discussions", 
 		"from": "discussion/:id", 
 		"method": "GET", 
 		"query": {
@@ -35,7 +35,7 @@
 		} 
 	},
 	{
-		"to": "_list/commentaires_regles/commentaires-regles", 
+		"to": "_list/commentaires_regles/commentaires_regles", 
 		"from": "regle/:id", 
 		"method": "GET", 
 		"query": {
@@ -45,7 +45,7 @@
 		} 
 	},
 		{
-		"to": "_list/commentaires_attributes/commentaires-attributes", 
+		"to": "_list/commentaires_attributes/commentaires_attributes", 
 		"from": "commentaires_attributes/:id",
                 "method": "GET", 
 		"query": {

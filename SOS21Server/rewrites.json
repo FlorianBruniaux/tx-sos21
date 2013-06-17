@@ -42,8 +42,8 @@
         }
     },
     {
-        "to": "_view/effects-by-place",
-        "from": "effects-by-place/:place",
+        "to": "_view/effects_by_place",
+        "from": "effects_by_place/:place",
         "query": {
             "startkey": [":place"],
             "endkey": [":place",{}],
@@ -51,8 +51,8 @@
         }
     },
     {
-        "to": "_view/effects_by-character",
-        "from": "effects-by-character/:character",
+        "to": "_view/effects_by_character",
+        "from": "effects_by_character/:character",
         "query": {
             "startkey": [":character"],
             "endkey": [":character",{}],
@@ -60,23 +60,23 @@
         }
     },
     {
-        "to": "_view/characters-by-place",
-        "from": "characters-by-place/:place",
+        "to": "_view/characters_by_place",
+        "from": "characters_by_place/:place",
         "query": {
             "include_docs": "true",
             "key": [":place"]
         }
     },
     {
-        "to": "_view/away-from-keyboard",
-        "from": "away-from-keyboard",
+        "to": "_view/away_from_keyboard",
+        "from": "away_from_keyboard",
         "query": {
             "descending": "true"
         }
     },
     {
-        "to": "_view/characters-and-effects",
-        "from": "view/characters-and-effects/:pseudo",
+        "to": "_view/characters_and_effects",
+        "from": "view/characters_and_effects/:pseudo",
         "method": "GET",
         "query": {
             "group":"true",
@@ -85,7 +85,7 @@
         } 
     },
     {
-        "to": "_list/tableau_honneur/tableau-honneur",
+        "to": "_list/tableau_honneur/tableau_honneur",
         "from": "tableau_honneur",
         "method": "GET", 
         "query": {
@@ -94,7 +94,7 @@
         } 
     },
     {
-        "to": "_list/tableau_bord/tableau-bord",
+        "to": "_list/tableau_bord/tableau_bord",
         "from": "tableau_bord",
         "method": "GET",
         "query": {

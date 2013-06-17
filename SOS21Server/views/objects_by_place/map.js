@@ -1,5 +1,9 @@
-function (doc) {
-    if (doc.type.match(/object$/gi)) {
-        emit(doc.place, doc);
+function (obj) {
+    
+    if(obj.type.match(/object$/gi)) {
+        
+        emit(obj.place, obj);
+        
     }
+    
 }

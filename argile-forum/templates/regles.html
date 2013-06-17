@@ -219,7 +219,7 @@
 		//Sélectionne la bdd
 		db = $.couch.db("sos21");
 		
-		db.view("argile-forum/regles-nouvelles", {
+		db.view("argile-forum/regles_nouvelles", {
 		    limit: 10,
 		    descending: true,
 		    success: function(data) {
@@ -252,7 +252,7 @@
 		//Sélectionne la bdd
 		db = $.couch.db("sos21");
 		
-		db.view("argile-forum/effects-attributes", {
+		db.view("argile-forum/effects_attributes", {
 		    descending: true,
 		    success: function(data) {
 			for(i in data.rows){

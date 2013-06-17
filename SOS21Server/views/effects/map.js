@@ -1,5 +1,9 @@
-function(o) {
-  for (var e in o.effects) {
-    emit([e], o.effects[e]);
+function(obj) {
+  
+  for (var e in obj.effects) {
+    
+    emit([e], obj.effects[e]);
+    
   }
+  
 }

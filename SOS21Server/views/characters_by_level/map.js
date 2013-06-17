@@ -1,7 +1,7 @@
-function(o) {
+function(obj) {
   
-  if (o.type == "character") {
-    emit([o._id], o.level);
+  if (obj.type == "character") {
+    emit([obj._id], obj.level);
   }
   
 }
