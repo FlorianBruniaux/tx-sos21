@@ -8,7 +8,8 @@ define(["jquery"], function($){
         
         api.publish = function(eventName, data){
             var extraParam = data || [];
-            if (typeof(data)==="object"){
+            //check si data est vraiment un objet
+            if(Object.prototype.toString.call(data) === "[object Object]"){
                 extraParam = [];
                 Object.keys(data).forEach(function(elem){
                     extraParam.push(data[elem]);
