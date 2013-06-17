@@ -1,6 +1,10 @@
-define(['entities', 'lib/melon', 'server', 'client', 'entities/gameObject'], function(entities, melon, server, client, GameObject){
+define(['entities', 'lib/melon', 'server', 'client', 'entities/interactiveObject'], function(entities, melon, server, client, InteractiveObject){
 
-    var ChangeMapObject = GameObject.extend({
+    var ChangeMapObject = InteractiveObject.extend({
+		init: function(x, y, settings){
+			this.place_to = settings.place_to;
+			this.parent(x,y,settings);
+		},
         applyEffect: function(){
         	console.log("change map");
             //mediator.trigger("gotToPlace", function(event, this.effets.placeName){});
