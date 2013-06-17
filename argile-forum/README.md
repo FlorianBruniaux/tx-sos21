@@ -1,4 +1,4 @@
-#Rappel
+###Rappel :
 
 Le forum Argile est un outil développé par le laboratoire Tech-Cico. 
 Ce forum repose sur l’architecture ARGILE (Architecture for Representations, Games, Interactions, and Learning among Experts) adaptée au jeu sérieux « participatif et intensif en connaissances ».
