@@ -1,5 +1,5 @@
 function(o) {
-  if (doc.type.match(/object$/gi)) {
+  if (o.type.match(/object$/gi)) {
     emit([o._id], null);
   }
 }
