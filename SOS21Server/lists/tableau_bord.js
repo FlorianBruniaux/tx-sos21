@@ -9,7 +9,7 @@ function(head, req) {
         actions: []
     }
     
-    characterIdAndName = [];
+    var characterIdAndName = [];
     
     var executants = [];
         
@@ -68,7 +68,8 @@ function(head, req) {
         }
         else if (row.key[0] == "executant") {
             executants.push({
-                "name": row.key[3],
+                "id": row.key[3],
+                "name": "no",
                 "action" : row.key[2],
                 "nb_executions": row.value.count,
                 "effects" : row.key[1]
@@ -143,9 +144,16 @@ function(head, req) {
     
     data.actions.sort(compareName);
     
+    for each(ex in executants) {
+        for each(ch in characterIdAndName) {
+            if (ex.id == ch.id) {
+                ex.name = ch.name;
+            }
+        }
+    }
     
     for each (ac in data["actions"]) {
-
+        
         for each( ex in executants) {
             if ( (ex.action == ac.name) && (JSON.stringify(ex.effects) == JSON.stringify(ac.effects)) ) {
                 ac.nb_executants++;
