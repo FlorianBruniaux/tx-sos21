@@ -13,7 +13,7 @@ function(head, req) {
         
     while (row = getRow()) {
         
-        if (row.key[0] == "effet_attribute") {
+        if (row.key[0] == "effect_attribute") {
             data.attributes.push({
                 "id_attribute": row.key[4],
                 "name" : row.key[1],
@@ -30,13 +30,13 @@ function(head, req) {
             if (existCharacter(row.key[1]) == false) {
                 data.characters.push({
                     "pseudo" : row.key[1],
-                    "effets" : []
+                    "effects" : []
                 });  
             }
             
             for each (c in data["characters"]) {
                 if (c.pseudo == row.key[1]) {
-                    c.effets.push({
+                    c.effects.push({
                         "attribute" : row.key[2],
                         "value" : row.value.sum
                     });
@@ -50,7 +50,7 @@ function(head, req) {
                 "nb_executions" : row.value.count,
                 "nb_executants" : 0,
                 "id_regle": row.key[1],
-                "effets" : row.key[2],
+                "effects" : row.key[2],
                 "executants" : []
             });
             
@@ -60,7 +60,7 @@ function(head, req) {
                 "name": row.key[3],
                 "action" : row.key[2],
                 "nb_executions": row.value.count,
-                "effets" : row.key[1]
+                "effects" : row.key[1]
             });
         }
         else{
@@ -70,16 +70,16 @@ function(head, req) {
                     "nb_executions" : 0,
                     "nb_executants" : 0,
                     "id_regle": row.key[1],
-                    "effets" : row.key[2]
+                    "effects" : row.key[2]
                 }); 
             }
         }
     }
     
-    function existAction(_name, _effets) {
+    function existAction(_name, _effects) {
         if (data["actions"].length > 0) {
             for each (a in data["actions"]) {
-                if ((a.name == _name) && (JSON.stringify(a.effets) == JSON.stringify(_effets))){
+                if ((a.name == _name) && (JSON.stringify(a.effects) == JSON.stringify(_effects))){
                     return true;
                 }
             }   
@@ -90,7 +90,7 @@ function(head, req) {
     for each (c in data["characters"]) {
         for each (a in data["attributes"]) {
             var copy = true;
-            for each(e in c.effets) {
+            for each(e in c.effects) {
                 if (e.attribute == a.name) {
                     copy = false;
                     
@@ -116,13 +116,13 @@ function(head, req) {
                 }
             }
             if (copy == true) {
-                c.effets.push({
+                c.effects.push({
                     "attribute" : a.name,
                     "value" : 0
                 })  
             }
         }
-        c.effets.sort(compareAttributes);
+        c.effects.sort(compareAttributes);
     }
     
     data.actions.sort(compareName);
@@ -131,7 +131,7 @@ function(head, req) {
     for each (ac in data["actions"]) {
 
         for each( ex in executants) {
-            if ( (ex.action == ac.name) && (JSON.stringify(ex.effets) == JSON.stringify(ac.effets)) ) {
+            if ( (ex.action == ac.name) && (JSON.stringify(ex.effects) == JSON.stringify(ac.effects)) ) {
                 ac.nb_executants++;
                 ac.executants.push({
                     "name" : ex.name,
@@ -143,20 +143,20 @@ function(head, req) {
         /*
         for each (a in data["attributes"]) {
             var copy = true;
-            for each(e in ac.effets) {
+            for each(e in ac.effects) {
                 if (e.name == a.name) {
                     copy = false;
                 }
             }
             if (copy == true) {
-                ac.effets.push({
+                ac.effects.push({
                     "name" : a.name,
                     "value" : 0
                 })  
             }
         }
         */
-        //ac.effets.sort(compareAttributes);
+        //ac.effects.sort(compareAttributes);
     }
     
     function compareAttributes(a,b) {

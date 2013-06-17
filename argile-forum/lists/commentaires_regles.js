@@ -40,14 +40,14 @@ function(head, req) {
 	    vote_positif: row.value.vote_positif,
 	    date_modification: row.value.created,
 	    auteur: row.value.auteur,
-	    effets : row.value.effets
+	    effects : row.value.effects
 	});
       }
       
       if( row.value._id == data.answered){
 	  data.answered_rev = row.value._rev;
 	  data.answered_text = row.value.texte;
-	  data.answered_effets = row.value.effets;
+	  data.answered_effects = row.value.effects;
 	  data.answered_count = row.value.vote_count;
 	  data.answered_author = row.value.auteur;
       }

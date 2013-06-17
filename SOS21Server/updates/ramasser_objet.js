@@ -2,7 +2,7 @@ function(o, req) {
   var action_object = JSON.parse(req.body);
   
   action_object.verb="ramasser_un_objet";
-  action_object.effets= {
+  action_object.effects= {
        "energy": -2,
        "moral": -1,
        "environnement": +1
