@@ -12,9 +12,17 @@ function (obj){
     }
     
     if(obj.character){
+	
     	for (var e in obj.effects) {
-      	    emit(["character", obj.character, obj.effects[e].name], obj.effects[e].value);
+      	    emit(["characterId_and_attribute", obj.character, obj.effects[e].name], obj.effects[e].value);
     	}
+	
+    }
+     
+    if (obj.type == "character") {
+    
+	emit(["character", obj._id, obj.name], 1);
+  
     }
     
     if(obj.effects_attribute){

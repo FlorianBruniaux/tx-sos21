@@ -11,7 +11,7 @@ define(["jquery"], function($){
             if (typeof(data)==="object"){
                 extraParam = [];
                 Object.keys(data).forEach(function(elem){
-                    extraParam.push(elem);
+                    extraParam.push(data[elem]);
                 });
             }
             $(this).trigger(eventName, extraParam);

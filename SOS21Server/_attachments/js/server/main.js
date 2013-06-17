@@ -1,4 +1,4 @@
-define(['jquery', 'lib/melon', 'entities'], function($, melon, entities){
+define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon, entities, mediator){
     var server = (function(){
         var out = {}; // public things
         var db_name = "sos21";
@@ -182,7 +182,6 @@ define(['jquery', 'lib/melon', 'entities'], function($, melon, entities){
         //// req.fail();
         //};
         
-        //must be binded to an obj type player (that is the point of view)
         out.registerListeners = function(mainPlayer){
             if (window.EventSource) {
                 this.listener = this.listener || {players: null};
@@ -207,7 +206,7 @@ define(['jquery', 'lib/melon', 'entities'], function($, melon, entities){
                 dataType: "json"
             });
             retrieveInfo.done(function(couchData){
-                $(out).trigger('move'+'.'+couchData._id, [couchData.x, couchData.y]);
+                mediator.publish('move'+'.'+couchData._id, [couchData.x, couchData.y]);
                 //me.event.publish("moveTo", [couchData._id, couchData.x, couchData.y]);
             });
         };

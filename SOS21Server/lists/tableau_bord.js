@@ -9,6 +9,8 @@ function(head, req) {
         actions: []
     }
     
+    characterIdAndName = [];
+    
     var executants = [];
         
     while (row = getRow()) {
@@ -25,23 +27,32 @@ function(head, req) {
                 "flopvalue" : "/"
             }); 
         }
-        else if(row.key[0] == "character"){
+        else if(row.key[0] == "characterId_and_attribute"){
             
             if (existCharacter(row.key[1]) == false) {
                 data.characters.push({
-                    "pseudo" : row.key[1],
+                    "id" : row.key[1],
+                    "name" : "no",
                     "effects" : []
                 });  
             }
             
             for each (c in data["characters"]) {
-                if (c.pseudo == row.key[1]) {
+                if (c.id == row.key[1]) {
                     c.effects.push({
                         "attribute" : row.key[2],
                         "value" : row.value.sum
                     });
                 }
             }   
+        }
+        else if(row.key[0] == "character"){
+            
+            characterIdAndName.push({
+                "id" : row.key[1],
+                "name" : row.key[2]
+            });
+   
         }
         else if(row.key[0] == "executed-action" ){
             
@@ -88,6 +99,11 @@ function(head, req) {
     }
 
     for each (c in data["characters"]) {
+        for each(ch in characterIdAndName) {
+            if (c.id == ch.id) {
+                c.name = ch.name;
+            }
+        }
         for each (a in data["attributes"]) {
             var copy = true;
             for each(e in c.effects) {
@@ -95,21 +111,21 @@ function(head, req) {
                     copy = false;
                     
                     if (a.topvalue == "/") {
-                        a.topcharacter = c.pseudo;
+                        a.topcharacter = c.name;
                         a.topvalue = e.value;
                     }else{
                         if (e.value > a.topvalue) {
-                            a.topcharacter = c.pseudo;
+                            a.topcharacter = c.name;
                             a.topvalue = e.value;   
                         }
                     }
                     
                     if (a.flopvalue == "/") {
-                        a.flopcharacter = c.pseudo;
+                        a.flopcharacter = c.name;
                         a.flopvalue = e.value;
                     }else{
                         if (e.value < a.flopvalue) {
-                            a.flopcharacter = c.pseudo;
+                            a.flopcharacter = c.name;
                             a.flopvalue = e.value;
                         }
                     }
@@ -175,10 +191,10 @@ function(head, req) {
         return 0;
     }
       
-    function existCharacter(_pseudo) {
+    function existCharacter(_id) {
         if (data["characters"].length > 0) {
             for each (c in data["characters"]) {
-                if (c.pseudo == _pseudo){
+                if (c.id == _id){
                     return true;
                 }
             }   

@@ -1,4 +1,4 @@
-define(['jquery', 'lib/melon', 'entities', 'server', 'entities/sos21Player'], function($, melon, entities, server, Sos21Player){
+define(['jquery', 'lib/melon', 'entities', 'server', 'event/mediator', 'entities/sos21Player'], function($, melon, entities, server, mediator, Sos21Player){
     // TODO : gérer le path finding pour les autres joueurs
     var OtherPlayer = Sos21Player.extend({
         init: function(x, y, settings) {
@@ -6,7 +6,7 @@ define(['jquery', 'lib/melon', 'entities', 'server', 'entities/sos21Player'], fu
             
             //Ecoute d'un message "goTo", qui déclanche le déplacement via le pathfinder
             //V_JQuery
-            $(server).on("move"+"."+this.servData._id, function(event, x, y){this.moveTo(x, y)}.bind(this));
+            mediator.on("move"+"."+this.servData._id, function(event, x, y){this.moveTo(x, y)}.bind(this));
             //V_1
             //goTo_callback = (function(objId, x, y){
             //    console.log(objId+" == "+this.servData._id+" ?")
@@ -17,11 +17,6 @@ define(['jquery', 'lib/melon', 'entities', 'server', 'entities/sos21Player'], fu
             //}).bind(this); //on bind this à l'objet courrant, et non à l'objet global
             //me.event.subscribe("moveTo", goTo_callback);
             
-        },
-        moveTo: function(x, y){
-                y -= this.height/1.5;
-                //console.log("from "+this.pos.x+";"+this.pos.y+" // to "+x+";"+y);
-                this.parent(x, y);
         }
         //registerEvent: function(eventName, handler, eventData){
         //    $.on(eventName+"."+this.servData._id, , )

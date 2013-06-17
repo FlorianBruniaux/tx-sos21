@@ -18,6 +18,7 @@ function(old, req) {
     timestamp.getHours(),
     timestamp.getMinutes()
   ];
+  
   action_object._id = action_object.verb +"-"+ action_object.character +"-"+ timestamp;
   
   return [action_object, "Action created at " + timestamp ];
