@@ -1,5 +1,8 @@
 define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'], function(entities, melon, scene, client, GameObject){
-
+    /**
+     * Objet interactif de base
+     * Ne pas instacier, utiliser un surcouche comme CollectableObject ou ChangeMapObject
+     */
     var InteractiveObject = GameObject.extend({
         hasBeenClicked: false,
         effectTriggered: false,
@@ -22,7 +25,7 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
 			me.event.subscribe("objectClicked", this.mouseDown);
         },
         update: function(){
-            this.isMouseOver();
+            this.checkMouseOver();
             this.checkInteraction();
             this.parent();
         },
@@ -31,22 +34,34 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
 				this.triggerEffect();
 			}
 		},
-        triggerEffect: function(){
-			if (!this.effectTriggered) {
-				this.effectTriggered = true;
-				this.applyEffect();
-			}
-		},
-		applyEffect: function(){
-			// EXTENDS
-		},
+        /**
+         * Controle la fin de l'interaction avec le personnage -> reset eventTrigger
+         */
         checkInteraction: function(){
             var collision = me.game.collide(this);
             if (!collision && this.effectTriggered) {
                 this.effectTriggered = false;
             }
         },
-        isMouseOver: function(){
+        /**
+         * Déclenche l'effet de l'objet
+         */
+        triggerEffect: function(){
+			if (!this.effectTriggered) {
+				this.effectTriggered = true;
+				this.applyEffect();
+			}
+		},
+        /**
+         * Applique l'éffet
+         */
+		applyEffect: function(){
+			// EXTENDS
+		},
+        /**
+         * Déclenche les effets de mouseOver, mouseOut
+         */
+        checkMouseOver: function(){
 			var mouse = client.getMouse();
 			if (this.collisionBox.containsPoint(mouse.x, mouse.y)) {
 				this.onMouseOver();
@@ -55,16 +70,19 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
 				this.onMouseOut();
 			}
 		},
+        /**
+         * Effet du mouseOver
+         */
         onMouseOver: function(){
             me.video.getScreenCanvas().style.cursor="move"; // BETA TEST
 			this.renderable.setCurrentAnimation("mouseover");
         },
+        /**
+         * effet Du mouseOut
+         */
 		onMouseOut: function(){
 			me.video.getScreenCanvas().style.cursor="auto"; // BETA TEST
 			this.renderable.setCurrentAnimation("default");
-		},
-        onOtherPlayerPick: function(){
-			me.game.remove(this);
 		}
     });
     

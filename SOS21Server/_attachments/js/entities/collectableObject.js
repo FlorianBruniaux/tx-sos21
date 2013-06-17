@@ -4,7 +4,13 @@ define(['entities', 'lib/melon', 'server', 'client', 'entities/interactiveObject
         applyEffect: function(){
             console.log("collectable");
             me.game.remove(this);
-        }
+        },
+		/**
+         * Objet pick par un autre joueur
+         */
+        onOtherPlayerPick: function(){
+			me.game.remove(this);
+		}
     });
     
     return CollectableObject;
