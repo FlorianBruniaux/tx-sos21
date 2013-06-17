@@ -4,7 +4,7 @@
 */
 function vote_up(id){
 
-   db = $.couch.db("tx");
+   db = $.couch.db("sos21");
    db.openDoc(id, {
            success: function(doc) {
                doc.vote_positif++;
@@ -25,7 +25,7 @@ function vote_up(id){
 */
 function vote_down(id){
 
-   db = $.couch.db("tx");
+   db = $.couch.db("sos21");
    db.openDoc(id, {
        success: function(doc) {
            doc.vote_negatif++;

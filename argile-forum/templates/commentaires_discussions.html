@@ -202,7 +202,7 @@
 	   function nouvelleDiscussion(auteur, titre, texte, type, mots_cle, lien){
 	       
 	       //Sélectionne la bdd
-	       db = $.couch.db("tx");
+	       db = $.couch.db("sos21");
 	       
 	       var reload = false;
 	       
@@ -235,7 +235,7 @@
 			    //Une fois la discution créée, on peut attacher l'image
 			    $('input#_rev').val(data.rev);
 			    $('form.imageForm').ajaxSubmit({
-				url: "/tx/"+ data.id,
+				url: "/sos21/"+ data.id,
 				//async:false,
 				success: function(response) {
 				}
@@ -315,7 +315,7 @@
 	   function nouveauCommentaire(auteur,id,name,text){
 	       
 	       //Sélectionne la bdd
-	       db = $.couch.db("tx");
+	       db = $.couch.db("sos21");
 	       
 	       var laDate = new Date();
 	       
@@ -358,7 +358,7 @@
 	        var laDate = new Date();
 		
 		//Sélectionne la bdd
-	        db = $.couch.db("tx");
+	        db = $.couch.db("sos21");
 		
 	        db.openDoc(top_id, {
 		   success: function(doc) {
@@ -382,7 +382,7 @@
 		var top_id=topic_id;
 	    
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		db.openDoc(top_id, {
 		    success: function(doc) {
@@ -405,7 +405,7 @@
 	    function supprimer(id,rev){
 	    
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		db.removeDoc({_id:id, _rev: rev}, {
 		    success: function(doc) {
@@ -521,7 +521,7 @@
 	    */
 	   
 	    //Sélectionne la bdd
-	    db = $.couch.db("tx");
+	    db = $.couch.db("sos21");
 	    
 	    db.view("argile-forum/discussions", {
 		success: function(data) {

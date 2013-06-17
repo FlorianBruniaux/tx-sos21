@@ -185,7 +185,7 @@
 	    $("#execution_counter").ready(function(){
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		//Charger les données générée par la vue
 		db.view("argile-forum/actions-executed", {
@@ -209,7 +209,7 @@
 	    $("#executors").ready(function(){
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		//Charger les données générée par la vue
 		db.view("argile-forum/actions-executed", {
@@ -235,7 +235,7 @@
 	    $("#commentaire_form").ready(function(){
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		//Charger les données générée par la vue
 		db.view("argile-forum/effects-attributes", {
@@ -318,7 +318,7 @@
 	    function addToEffectsAttributes(_name) {
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 	        db.saveDoc({		
 			effects_attribute: _name,
@@ -347,7 +347,7 @@
 		$('#'+_name+'_form').remove();
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		db.removeDoc({_id: _idAtt, _rev: _revAtt}, {
 		    success: function(doc) {
@@ -365,7 +365,7 @@
 	    function valider(_id_regle, _idCom){
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		//ouvrir doc
 		db.openDoc( _idCom, {
@@ -425,7 +425,7 @@
 	    function invalider(_id_regle, _id_action, _rev_action){
 	    
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		//Supprimer l'action qui avaité été créé lors de la validation du commentaire
 		//RQ: une fois supprimer, tant qu'un autre commentaire n'est pas validé, on ne
@@ -491,7 +491,7 @@
 	    function supprimer(_idCom, _revCom){
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		db.removeDoc({_id:_idCom, _rev: _revCom}, {
 		    success: function(doc) {
@@ -583,7 +583,7 @@
 		}
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		//On enregistre le commentaire
 		db.saveDoc({

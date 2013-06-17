@@ -188,7 +188,7 @@
 	    function nouvelleRegle(_auteur, _title, _description){
 	       
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		db.saveDoc({
 			type : "regle", 
@@ -217,7 +217,7 @@
 	    $("#reglesRecentes").ready(function(){
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		db.view("argile-forum/regles-nouvelles", {
 		    limit: 10,
@@ -250,7 +250,7 @@
 	    $("#attributs_body").ready(function(){
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		db.view("argile-forum/effects-attributes", {
 		    descending: true,

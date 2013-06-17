@@ -68,7 +68,7 @@ function enregistrer(login,mdp,email,role,recrut){
       var role = "basique";
     }
     
-    db = $.couch.db("tx");
+    db = $.couch.db("sos21");
     
     var laDate = new Date();
     
@@ -100,7 +100,7 @@ function connecter(login,mdp){
     //Pour savoir si on recharge la page après connexion ou si on affiche une erreur de connexion
     var reussi = false;
     
-    db = $.couch.db("tx");
+    db = $.couch.db("sos21");
     db.view("argile-forum/utilisateurs", {
         success: function(data) {
             //On cherche document par document si on trouve l'utilisateur'
