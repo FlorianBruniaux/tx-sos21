@@ -53,6 +53,8 @@ li) ? 1 : 0;
 				var newObject = me.entityPool.newInstanceOf(obj.type, obj.x, obj.y, obj);
 				me.game.add(newObject, 3);
 			});
+			server.registerListeners(mainPlayer);
+
 		},
 		initHUD: function(){
 			me.game.addHUD(0,0,100,50, "rgba(255,255,255, 0.5)");
