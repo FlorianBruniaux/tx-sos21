@@ -17,7 +17,21 @@ L’intérêt est que nous posions ensembles les bases techniques du jeu afin qu
 
 ## Requis
 - [CouchDB](http://couchdb.apache.org)
+CouchDB fait partie des bases de données dites « NoSQL ». C’est un système de gestion de base de données orienté documents. Développé il y a quelques années par Damien Katz, Jan Lehnardt, Noah Slater, Christopher Lenz, J. Chris Anderson, CouchDB fait partie des logiciels distribués sous licence Apache. 
+CouchDB est presque entièrement réalisé en Erlang, un langage de programmation fonctionnel supportant plusieurs paradigmes (concurrence, temps réel, distribution) principalement basé sur la récursivité.
+
 - [couchapp](https://github.com/couchapp/couchapp)
+CouchApp est un ensemble d’application permettant de vous aider à créer vos applications CouchDB. CouchApp prend la forme d’un outil en ligne de commande. Il génère l’ensemble des dossiers, librairies et éventuels codes nécessaires pour avoir une application prête à développer et mise en ligne.
+CouchApp contient plusieurs choses :
+	- un générateur de squelette d'applications JavaScript pour CouchDB
+	- un ensemble de "helpers" et de plugin jQuery orientés CouchDB
+	- des librairies JavaScript telles mustache.js, markdown.js ...
+	- un ensemble de commandes permettant particulièrement d'installer/copier votre application dans CouchDB
+	
+	>RQ : jQuery permet de lier la partie client et la partie serveur. Elle se trouve en base et est donc « fournie » par l’application CouchDB. On utilisera surtout Ajax afin d’envoyer et récupérer les données formatées en JSON. Les concepteurs de CouchDB ont aussi prévu une extension nommée jquery.couch.js qui permet de faciliter la manipulation des documents stockés dans la base grâce à des fonctions prédéfinies (dont les noms sont assez explicites pour ne pas les décrire) comme openDoc(), saveDoc() et removeDoc(). 
+
+
+
 - or any other tools that help you to create web application through Couchdb
 
 ## Dossiers 
