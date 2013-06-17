@@ -35,9 +35,9 @@
 		    <script type="text/javascript">
 			if ("{{topcharacter}}" != "{{flopcharacter}}") {
 			    $("#classement").append('<div class="topsflops">\
-							<h3>{{name}}</h3>\
-							<p><b>{{top}}</b> = {{topcharacter}} avec {{topvalue}} points</p>\
-							<p><b>{{flop}}</b> = {{flopcharacter}} avec {{flopvalue}} points</p>\
+							<h3 class="blue" >{{name}}</h3>\
+							<p><b>{{top}}</b> = {{topcharacter}} avec <span class="orange">{{topvalue}}</span> points</p>\
+							<p><b>{{flop}}</b> = {{flopcharacter}} avec <span class="orange">{{flopvalue}}</span> points</p>\
 						    </div>');
 			}
 		    </script>

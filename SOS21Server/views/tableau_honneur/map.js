@@ -2,7 +2,7 @@ function(obj) {
   
   if(obj.character){
     for (var e in obj.effects) {
-      emit([obj.character, obj.effects[e].name], obj.effects[e].value);
+      emit(["characterId_and_attribute", obj.character, obj.effects[e].name], obj.effects[e].value);
     }
   }
   
@@ -10,4 +10,7 @@ function(obj) {
     emit(["effect_attribute", obj.effects_attribute, obj.top, obj.flop], 1);
   }
   
+  if (obj.type == "character") {
+    emit(["character", obj._id, obj.name], 1);
+  }
 }
