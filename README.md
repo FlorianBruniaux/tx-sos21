@@ -73,18 +73,27 @@ $ couchapp push . http://<user>:<passwd>@localhost:5984/<db_name>
 
 ### Objets
 ```bash
-  {
-		"name": "obj1",
-		"image": "obj1",
-		"place": "ed78748a843191d9c9c5e50887581b77",
-		"type": "Object",
-		"visible": true,
-		"x": 330,
-		"y": 200,
-		"spriteheight": 93,
-		"spritewidth": 84,
-		"colRect": {"x": 5,"w": 35,"y": 65,"h":20}
-  }
+{
+   "name": "nom_objet",
+   "image": "nom_prite",
+   "place": "id_place",
+   "type": "Object",
+   "place_to": "id_place_to_go",
+   "x": 50,
+   "y": 200,
+   "spriteheight": 30,
+   "spritewidth": 60,
+   "colRect": {
+       "x": 0,
+       "w": 60,
+       "y": 0,
+       "h": 30
+   },
+   "animationSheet": {
+       "default": [0],
+       "mouseover": [1]
+   }
+}
 ```
 
     Type : ["collectableObject", "changeMapObject", "informationObject", "Object"]
