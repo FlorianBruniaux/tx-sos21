@@ -5,7 +5,7 @@ define(['lib/melon',
 	'client/scene',
 	//'gui/cursor',
 	'screens/playScreen', 'screens/loadingScreen',
-	'entities/player', 'entities/otherPlayer', 'entities/gameObject', 'entities/changeMapObject', 'entities/collectableObject'],
+	'entities/player', 'entities/otherPlayer', 'entities/gameObject', 'entities/changeMapObject', 'entities/collectableObject', 'client/informationObject'],
        function(melon,
 		entities,
 		server,
@@ -14,7 +14,7 @@ define(['lib/melon',
 		//Cursor,
 		PlayScreen,
 		LoadingScreen,
-		Player, OtherPlayer, GameObject, ChangeMapObject, CollectableObject
+		Player, OtherPlayer, GameObject, ChangeMapObject, CollectableObject, InformationObject
 ){
 //-----------------------------------------------------------
 // JEU
@@ -74,6 +74,7 @@ define(['lib/melon',
 		me.entityPool.add("Object", GameObject, true);
 		me.entityPool.add("changeMapObject", ChangeMapObject, true);
 		me.entityPool.add("collectableObject", CollectableObject, true);
+		me.entityPool.add("informationObject", InformationObject, true);
     }
     
     
