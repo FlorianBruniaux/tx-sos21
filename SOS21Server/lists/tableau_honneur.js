@@ -10,7 +10,7 @@ function(head, req) {
     
     while (row = getRow()) {
         
-        if (row.key[0] == "effect_attribute") {
+        if (row.key[0] == "effet_attribute") {
             data.attributes.push({
                 "name" : row.key[1],
                 "topcharacter" : "Plusieurs personnages",
@@ -26,12 +26,12 @@ function(head, req) {
             if (alreadyAdded == false) {
                 data.characters.push({
                     "pseudo" : row.key[0],
-                    "effects" : []
+                    "effets" : []
                 });  
             }
             for each (c in data["characters"]) {
                 if (c.pseudo == row.key[0]) {
-                    c.effects.push({
+                    c.effets.push({
                         "attribute" : row.key[1],
                         "value" : row.value.sum
                     });
@@ -44,7 +44,7 @@ function(head, req) {
         for each (a in data["attributes"]) {
             
             var copy = true;
-            for each(e in c.effects) {
+            for each(e in c.effets) {
                 if (e.attribute == a.name) {
                     copy = false;
                     
@@ -72,13 +72,13 @@ function(head, req) {
                 
             }
             if (copy == true) {
-                c.effects.push({
+                c.effets.push({
                     "attribute" : a.name,
                     "value" : 0
                 })  
             }
         }
-        c.effects.sort(compare);
+        c.effets.sort(compare);
     }
     
     function compare(a,b) {

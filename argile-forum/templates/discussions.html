@@ -199,7 +199,7 @@
 	    function nouvelleDiscussion(auteur, titre, texte, type, mots_cle, lien){
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		var reload = false;
 		
@@ -233,7 +233,7 @@
 			    //Une fois la discution créée, on peut attacher l'image
 			    $('input#_rev').val(data.rev);
 			    $('form.imageForm').ajaxSubmit({
-			      url: "/tx/"+ data.id,
+			      url: "/sos21/"+ data.id,
 			      //async:false,
 			      success: function(response) {
 	    
@@ -255,7 +255,7 @@
 	    $("#discussionsRecentes").ready(function(){
 	     
 		 //Sélectionne la bdd
-		 db = $.couch.db("tx");
+		 db = $.couch.db("sos21");
 		
 		 db.view("argile-forum/discussions-nouvelles", {
 		    limit: 10,

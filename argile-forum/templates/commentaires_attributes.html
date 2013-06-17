@@ -208,7 +208,7 @@
 	    function valider(_id_attribute, _id){
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		//Ouvre le document avec l'id correspondant
 		db.openDoc( _id, {
@@ -252,7 +252,7 @@
 	    function invalider(_id_attribute){
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		//Ouvre le document avec l'id correspondant
 		db.openDoc( _id_attribute, {
@@ -306,7 +306,7 @@
 	    function supprimer(_idCom, _revCom){
 	    
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		//Supprime le doc
 		db.removeDoc({_id : _idCom , _rev : _revCom}, {
@@ -360,7 +360,7 @@
 	    function ajouterCommentaire(){
 	    
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		//Sauvegarde le doc
 		db.saveDoc({

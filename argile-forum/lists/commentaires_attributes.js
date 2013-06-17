@@ -12,7 +12,7 @@ function(head, req) {
     
     if (i == 0){
       data.id_attribute = row.value._id;
-      data.name = row.value.effects_attribute;
+      data.name = row.value.effets_attribute;
       data.top = row.value.top;
       data.flop = row.value.flop;
       data.answered = row.value.answered;

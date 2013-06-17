@@ -66,7 +66,7 @@
 			    <b>{{date}}</b><br />
 			    {{text}}<br />
 			    {{dateCom}} by {{authorCom}} : {{textCom}}<br/>
-			    {{#effects}}[{{name}}:{{value}}]{{/effects}}<br /><br />
+			    {{#effets}}[{{name}}:{{value}}]{{/effets}}<br /><br />
 			{{/logs}}	
 		    </p>
 		    
@@ -90,13 +90,13 @@
 			    
 			</tr>
 			
-			{{#effects}}
+			{{#effets}}
 			<tr>
 			    <td>
 				{{name}}: {{value}}
 			    </td>
 			</tr>
-			{{/effects}}
+			{{/effets}}
 			
 			<tr>
 			    <td id="valid" class="valid" style="visibility: hidden" onclick="valider('{{id_regle}}','{{id}}')">
@@ -185,7 +185,7 @@
 	    $("#execution_counter").ready(function(){
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		//Charger les données générée par la vue
 		db.view("argile-forum/actions-executed", {
@@ -209,7 +209,7 @@
 	    $("#executors").ready(function(){
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		//Charger les données générée par la vue
 		db.view("argile-forum/actions-executed", {
@@ -235,10 +235,10 @@
 	    $("#commentaire_form").ready(function(){
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		//Charger les données générée par la vue
-		db.view("argile-forum/effects-attributes", {
+		db.view("argile-forum/effets-attributes", {
 		    descending: true,
 		    success: function(data) {
 			//ajout d'une ligne pour chaque attribut déjà créé
@@ -246,7 +246,7 @@
 			    $("#commentaire_form").append(
 				    "<tr>\
 					<td>"+data.rows[i].key[1]+" : </td>\
-					<td class='effect_attribute' id='"+data.rows[i].key[1]+"'>\
+					<td class='effet_attribute' id='"+data.rows[i].key[1]+"'>\
 					   <select id='"+data.rows[i].key[1]+"_sign'>\
 						<option>+</option>\
 						<option>-</option>\
@@ -258,10 +258,10 @@
 			
 			//Ajout d'un mini formulaire d'ajout de nouvel attribut
 			$("#commentaire_form").append(
-				    "<tr id='new_effect_form'>\
+				    "<tr id='new_effet_form'>\
 					<td>Nouvel effet ?</td>\
-					<td><input type='text' id='new_effect' placeholder='Nom'/>\
-					<a style='color:#FA914B;text-decoration:underline;cursor:pointer;' onclick=\"ajouterAttribut($('#new_effect').val())\">Ajouter</a></td>\
+					<td><input type='text' id='new_effet' placeholder='Nom'/>\
+					<a style='color:#FA914B;text-decoration:underline;cursor:pointer;' onclick=\"ajouterAttribut($('#new_effet').val())\">Ajouter</a></td>\
 				     </tr>");
 			
 			//Bouton de validation du commentaire
@@ -288,10 +288,10 @@
 	    function ajouterAttribut(_name){
 		//Si le nom n'est pas nul
 		if (_name !="") {
-		    $("#new_effect_form").before(
+		    $("#new_effet_form").before(
 			    "<tr id='"+_name+"_form'>\
 				<td>"+_name+" : </td>\
-				<td class='effect_attribute' id='"+_name+"'>\
+				<td class='effet_attribute' id='"+_name+"'>\
 				   <select id='"+_name+"_sign'>\
 					<option>+</option>\
 					<option>-</option>\
@@ -300,14 +300,14 @@
 				</td>\
 			    </tr>");
 		    //Vider champs d'ajout
-		    $("#new_effect").val("");
+		    $("#new_effet").val("");
 		    //Supprimer les erreurs (s'il y en a)
 		    $(".err").remove();
 		    //Ajouter l'attibut en bdd
-		    addToEffectsAttributes(_name);
+		    addToEffetsAttributes(_name);
 		}
 		else{
-		    $("#new_effect").after("<span class='err' style='color:red;'> Can't be empty !</span>");
+		    $("#new_effet").after("<span class='err' style='color:red;'> Can't be empty !</span>");
 		}
 	    }
 	    
@@ -315,13 +315,13 @@
 	     * Pour sauvegarder le nouvel attribut dans la bdd
 	     * @param {string} _name = le nom du nouvel attribut
 	     */
-	    function addToEffectsAttributes(_name) {
+	    function addToEffetsAttributes(_name) {
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 	        db.saveDoc({		
-			effects_attribute: _name,
+			effets_attribute: _name,
 			top : "top",
 			flop : "flop",
 			answered : "no",
@@ -330,7 +330,7 @@
 		    {success: function(data){
 			//Possibilité de supprimer l'attribut récémment ajouté.
 			//Rq: cela le supprime de la bdd ET de l'écran
-			$("#"+_name).append("<a style='text-decoration:underline;cursor:pointer;' onclick='delFromEffectsAttributes(\""+_name+"\", \""+data.id+"\", \""+data.rev+"\")'>X</a>");
+			$("#"+_name).append("<a style='text-decoration:underline;cursor:pointer;' onclick='delFromEffetsAttributes(\""+_name+"\", \""+data.id+"\", \""+data.rev+"\")'>X</a>");
 		    }}
 		);  
 	    }
@@ -341,13 +341,13 @@
 	     * @param {string} _idAtt = id de l'attribut à supprimer
 	     * @parem {string} _revAtt = rev de l'attribut à supprimer
 	     */
-	    function delFromEffectsAttributes(_name, _idAtt, _revAtt) {
+	    function delFromEffetsAttributes(_name, _idAtt, _revAtt) {
 		
 		//Supprime la ligne de l'attribut de l'écran
 		$('#'+_name+'_form').remove();
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		db.removeDoc({_id: _idAtt, _rev: _revAtt}, {
 		    success: function(doc) {
@@ -365,19 +365,19 @@
 	    function valider(_id_regle, _idCom){
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		//ouvrir doc
 		db.openDoc( _idCom, {
 		    success: function(com) {
 			//créer une action avec les effets choisi
-			//On pourra effectuer un POST directement sur cette action
+			//On pourra effetuer un POST directement sur cette action
 			//afin d'en reprendre les caractéristiques
 			db.saveDoc({		
 				_id: "{{titre_regle}}",
 				created: new Date().toString() ,
 				description_action : "{{description_regle}}",
-				effects: com.effects,
+				effets: com.effets,
 				id_regle: "{{id_regle}}"
 			    },
 			    {
@@ -396,7 +396,7 @@
 						dateCom : "Answer proposed "+com.created,
 						textCom : com.texte,
 						authorCom : com.auteur,
-						effects : com.effects,
+						effets : com.effets,
 						text : "VALIDATION"
 					    });
 					    //sauvegarder changements
@@ -425,7 +425,7 @@
 	    function invalider(_id_regle, _id_action, _rev_action){
 	    
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		//Supprimer l'action qui avaité été créé lors de la validation du commentaire
 		//RQ: une fois supprimer, tant qu'un autre commentaire n'est pas validé, on ne
@@ -491,7 +491,7 @@
 	    function supprimer(_idCom, _revCom){
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		db.removeDoc({_id:_idCom, _rev: _revCom}, {
 		    success: function(doc) {
@@ -527,7 +527,7 @@
 					 <td class='valid-answer-text'>{{answered_text}}</td>\
 				    </tr>\
 				    <tr>\
-					<td  id='answered_effects' class='valid-answer-text'><b>Effets</b>:<span>{{#answered_effects}}[{{name}}:{{value}}]{{/answered_effects}}</span>\</td>\
+					<td  id='answered_effets' class='valid-answer-text'><b>Effets</b>:<span>{{#answered_effets}}[{{name}}:{{value}}]{{/answered_effets}}</span>\</td>\
 				    </tr>\
 				</table>\
 			    </td></tr>";
@@ -542,8 +542,8 @@
 		    tableau.appendChild(ligne);
 		    
 		    //Si l'action n'a aucun effet
-		    if ( $("#answered_effects").text() == "Effets:" ) {
-			$("#answered_effects").append("Cette action n'a aucun effet..."); 
+		    if ( $("#answered_effets").text() == "Effets:" ) {
+			$("#answered_effets").append("Cette action n'a aucun effet..."); 
 		    }
 		    
 		}	     
@@ -554,11 +554,11 @@
 	    */
 	    function ajouterCommentaire(){
 	     
-		var effects_list = [];
+		var effets_list = [];
 		var validated = true;
 		
-		//Pour chacun des attributs (identifiés par une class "effect_attribute")
-		$(".effect_attribute").each(function(){
+		//Pour chacun des attributs (identifiés par une class "effet_attribute")
+		$(".effet_attribute").each(function(){
 		    var id =  this.id;
 		    
 		    //On vérifie que les valeurs saisies sont bien des entiers
@@ -568,9 +568,9 @@
 		    
 		    //S'il y a une valeur pour l'attribut et que cette valeur est != 0
 		    if ($("#"+id+"_value").val() && $("#"+id+"_value").val() != 0) {
-			//On push dans le tableau effects_list
+			//On push dans le tableau effets_list
 			//Rq : setSignValue permet d'éliminer le + pour les valeurs positives (cf notation json)
-			effects_list.push({
+			effets_list.push({
 			    name : id,
 			    value : setSignValue(id)
 			});
@@ -583,14 +583,14 @@
 		}
 		
 		//Sélectionne la bdd
-		db = $.couch.db("tx");
+		db = $.couch.db("sos21");
 		
 		//On enregistre le commentaire
 		db.saveDoc({
 			texte : $("#texte_commentaire").val(),
 			auteur : verifierConnexion(),
 			target : '{{id_regle}}',
-			effects : effects_list,
+			effets : effets_list,
 			created : new Date().toString(),
 			type :  "commentaire-regle",
 			vote_negatif : 0,
