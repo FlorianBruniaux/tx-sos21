@@ -151,6 +151,36 @@ Composition d’un commentaire de règle :
 
 
 ###Attributs
+Pour faire simple, un attribut est un effet d’action. Pour chaque règle (et donc pour l’action que cette règle décrit) plusieurs attributs sont disponibles. 
+
+Composition d’un attribut :
+
+- effects_attribute :
+ -	Type : String 
+ -	Description : Nom de l’effet
+
+-	top :
+ -	Type : String 
+ -	Valeur par défaut : « top »
+ -	Description : Adjectif donné au joueur ayant le meilleur score pour cet attribut
+
+-	flop :
+ -	Type : String 
+ -	Valeur par défaut : « flop »
+ -	Description : Adjectif donné au joueur ayant le moins bon score pour cet attribut
+
+-	answered_date :
+ -	Type : String (Timestamp)
+ -	Valeur par défaut : « no »
+ -	Description : Date à laquelle le commentaire a été validé.
+
+- logs : cf logs règles.
+
+-	answered : 
+ -	Type : String
+ -	Valeur par défaut : « no » 
+ -	Description : Lorsqu’un commentaire est validé, l’attribut prend pour valeur l’id de ce dernier. On peut ainsi effectuer des jointures. 
+
 
 ###Commentaires d'attributs
 
