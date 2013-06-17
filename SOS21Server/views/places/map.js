@@ -1,7 +1,9 @@
-function(o) {
+function(obj) {
   
-  if (o.type == "place") {
-    emit([o._id], [o.title]);
+  if (obj.type == "place") {
+    
+    emit([obj._id], [obj.title]);
+    
   }
   
 }

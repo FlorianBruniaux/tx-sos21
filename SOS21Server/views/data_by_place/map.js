@@ -1,7 +1,13 @@
-function (doc) {
-    if (doc.type=="place") {
-        doc.tilesets.forEach(function(tileset){
-            emit(doc._id, tileset);
-        });
+function (obj) {
+    
+    if (obj.type=="place") {
+        
+        obj.tilesets.forEach(
+            function(tileset){
+                emit(obj._id, tileset);
+            }
+        );
+        
     }
+    
 }

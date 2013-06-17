@@ -1,7 +1,7 @@
-function(o) {
+function(obj) {
   
-  if (o.loggedOn) {
-    emit(o.pseudo, o);
+  if (obj.loggedOn) {
+    emit(obj.pseudo, obj);
   }
   
 }

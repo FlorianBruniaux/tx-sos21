@@ -1,5 +1,9 @@
-function(o) {
-  if (o.type == "character") {
-    emit([o._id], null);
+function(obj) {
+  
+  if (obj.type == "character") {
+    
+    emit([obj._id], null);
+  
   }
+  
 }

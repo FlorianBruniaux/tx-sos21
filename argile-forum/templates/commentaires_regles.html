@@ -188,7 +188,7 @@
 		db = $.couch.db("sos21");
 		
 		//Charger les données générée par la vue
-		db.view("argile-forum/actions-executed", {
+		db.view("argile-forum/actions_executed", {
 		    descending: true,
 		    group: true,
 		    group_level:1,
@@ -212,7 +212,7 @@
 		db = $.couch.db("sos21");
 		
 		//Charger les données générée par la vue
-		db.view("argile-forum/actions-executed", {
+		db.view("argile-forum/actions_executed", {
 		    descending: true,
 		    group: true,
 		    startkey:["{{titre_regle}}",{}],
@@ -238,7 +238,7 @@
 		db = $.couch.db("sos21");
 		
 		//Charger les données générée par la vue
-		db.view("argile-forum/effects-attributes", {
+		db.view("argile-forum/effects_attributes", {
 		    descending: true,
 		    success: function(data) {
 			//ajout d'une ligne pour chaque attribut déjà créé
