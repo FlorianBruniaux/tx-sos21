@@ -25,7 +25,7 @@ define(['entities', 'lib/melon', 'client', 'server', 'entities/sos21Player'], fu
                 me.game.collide(this);
                 var mouse = client.getMouse();
 				if(me.game.collisionMap.getTile(mouse.x, mouse.y)!=null){
-					me.video.getScreenCanvas().style.cursor="crosshair";
+					me.video.getScreenCanvas().style.cursor="auto";
 				}else{
 					me.video.getScreenCanvas().style.cursor="pointer";
 				}

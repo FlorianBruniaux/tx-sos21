@@ -3,7 +3,7 @@ define(['lib/melon',
 	'server',
 	'client',
 	'client/scene',
-	'gui/cursor',
+	//'gui/cursor',
 	'screens/playScreen', 'screens/loadingScreen',
 	'entities/player', 'entities/otherPlayer', 'entities/gameObject', 'entities/changeMapObject', 'entities/collectableObject'],
        function(melon,
@@ -11,7 +11,7 @@ define(['lib/melon',
 		server,
 		client,
 		scene,
-		Cursor,
+		//Cursor,
 		PlayScreen,
 		LoadingScreen,
 		Player, OtherPlayer, GameObject, ChangeMapObject, CollectableObject
@@ -68,7 +68,7 @@ define(['lib/melon',
     
     var initEntityPool = function(){
     	//init entitypool (travail de entities/main.js ?)
-    	me.entityPool.add("cursor", Cursor);
+    	//me.entityPool.add("cursor", Cursor);
 		me.entityPool.add("mainPlayer", Player);
 		me.entityPool.add("otherPlayer", OtherPlayer, true);
 		me.entityPool.add("Object", GameObject, true);
@@ -79,8 +79,8 @@ define(['lib/melon',
     
     var initDebug = function(){
 		// debug renders
-		me.debug.renderHitBox = true; // debug - hitbox
-		me.debug.renderVelocity = true; // melon v0.9.7+
+		//me.debug.renderHitBox = true; // debug - hitbox
+		//me.debug.renderVelocity = true; // melon v0.9.7+
 		//me.debug.renderCollisionMap = true; // melon v0.9.7+
     }
     

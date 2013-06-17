@@ -37,17 +37,16 @@ define(['entities', 'lib/melon', 'server', 'client', 'client/scene'], function(e
 		},
 		applyEffect: function(){
 			console.log("effect");
-			me.game.remove(this);
+			//me.game.remove(this);
 		},
 		isMouseOver: function(){
 			var mouse = client.getMouse();
 			if (this.collisionBox.containsPoint(mouse.x, mouse.y)) {
-				me.video.getScreenCanvas().style.cursor="move"; // BETA TEST
 				this.onMouseOver();
 			}
 		},
 		onMouseOver: function(){
-			this.renderable.flicker(10);
+			// extends
 		},
 		onDestroyEvent: function(){
 			me.event.unsubscribe(this.mouseHandler);
