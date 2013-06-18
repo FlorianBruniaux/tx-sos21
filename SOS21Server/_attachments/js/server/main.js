@@ -1,9 +1,11 @@
 define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon, entities, mediator){
     var server = (function(){
-        var out = {}; // public things
         var db_name = "sos21";
         var couchUrl = "http://localhost:5984";
         var serverUrl = couchUrl + "/" + db_name;
+        
+        var out = {}; // public things
+        out.listener = [];
         
         var online = (function(){
             var isOnline = false
@@ -40,7 +42,6 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 type: "GET",
-                // la requette ce doit d'etre synchrone, comme le resultat est utilisé en argument d'une fonction (sos21.js, line 12)
                 async: false
             });
             
@@ -58,10 +59,9 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
         out.getOtherPlayers = function(map, playerId){
             var players = [];
             var get_otherPlayers_info = $.ajax({
-                url: serverUrl+"/_design/SOS21Server/_view/characters_by_place",
+                url: serverUrl+"/_design/SOS21Server/_view/characters_by_place?key=["+JSON.stringify(map)+"]",
                 type: "GET",
                 contentType: "application/json; charset=utf-8",
-                data: JSON.stringify({"key": map}),
                 async: false,
                 dataType: "json"
             });
@@ -124,11 +124,12 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
             return mapObjects;
         };
         
-        out.updatePlayerPosition = function(playerData, x, y){
+        out.updatePlayer = function(playerData){
             var output = null;
             if(playerData._id && playerData._rev && playerData.type == "character"){
-                playerData.x = x; 
-                playerData.y = y;
+                //playerData.x = x; 
+                //playerData.y = y;
+                playerData.changingPlace = false;
                 var req_update = $.ajax({
                     url: serverUrl+"/"+playerData._id,
                     type: "PUT",
@@ -140,7 +141,7 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
                     data = JSON.parse(data);
                     playerData._rev = data.rev;
                     output = playerData;
-
+        
                 });
             
                 req_update.fail(function(error){
@@ -149,55 +150,122 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
             }
             return output
         };
-        
-        //out.longpoll = function (lastseq, pseudo){
-        //    var _this = this;
-        //    data = {"feed":"longpoll","since": lastseq, "heartbeat": 3000};
-        //    req = $.ajax({
-        //        url: serverUrl+"/_changes?filter=SOS21Server/other_players&pseudo="+pseudo, // ~
-        //        type: "GET",
-        //        data: data,
-        //        contentType: "application/json; charset=utf-8",
-        //        dataType: "json"
-        //    });
-        //
-        //    req.done(function(dataChange){
-        //        var maj = $.ajax({
-        //            url: serverUrl+"/"+dataChange.results[0].id,
-        //            type: "GET",
-        //            contentType: "application/json; charset=utf-8",
-        //            dataType: "json"
+        //out.updatePlayerPosition = function(playerData, x, y){
+        //    var output = null;
+        //    if(playerData._id && playerData._rev && playerData.type == "character"){
+        //        playerData.x = x; 
+        //        playerData.y = y;
+        //        playerData.changingPlace = false;
+        //        var req_update = $.ajax({
+        //            url: serverUrl+"/"+playerData._id,
+        //            type: "PUT",
+        //            data: JSON.stringify(playerData),
+        //            async: false
         //        });
         //    
-        //        maj.done(function(dataPerso){
-        //            /*if (me.game.getEntityByGUID(dataChange.results[0].id)) {
-        //                    me.game.getEntityByGUID(dataChange.results[0].id).longpollMvt(dataPerso.x, dataPerso.y);
-        //            }*/
-        //            
-        //            _this.longpoll(dataChange.results[dataChange.results.length-1].seq, pseudo);
-        //            
+        //        req_update.done(function(data){
+        //            data = JSON.parse(data);
+        //            playerData._rev = data.rev;
+        //            output = playerData;
+        //
         //        });
-        //    // maj.fail();
-        //    });  
-        //// req.fail();
+        //    
+        //        req_update.fail(function(error){
+        //            output = null;
+        //        });
+        //    }
+        //    return output
         //};
+        
+        out.updateObject = function(objectData){
+            console.log("update de l'objet !");
+            console.log(objectData);
+            var req_update = $.ajax({
+                url : serverUrl + "/" + objectData._id,
+                type : "PUT",
+                data : JSON.stringify(objectData),
+                contentType: 'application/json; charset=UTF-8'
+            });
+            req_update.done(function(successData){
+                successData = JSON.parse(successData);
+                mediator.publish("objectUpdated"+"."+successData.id);
+                //var req_applyEffect = $.ajax({
+                //    url : "",
+                //    type : "POST",
+                //    data: JSON.stringify()
+                //});
+            });
+        }
+        
+        out.longpoll = function (lastseq, pseudo){
+            var _this = this;
+            data = {"feed":"longpoll","since": lastseq, "heartbeat": 3000};
+            req = $.ajax({
+                url: serverUrl+"/_changes?filter=SOS21Server/other_players&pseudo="+pseudo, // ~
+                type: "GET",
+                data: data,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json"
+            });
+        
+            req.done(function(dataChange){
+                var maj = $.ajax({
+                    url: serverUrl+"/"+dataChange.results[0].id,
+                    type: "GET",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json"
+                });
+            
+                maj.done(function(dataPerso){
+                    /*if (me.game.getEntityByGUID(dataChange.results[0].id)) {
+                            me.game.getEntityByGUID(dataChange.results[0].id).longpollMvt(dataPerso.x, dataPerso.y);
+                    }*/
+                    
+                    _this.longpoll(dataChange.results[dataChange.results.length-1].seq, pseudo);
+                    
+                });
+            // maj.fail();
+            });  
+        // req.fail();
+        };
         
         out.registerListeners = function(mainPlayer){
             if (window.EventSource) {
-                this.listener = this.listener || {players: null};
-                this.listener.players = this.listener.players || (function(){
-                    var source = new EventSource(serverUrl+("/_changes?feed=eventsource&filter=SOS21Server/other_players"
+                this.listener = this.listener || {};
+                //listen to playersMovements
+                console.log(mainPlayer.servData._id);
+                var source = new EventSource(serverUrl+("/_changes?feed=eventsource&filter=SOS21Server/other_players"
                                                             +"&limit=1"
                                                             +"&include_docs=true"
                                                             +"&descending=true"
                                                             +"&mainPlayer="+mainPlayer.servData._id)
-                                );
-                    source.addEventListener("message", this.parseEventData, false)
-                    return source;
-                }.bind(this)());
+                );
+                var handler = function(data){
+                    //console.log(data);
+                    mediator.publish('move'+'.'+data._id, [data.x, data.y]);
+                };
+                source.addEventListener("message", this.parseEventData, false);
+                this.listener[source] = handler;
+                
+                //listen to mapChange
+                //var source2 = new EventSource(serverUrl+("/_changes?feed=eventsource&filter=SOS21Server/place"
+                //                                            +"&limit=1"
+                //                                            +"&include_docs=true"
+                //                                            +"&descending=true"
+                //                                            +"&place="+mainPlayer.servData.place
+                //                                            +"&mainPlayer="+mainPlayer.servData._id)
+                //);
+                //var handler2 = function(data){
+                //    console.log(data);
+                //    mediator.publish('changeMap'+'.'+data._id, [data.place]);
+                //};
+                //source2.addEventListener("message", this.parseEventData, false);
+                //this.listener[source2] = handler2;
             }
         };
+        
         out.parseEventData = function(event){
+            //console.log(event.data);
             data = JSON.parse(event.data);
             var retrieveInfo = $.ajax({
                 url: serverUrl+"/"+data.id,
@@ -206,35 +274,18 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
                 dataType: "json"
             });
             retrieveInfo.done(function(couchData){
-                mediator.publish('move'+'.'+couchData._id, [couchData.x, couchData.y]);
-                //me.event.publish("moveTo", [couchData._id, couchData.x, couchData.y]);
+                //console.log(couchData);
+                out.listener[event.target](couchData);
             });
         };
         
-        //out.getCurrentMap = function(mapName){
-        //    var output = null;
-        //    var req = $.ajax({
-        //        url : serverUrl + "/" + "_design/SOS21Server/_view/places_by_name",
-        //        type: "GET",
-        //        contentType: "application/json; charset=utf-8",
-        //        data: JSON.stringify({"key": mapName}),
-        //        dataType: "json",
-        //        async: false
-        //    });
-        //    req.done(function(data){
-        //        console.log(data);
-        //        output = data.rows[0].value;
-        //    });
-        //    return output;
-        //};
+        out.addListener = function(listenerData){
+            this.listener.push(listenerData);
+        }
         
         out.getServerUrl = function(){
             return serverUrl;
         }
-        
-        //out.getAttachmentsURL = function(){
-        //    return serverUrl+"/_design/SOS21Server";
-        //}
         
         return out;    
     })();
