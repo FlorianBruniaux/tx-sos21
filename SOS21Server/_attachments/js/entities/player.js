@@ -1,4 +1,4 @@
-define(['entities', 'lib/melon', 'client', 'server', 'entities/sos21Player'], function(entities, melon, client, server, Sos21Player){
+define(['entities', 'lib/melon', 'client', 'client/scene', 'entities/sos21Player'], function(entities, melon, client, scene, Sos21Player){
     var Player = Sos21Player.extend({
             init: function(x, y, settings){
                 this.parent(x,y,settings);
@@ -14,7 +14,7 @@ define(['entities', 'lib/melon', 'client', 'server', 'entities/sos21Player'], fu
             },
             moveTo: function(x, y){
             	if (me.game.collisionMap.getTile(x, y)==null)
-		            if(server.updatePlayerPosition(this.servData, x, y) != null){
+		            if(scene.updatePlayer({"x" : x, "y" : y}) != null){
 		                this.parent(x, y);
 		            }
             },
