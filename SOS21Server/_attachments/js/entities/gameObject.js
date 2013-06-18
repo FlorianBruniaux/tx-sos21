@@ -15,10 +15,6 @@ define(['entities', 'lib/melon', 'server', 'client', 'client/scene'], function(e
 			this.updateMovement();
             this.parent();
             return true;
-		},
-		onDestroyEvent: function(){
-			me.event.unsubscribe(this.mouseHandler);
-			this.parent();
 		}
 	});
 	return GameObject;

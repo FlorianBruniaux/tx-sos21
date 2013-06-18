@@ -15,6 +15,8 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
             this.lastStep = false;
             this.position = {x: 0, y: 0}; // position du centre de la hitbox du joueur - pour le déplacement
             this.updatePosition();
+            this.pos.x -= this.position.x - this.pos.x;
+            this.pos.y -= this.position.y - this.pos.y;
             //animationSheet
             for(var name in this.skin.animationSheet){
                 this.renderable.addAnimation(name, this.skin.animationSheet[name]);
