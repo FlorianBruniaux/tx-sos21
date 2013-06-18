@@ -9,9 +9,6 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
         effectTriggered: false,
         init: function(x, y, settings){
             this.parent(x,y,settings);
-			if (typeof this.renderable.anim['mouseover'] == 'undefined') {
-				this.renderable.addAnimation('mouseover', [0]);
-			}
             me.input.registerPointerEvent("mousedown", this.collisionBox, function(e){
 				me.event.publish("event_"+this.GUID);
 			}.bind(this));
@@ -20,7 +17,7 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
 			}).bind(this);
 			this.unregisterMouseClick = (function(){
 				var mouse = client.getMouse();
-				if (!this.collisionBox.containsPoint(mouse.x, mouse.y) && this.hasBeenClicked) {
+				if (!this.collisionBox.containsPoint(mouse.x, mouse.y) && this.hasBeenClicked){
 					this.hasBeenClicked = false;
 				}
 			}).bind(this);
@@ -78,14 +75,14 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
          */
         onMouseOver: function(){
             me.video.getScreenCanvas().style.cursor="move"; // BETA TEST
-			this.renderable.setCurrentAnimation("mouseover");
+			this.setAnimation("mouseover");
         },
         /**
          * effet Du mouseOut
          */
 		onMouseOut: function(){
 			me.video.getScreenCanvas().style.cursor="auto"; // BETA TEST
-			this.renderable.setCurrentAnimation("default");
+			this.setAnimation("default");
 		},
 		onDestroyEvent: function(){
 			me.event.unsubscribe(this.mouseHandler);

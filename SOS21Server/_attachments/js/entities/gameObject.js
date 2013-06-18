@@ -2,19 +2,26 @@ define(['entities', 'lib/melon', 'server', 'client', 'client/scene'], function(e
 
 	var GameObject = me.CollectableEntity.extend({
 		init: function(x, y, settings){
-			this.servData = (settings.image != null) ? settings : {image: settings.name};
+			settings.image = (settings.image != null)?settings.image:settings.name;
+			this.servData = settings;
 			this.parent(x, y, settings);
 			this.updateColRect(settings.colRect.x, settings.colRect.w, settings.colRect.y, settings.colRect.h);
 			this.setVelocity(0,0);
 			for(var name in settings.animationSheet){
                 this.renderable.addAnimation(name, settings.animationSheet[name]);
             }
-			this.renderable.setCurrentAnimation("default");
+			this.setAnimation("default");
 		},
 		update: function(){
 			this.updateMovement();
             this.parent();
             return true;
+		},
+		setAnimation: function(name){
+			if (typeof this.renderable.anim[name] == 'undefined')
+				this.renderable.setCurrentAnimation("default");
+			else
+				this.renderable.setCurrentAnimation(name);
 		}
 	});
 	return GameObject;

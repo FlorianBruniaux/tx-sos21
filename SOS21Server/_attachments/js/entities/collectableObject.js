@@ -3,19 +3,19 @@ define(['entities', 'lib/melon', 'server', 'client', 'entities/interactiveObject
 
     var CollectableObject = InteractiveObject.extend({
 	init: function(x, y, settings){
-            this.parent(x,y,settings);
+        this.parent(x,y,settings);
 	    mediator.on("objectUpdated"+"."+this.servData._id, function(event){this.onOtherPlayerPick()}.bind(this));
 	},
-        applyEffect: function(){
-	    mediator.publish("objectCollection", [this.servData]);
-	    me.game.remove(this);
-        },
-		/**
-         * Objet pick par un autre joueur
-         */
-        onOtherPlayerPick: function(){
-	    console.log("picked by another");
-	    me.game.remove(this);
+    applyEffect: function(){
+        mediator.publish("objectCollection", [this.servData]);
+        me.game.remove(this);
+    },
+    /**
+     * Objet pick par un autre joueur
+     */
+    onOtherPlayerPick: function(){
+        console.log("picked by another");
+        me.game.remove(this);
 	}
     });
     
