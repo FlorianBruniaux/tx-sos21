@@ -1,4 +1,5 @@
-define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'], function(entities, melon, scene, client, GameObject){
+define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject', 'event/mediator'],
+       function(entities, melon, scene, client, GameObject, mediator){
     /**
      * Objet interactif de base
      * Ne pas instacier, utiliser un surcouche comme CollectableObject ou ChangeMapObject
