@@ -8,7 +8,6 @@ define(['entities', 'lib/melon', 'server', 'client', 'entities/interactiveObject
 	},
     applyEffect: function(){
         this.parent();
-        me.game.remove(this);
     },
     /**
      * Objet pick par un autre joueur
