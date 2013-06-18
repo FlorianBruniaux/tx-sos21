@@ -1,5 +1,5 @@
-define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'gui/debugHUD', 'client/scene'],
-	   function(melon, pathfinding, client, server, DebugHUD, scene){
+define(['lib/melon', 'lib/pathfinding', 'client', 'gui/debugHUD', 'client/scene'],
+	   function(melon, pathfinding, client, DebugHUD, scene){
 	   
 	// écran de jeu
 	var playScreen = me.ScreenObject.extend({
@@ -7,7 +7,7 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'gui/debugHUD', 'cli
 		onResetEvent: function(){
 			// changement de l'état (me.state.change)
 			// charger un niveau, currentMap vien de scene
-			me.levelDirector.loadLevel(scene.mainPlayer.place);
+			me.levelDirector.loadLevel(scene.mainPlayerData.place);
 			//me.game.viewport.move(540,255); // décalage de la caméra mode iso
 			me.game.viewport.move(30,15); // decalage de la caméra mode ortho
 			this.loadPathFinding();
@@ -39,21 +39,10 @@ li) ? 1 : 0;
 			me.game.collisionMap.pathfinder = new PF.JumpPointFinder();
 		},
 		initEntities: function(){
-			var mainPlayer = me.entityPool.newInstanceOf("mainPlayer", scene.mainPlayer.x, scene.mainPlayer.y, scene.mainPlayer);
-			me.game.add(mainPlayer, 5);
-			var players = scene.players;
-			players.forEach(function(obj){
-				var pos = (obj.x && obj.y) ? {"x":obj.x, "y":obj.y} : {"x":me.game.viewport.limits.x/2, "y":me.game.viewport.limits.y/2};
-				var otherPlayer = me.entityPool.newInstanceOf("otherPlayer", pos.x, pos.y, obj);
-				//console.log(otherPlayer);
-				me.game.add(otherPlayer, 4)
-			});
-			var objects = scene.objects;
-			objects.forEach(function(obj){
-				var newObject = me.entityPool.newInstanceOf(obj.type, obj.x, obj.y, obj);
-				me.game.add(newObject, 3);
-			});
-			server.registerListeners(mainPlayer);
+			scene.setMainPlayer();
+			scene.setPlayers();
+			scene.setObjects();
+			scene.server.registerListeners(scene.mainPlayer);
 
 		},
 		initHUD: function(){

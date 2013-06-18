@@ -31,7 +31,7 @@ define(['lib/melon',
     var api = {};
     
     api.login = function(pseudo){
-		mainPlayerPseudo = pseudo;
+		scene.logMainPlayer(pseudo);
 		return ( api.onload());
     }
     
@@ -49,7 +49,6 @@ define(['lib/melon',
 		initEntityPool();
 		// set the "Loading" Screen Object
 		me.state.set(me.state.LOADING, new LoadingScreen());
-		scene.setMainPlayer(mainPlayerPseudo);
 		// load everything & display a loading screen
 		me.state.change(me.state.LOADING);
 		return true;

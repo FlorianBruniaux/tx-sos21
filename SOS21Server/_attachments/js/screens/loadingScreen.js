@@ -18,41 +18,11 @@ define(['lib/melon', 'client/scene', 'entities'],
     
        },
        
-       onResetEvent: function(){
-         //clear memory
+      onResetEvent: function(){
+         //libération de la mémoire melon
          me.loader.unloadAll();
-         scene.setPlayers();
-         scene.setMapData();
-         scene.setObjects();
-         var g_ressources = [];
-         var mainPlayerData = {};
-         mainPlayerData["name"] = scene.mainPlayer.image;
-         mainPlayerData["type"] = "image";
-         mainPlayerData["src"] = entities.entities_folder+scene.mainPlayer.image+".png";
-         g_ressources.push(mainPlayerData);
-         scene.players.forEach(function(player){
-            var playerData = {};
-            playerData["name"] = player.image;
-            playerData["type"] = "image";
-            playerData["src"] = entities.entities_folder + player.image+".png";
-            g_ressources.push(playerData);
-         });         
-         scene.mapData.forEach(function(res){
-            var resData = {};
-            resData["name"] = res.name;
-            resData["type"] = "image";
-            resData["src"] = scene.getResFolder() + res.image.substr(2, res.image.length);
-            g_ressources.push(resData);
-         });
-         scene.objects.forEach(function(obj){
-            var resData = {};
-            resData["name"] = obj.image;
-            resData["type"] = "image";
-            resData["src"] = entities.objects_folder + obj.image+".png";
-            g_ressources.push(resData);
-         });
-         g_ressources.push({name : scene.mainPlayer.place, type : "tmx", src : scene.getMapUrl()});
-         me.loader.preload(g_ressources);
+         scene.init();        
+         me.loader.preload(scene.getGRessources());
          //me.loader.load(tileset,
          //               me.loader.onResourceLoaded.bind(me.loader),
          //               me.loader.onLoadingError.bind(me.loader, tileset)
