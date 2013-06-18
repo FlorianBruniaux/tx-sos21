@@ -30,7 +30,7 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
             this.parent();
         },
         onCollision : function(res, obj) {
-			if (obj.servData.pseudo == scene.mainPlayer.pseudo && this.hasBeenClicked) {
+			if (obj.servData.pseudo == scene.mainPlayerData.pseudo && this.hasBeenClicked) {
 				this.triggerEffect();
 			}
 		},

@@ -124,7 +124,7 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'e
         }.bind(api));
         //écoute objets
         mediator.on("objectInteraction", function(event, objData){
-            objData["target"] = callerID;
+            //objData["target"] = callerID;
             api.server.updateObject(objData, this.mainPlayer.servData._id);
         }.bind(api));
         //écoute players
