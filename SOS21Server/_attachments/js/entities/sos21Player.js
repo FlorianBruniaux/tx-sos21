@@ -69,10 +69,10 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
          *
          */
         moveTo: function(x, y){
-            if(x != this.pos.x && y != this.pos.y){
+            if(x != this.pos.x || y != this.pos.y){
                 var endTile = me.game.currentLevel.mapLayers[0].getTile(x, y); // tile d'arrivée
                 var startTile = me.game.currentLevel.mapLayers[0].getTile(this.position.x, this.position.y); // tile de départ
-                if(startTile.row!=endTile.row && startTile.col!=endTile.col){
+                if(startTile.row!=endTile.row || startTile.col!=endTile.col){
                     var grid = me.game.collisionMap.collisionGrid.clone(); // cloner le collision grid, car détruit par findPath() de Pathfinding.js
                     var path = me.game.collisionMap.pathfinder.findPath(startTile.col, startTile.row, endTile.col, endTile.row, grid);
                     path.forEach(function(coord, i){

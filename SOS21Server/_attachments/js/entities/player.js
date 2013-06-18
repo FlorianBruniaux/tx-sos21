@@ -13,10 +13,11 @@ define(['entities', 'lib/melon', 'client', 'client/scene', 'entities/sos21Player
                 me.event.subscribe("mousedown", this.mouseDown);
             },
             moveTo: function(x, y){
-            	if (me.game.collisionMap.getTile(x, y)==null)
+            	if (me.game.collisionMap.getTile(x, y)==null){
 		            if(scene.updatePlayer({"x" : x, "y" : y}) != null){
 		                this.parent(x, y);
 		            }
+                }
             },
             update: function(){
                 me.game.HUD.setItemValue("playerX", Math.ceil(this.position.x));
