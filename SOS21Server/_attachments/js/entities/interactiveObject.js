@@ -5,7 +5,9 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
      * Ne pas instacier, utiliser un surcouche comme CollectableObject ou ChangeMapObject
      */
     var InteractiveObject = GameObject.extend({
-        hasBeenClicked: false,
+		isClicked: false,
+        isPicked: false,
+		playerPicking: "",
         effectTriggered: false,
         init: function(x, y, settings){
             this.parent(x,y,settings);
@@ -13,24 +15,38 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
 				me.event.publish("event_"+this.GUID);
 			}.bind(this));
 			this.mouseDown = (function(){
-				this.hasBeenClicked = true;
+				this.isClicked = true;
+				this.registerPick(scene.mainPlayerData._id);
 			}).bind(this);
 			this.unregisterMouseClick = (function(){
 				var mouse = client.getMouse();
-				if (!this.collisionBox.containsPoint(mouse.x, mouse.y) && this.hasBeenClicked){
-					this.hasBeenClicked = false;
+				if (!this.collisionBox.containsPoint(mouse.x, mouse.y) && this.isPicked){
+					this.isClicked = false;
+					this.unregisterPick(scene.mainPlayerData._id);
 				}
 			}).bind(this);
 			this.mouseHandler = me.event.subscribe("mousedown", this.unregisterMouseClick);
 			me.event.subscribe("event_"+this.GUID, this.mouseDown);
         },
+		registerPick: function(id){
+			if (!this.isPicked) {
+				this.isPicked = true;
+				this.playerPicking = id;
+			}
+		},
+		unregisterPick: function(id){
+			if (this.playerPicking == id) {
+				this.isPicked = false;
+				this.playerPicking = "";
+			}
+		},
         update: function(){
             this.checkMouseOver();
             this.checkInteraction();
             this.parent();
         },
         onCollision : function(res, obj) {
-			if (obj.servData.pseudo == scene.mainPlayerData.pseudo && this.hasBeenClicked) {
+			if (this.isClicked && obj.servData._id == scene.mainPlayerData._id) {
 				this.triggerEffect();
 			}
 		},
