@@ -13,8 +13,8 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
 				this.renderable.addAnimation('mouseover', [0]);
 			}
             me.input.registerPointerEvent("mousedown", this.collisionBox, function(e){
-				me.event.publish("objectClicked");
-			});
+				me.event.publish("event_"+this.GUID);
+			}.bind(this));
 			this.mouseDown = (function(){
 				this.hasBeenClicked = true;
 			}).bind(this);
@@ -24,9 +24,8 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
 					this.hasBeenClicked = false;
 				}
 			}).bind(this);
-			
 			this.mouseHandler = me.event.subscribe("mousedown", this.unregisterMouseClick);
-			me.event.subscribe("objectClicked", this.mouseDown);
+			me.event.subscribe("event_"+this.GUID, this.mouseDown);
         },
         update: function(){
             this.checkMouseOver();
@@ -87,6 +86,10 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
 		onMouseOut: function(){
 			me.video.getScreenCanvas().style.cursor="auto"; // BETA TEST
 			this.renderable.setCurrentAnimation("default");
+		},
+		onDestroyEvent: function(){
+			me.event.unsubscribe(this.mouseHandler);
+			this.parent();
 		}
     });
     
