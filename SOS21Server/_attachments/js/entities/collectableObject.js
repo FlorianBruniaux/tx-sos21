@@ -7,7 +7,7 @@ define(['entities', 'lib/melon', 'server', 'client', 'entities/interactiveObject
 	    mediator.on("objectUpdated"+"."+this.servData._id, function(event){this.onOtherPlayerPick()}.bind(this));
 	},
     applyEffect: function(){
-        mediator.publish("objectCollection", [this.servData]);
+        this.parent();
         me.game.remove(this);
     },
     /**

@@ -56,7 +56,7 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
          * Applique l'éffet
          */
 		applyEffect: function(){
-			// EXTENDS
+			mediator.publish("objectInteraction", [this.servData]);
 		},
         /**
          * Déclenche les effets de mouseOver, mouseOut

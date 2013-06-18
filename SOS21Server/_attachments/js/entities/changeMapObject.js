@@ -6,6 +6,7 @@ define(['entities', 'lib/melon', 'server', 'client', 'entities/interactiveObject
 			this.parent(x,y,settings);
 		},
         applyEffect: function(){
+            this.parent();
         	console.log("change map");
             //mediator.trigger("gotToPlace", function(event, this.effets.placeName){});
         }
