@@ -50,6 +50,7 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
             return str;
         },
         update: function() {
+            me.game.collide(this);
             this.updatePosition();
             this.computePath();
             this.updateAnimation();

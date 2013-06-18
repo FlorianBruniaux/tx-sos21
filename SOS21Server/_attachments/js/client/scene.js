@@ -1,14 +1,16 @@
 define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'entities'],
-       function(melon, pathfinding, ressources, server, mediator, entities){
+       function(melon, pathfinding, ressources, Server, mediator, entities){
     
     var api = {};
     api.mainPlayerData = {};
+    api.mainPlayer = {};
     api.mapData = [];
     api.playersData = [];
     api.players = {};
     api.objectsData = [];
     api.objects = {};
-    api.server = server;
+    api.nextMap = {};
+    api.server = null;
         
     api.getResFolder = function(){
         return api.server.getServerUrl() + "/_design/SOS21Server/data"
@@ -18,7 +20,7 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'e
     }
 
     api.setMapData = function(){
-        console.log(this.mainPlayerData);
+        console.log(this.mainPlayerData.place);
         this.mapData = api.server.getMapData(this.mainPlayerData.place);
     }
     
@@ -27,12 +29,14 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'e
     }
     
     api.setPlayersData = function(){
+        this.playersData = [];
         if (this.mainPlayerData.place && this.mainPlayerData._id ) {
             this.playersData = api.server.getOtherPlayers(this.mainPlayerData.place, this.mainPlayerData._id);   
         }
     }
     
     api.setObjectsData = function(){
+        this.objectsData = [];
         if (this.mainPlayerData.place && this.mainPlayerData._id ) {
             this.objectsData = api.server.getMapObjects(this.mainPlayerData.place);   
         }
@@ -83,7 +87,6 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'e
         this.playersData.forEach(function(obj){
             var pos = (obj.x && obj.y) ? {"x":obj.x, "y":obj.y} : {"x":me.game.viewport.limits.x/2, "y":me.game.viewport.limits.y/2};
             var otherPlayer = me.entityPool.newInstanceOf("otherPlayer", pos.x, pos.y, obj);
-            console.log(obj);
             api.players[obj._id] = otherPlayer;
             me.game.add(otherPlayer, 4)
         });
@@ -111,7 +114,31 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'e
         return null;
     }
     
-    api.init = function() {
+    api.unloadAll = function(){
+        for (id in this.players) {
+            this.players[id].onDestroyEvent();
+            delete this.players[id];
+        }
+        for (id in this.objects) {
+            this.objects[id].onDestroyEvent();
+            delete this.objects[id];
+        }
+        //this.server = null;
+    }
+    
+    api.init = function(pseudo) {
+        console.log(this);
+        this.unloadAll();
+        if (this.nextMap.id) {
+            this.mainPlayerData.place = this.nextMap.id;
+            this.mainPlayerData.x = this.nextMap.x;
+            this.mainPlayerData.y = this.nextMap.y;
+            this.server.updatePlayer(this.mainPlayerData);
+        }else{
+            this.server = Server;
+            this.logMainPlayer(pseudo);
+            this.server.registerListeners(this.mainPlayerData);
+        }
         //récupération des othersPlayers
         api.setPlayersData();
         //récupération des donnée de la map
@@ -119,7 +146,17 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'e
         //récupération des objets sur la map
         api.setObjectsData();
         //écoute changement de map
-        mediator.on("changeMap", function(event){
+        mediator.on("goToMap", function(event, placeTo){
+            mainPlayerData.x = placeTo.x;
+            mainPlayerData.y = placeTo.y;
+            mainPlayerData.place = placeTo.id;
+            this.server.updatePlayerMap(tthis.mainPlayerData, placeTo)    
+        }.bind(api));
+        mediator.on("changeMap", function(event, placeTo){
+            console.log("changeMap reçu");
+            this.nextMap = placeTo;
+            this.init(this.mainPlayerData.pseudo);        
+            me.loader.preload(this.getGRessources());
             me.state.change(me.state.LOADING);
         }.bind(api));
         //écoute objets
@@ -128,16 +165,6 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'e
             api.server.updateObject(objData, this.mainPlayer.servData._id);
         }.bind(api));
         //écoute players
-        return api;
     }   
-    /*initilalisation des écouteurs d’évènement client via jquery :
-        - écoute des entrée/sortie des joueurs
-        - écoute des actions des joueurs
-        - écoute des objets ?
-    */
-    // exemple : $(api).trigger('move'+'.'+couchData._id, [couchData.x, couchData.y]);
-    //mediator.on est un alias vers $(api).on() avec api dans mediator.js
-    //mediator.on("leavePlace", function(event, objectGUID){/*remove object*/});
-    //mediator.on("gotToPlace", function(event, placeName){}); 
     return api;
 });

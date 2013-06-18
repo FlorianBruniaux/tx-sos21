@@ -129,7 +129,6 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
             if(playerData._id && playerData._rev && playerData.type == "character"){
                 //playerData.x = x; 
                 //playerData.y = y;
-                playerData.changingPlace = false;
                 var req_update = $.ajax({
                     url: serverUrl+"/"+playerData._id,
                     type: "PUT",
@@ -177,9 +176,8 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
         //    return output
         //};
         
-        out.updateObject = function(objectData){
-            console.log("update de l'objet !");
-            console.log(objectData);
+        out.updateObject = function(objectData, ownerID){
+            objectData["owner"] = ownerID;
             var req_update = $.ajax({
                 url : serverUrl + "/" + objectData._id,
                 type : "PUT",
@@ -188,7 +186,8 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
             });
             req_update.done(function(successData){
                 successData = JSON.parse(successData);
-                mediator.publish("objectUpdated"+"."+successData.id);
+                objectData._rev = successData.rev;
+                // url :  http://localhost:5984/sos21/_design
                 //var req_applyEffect = $.ajax({
                 //    url : "",
                 //    type : "POST",
@@ -233,34 +232,48 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
             if (window.EventSource) {
                 this.listener = this.listener || {};
                 //listen to playersMovements
-                console.log(mainPlayer.servData._id);
                 var source = new EventSource(serverUrl+("/_changes?feed=eventsource&filter=SOS21Server/other_players"
                                                             +"&limit=1"
                                                             +"&include_docs=true"
                                                             +"&descending=true"
-                                                            +"&mainPlayer="+mainPlayer.servData._id)
+                                                            +"&mainPlayer="+mainPlayer._id
+                                                            +"&place="+mainPlayer.place
+                                                       )
                 );
-                var handler = function(data){
+                var handler = function(event){
                     //console.log(data);
+                    var data = JSON.parse(event.data).doc;
                     mediator.publish('move'+'.'+data._id, [data.x, data.y]);
                 };
-                source.addEventListener("message", this.parseEventData, false);
-                this.listener[source] = handler;
-                
+                //console.log(source);
+                source.addEventListener("message", handler, false);
+                //this.listener[source] = handler;
+                ////listen to objectUpdates
+                var source2 = new EventSource(serverUrl+("/_changes?feed=eventsource&filter=SOS21Server/objects"
+                                                            +"&limit=1"
+                                                            +"&include_docs=true"
+                                                            +"&descending=true"
+                                                            +"&place="+mainPlayer.place)
+                );
+                var handler2 = function(event){
+                    var data = JSON.parse(event.data).doc;
+                    mediator.publish("objectUpdated" + "." + data._id, [data.owner]);
+                }
+                //this.listener[source2] = handler2;                
+                source2.addEventListener("message", handler2, false);
                 //listen to mapChange
-                //var source2 = new EventSource(serverUrl+("/_changes?feed=eventsource&filter=SOS21Server/place"
-                //                                            +"&limit=1"
-                //                                            +"&include_docs=true"
-                //                                            +"&descending=true"
-                //                                            +"&place="+mainPlayer.servData.place
-                //                                            +"&mainPlayer="+mainPlayer.servData._id)
-                //);
-                //var handler2 = function(data){
-                //    console.log(data);
-                //    mediator.publish('changeMap'+'.'+data._id, [data.place]);
-                //};
-                //source2.addEventListener("message", this.parseEventData, false);
-                //this.listener[source2] = handler2;
+                var source3 = new EventSource(serverUrl+("/_changes?feed=eventsource&filter=SOS21Server/place"
+                                                            +"&limit=1"
+                                                            +"&include_docs=true"
+                                                            +"&descending=true"
+                                                            +"&place="+mainPlayer.place
+                                                            +"&mainPlayer="+mainPlayer._id)
+                );
+                var handler3 = function(event){
+                    var data = JSON.parse(event.data).doc;
+                    mediator.publish('changeMap'+'.'+data._id, [data.place]);
+                };
+                source3.addEventListener("message", handler3, false);
             }
         };
         

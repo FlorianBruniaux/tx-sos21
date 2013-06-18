@@ -1,7 +1,12 @@
 define(['lib/melon', 'client/scene', 'entities'],
 	   function(melon, scene, entities){
     // écran de chargement
-    var CustomLoadingScreen = me.ScreenObject.extend({
+   var CustomLoadingScreen = me.DefaultLoadingScreen.extend({
+      onResetEvent : function(){
+         this.parent();
+      }
+   });
+    /*me.ScreenObject.extend({
        // constructor
        init: function(){
           // pass true to the parent constructor
@@ -15,26 +20,15 @@ define(['lib/melon', 'client/scene', 'entities'],
           this.loadPercent = 0;
           // setup a callback
           me.loader.onProgress = this.onProgressUpdate.bind(this);
+          this.handle = null;
     
        },
        
       onResetEvent: function(){
          //libération de la mémoire melon
-         me.loader.unloadAll();
+         //me.loader.unloadAll();
          scene.init();        
          me.loader.preload(scene.getGRessources());
-         //me.loader.load(tileset,
-         //               me.loader.onResourceLoaded.bind(me.loader),
-         //               me.loader.onLoadingError.bind(me.loader, tileset)
-         //);
-         //me.loader.load({name : scene.map.ressources.tileset, type : "image", src : "/data/images/tiles/"+scene.map.ressources.tileset+".png"});
-         //me.loader.load({name : scene.map.ressources.background, type : "image", src : "/data/images/backgrounds/"+scene.map.ressources.background+".png"});
-         //load all entities on the current map
-         //scene.getEntities().forEach(function(entity){
-         //   //me.loader.load({name: entity.name,  type: entity.type,  src: entity.image});
-         //   console.log(entity);
-         //});
-         //
        },
        
        // will be fired by the loader each time a resource is loaded
@@ -85,6 +79,6 @@ define(['lib/melon', 'client/scene', 'entities'],
           context.fillStyle = "#89b002";
           context.fillRect(2, (me.video.getHeight() / 2) + 42, width-4, 2);
        }
-    });
+    });*/
     return CustomLoadingScreen;
 });

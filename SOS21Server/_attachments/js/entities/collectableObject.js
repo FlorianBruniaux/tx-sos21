@@ -4,7 +4,7 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/interactive
     var CollectableObject = InteractiveObject.extend({
 	init: function(x, y, settings){
         this.parent(x,y,settings);
-		mediator.on("objectUpdated"+"."+this.servData._id, function(event){this.registerPick()}.bind(this));
+	mediator.on("objectUpdated"+"."+this.servData._id, function(event, ownerID){this.registerPick(ownerID)}.bind(this));
 	},
 	onCollision : function(res, obj) {
 		if (this.isPicked && obj.servData._id == this.playerPicking) {
@@ -21,7 +21,6 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/interactive
 	* Objet pick par un autre joueur
 	*/
 	onPicked: function(){
-		console.log("picked");
 		me.game.remove(this);
 	}
     });

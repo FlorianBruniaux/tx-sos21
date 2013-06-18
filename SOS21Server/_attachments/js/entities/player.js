@@ -23,7 +23,7 @@ define(['entities', 'lib/melon', 'client', 'client/scene', 'entities/sos21Player
                 me.game.HUD.setItemValue("playerX", Math.ceil(this.position.x));
                 me.game.HUD.setItemValue("playerY", Math.ceil(this.position.y));
                 
-                me.game.collide(this);
+                
                 var mouse = client.getMouse();
 				if(me.game.collisionMap.getTile(mouse.x, mouse.y)!=null){
 					me.video.getScreenCanvas().style.cursor="auto";

@@ -42,8 +42,6 @@ li) ? 1 : 0;
 			scene.setMainPlayer();
 			scene.setPlayers();
 			scene.setObjects();
-			scene.server.registerListeners(scene.mainPlayer);
-
 		},
 		initHUD: function(){
 			me.game.addHUD(0,0,100,50, "rgba(255,255,255, 0.5)");
@@ -58,6 +56,7 @@ li) ? 1 : 0;
 			});
 		},
 		onDestroyEvent: function(){
+			me.input.releasePointerEvent("mousemove", me.game.viewport);
 			me.game.disableHUD();
 		}
 	});

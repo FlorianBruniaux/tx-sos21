@@ -15,6 +15,7 @@ define(["jquery"], function($){
                     extraParam.push(data[elem]);
                 });
             }
+            console.log({eventName : eventName, extraParam : extraParam});
             $(this).trigger(eventName, extraParam);
         }
         

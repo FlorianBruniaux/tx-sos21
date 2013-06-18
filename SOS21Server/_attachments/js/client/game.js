@@ -31,7 +31,7 @@ define(['lib/melon',
     var api = {};
     
     api.login = function(pseudo){
-		scene.logMainPlayer(pseudo);
+		mainPlayerPseudo = pseudo;
 		return ( api.onload());
     }
     
@@ -48,7 +48,11 @@ define(['lib/melon',
 		me.loader.onload = this.loaded.bind(this); //why nunu ?
 		initEntityPool();
 		// set the "Loading" Screen Object
+		scene.init(mainPlayerPseudo);        
+		me.loader.preload(scene.getGRessources());
+		console.log("onload");
 		me.state.set(me.state.LOADING, new LoadingScreen());
+		me.state.set(me.state.PLAY, new PlayScreen()); 
 		// load everything & display a loading screen
 		me.state.change(me.state.LOADING);
 		return true;
@@ -59,7 +63,6 @@ define(['lib/melon',
 			initDebug();
 		}
 		// définir l'écran de jeu
-		me.state.set(me.state.PLAY, new PlayScreen()); 
 		me.state.transition("fade", "#000", 250);
 		// afficher l'écran de jeu
 		me.state.change(me.state.PLAY); 
