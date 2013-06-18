@@ -8,6 +8,9 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
         effectTriggered: false,
         init: function(x, y, settings){
             this.parent(x,y,settings);
+			if (typeof this.renderable.anim['mouseover'] == 'undefined') {
+				this.renderable.addAnimation('mouseover', [0]);
+			}
             me.input.registerPointerEvent("mousedown", this.collisionBox, function(e){
 				me.event.publish("objectClicked");
 			});
