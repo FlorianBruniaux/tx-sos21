@@ -93,20 +93,29 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'e
     }
     
     api.addPlayer = function(playerData){
+        console.log("new joueur");
         var playerRes = {};
-        playerRes["name"] = data.image;
+        playerRes["name"] = playerData.image;
         playerRes["type"] = "image";
-        playerRes["src"] = entities.entities_folder + data.image + ".png";
-        g_ressources.push(playerRes);
-        var pos = (playerData.x && playerData.y) ? {"x":playerData.x, "y":playerData.y} : {"x":me.game.viewport.limits.x/2, "y":me.game.viewport.limits.y/2};
-        var otherPlayer = me.entityPool.newInstanceOf("otherPlayer", pos.x, pos.y, playerData);
-        api.players[playerData._id] = otherPlayer;
-        me.game.add(otherPlayer, 4)
+        playerRes["src"] = entities.entities_folder + playerData.image + ".png";
+        this.playersData.push(playerRes);
+        me.loader.load(playerRes, onPlayerResLoaded.bind(this), onPlayerResError.bind(this));
+        function onPlayerResLoaded() {
+            console.log("ressources du nouveau personnage loaded");
+            var pos = (playerData.x && playerData.y) ? {"x":playerData.x, "y":playerData.y} : {"x":me.game.viewport.limits.x/2, "y":me.game.viewport.limits.y/2};
+            var otherPlayer = me.entityPool.newInstanceOf("otherPlayer", pos.x, pos.y, playerData);
+            api.players[playerData._id] = otherPlayer;
+            me.game.add(otherPlayer, 4);
+            me.game.sort();
+        }
+        function onPlayerResError() {
+            console.log("erreur au chargement des ressources graphiques du nouveau joueur");
+        }
     }
     
     api.removePlayer = function(playerId){
         if (this.players[playerId]) {
-            melon.game.remove(this.players[playerId]);
+            me.game.remove(this.players[playerId]);
             delete this.players[playerId];
         }
     }
@@ -185,14 +194,13 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'e
                     //var otherPlayer = me.entityPool.newInstanceOf("otherPlayer", pos.x, pos.y, playerData);
                     //api.players[playerData._id] = otherPlayer;
                     //me.game.add(otherPlayer, 4);
-                    console.log("new joueur");
-                    //this.addPlayer(playerData);
+                    this.addPlayer(playerData);
                 }else if(playerData.previousPlace == this.mainPlayerData.place){
                     //this.players[id].onDestroyEvent();
                     //me.game.remove(this.players[id]);
                     //delete this.players[id];
                     console.log("del joueur");
-                    //this.removePlayer(playerData._id);
+                    this.removePlayer(playerData._id);
                 }
             }.bind(api));
         }
