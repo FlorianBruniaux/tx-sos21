@@ -185,7 +185,7 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'e
             //écoute objets
             mediator.on("objectInteraction", function(event, objData){
                 //objData["target"] = callerID;
-                api.server.updateObject(objData, this.mainPlayer.servData._id);
+                api.server.applyObjectEffect(objData, this.mainPlayer.servData._id);
             }.bind(api));
             mediator.on("borderCrossed", function(event, playerData){
                 console.log(playerData);
