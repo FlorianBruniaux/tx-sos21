@@ -94,7 +94,7 @@ define(['lib/melon',
 		containerID = (HTMLContainerID || (function(){return $("canvas").length > 0 ? $("div")[0]: ""})());
 		$containerID = "#"+HTMLContainerID
 		viewPortWidth = (width || 840);
-		viewPortHeight = (height || 420);
+		viewPortHeight = (height || 480);
 		return api;
     }
     return game;
