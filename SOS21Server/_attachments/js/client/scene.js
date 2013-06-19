@@ -138,6 +138,25 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'e
             this.server = Server;
             this.logMainPlayer(pseudo);
             this.server.registerListeners(this.mainPlayerData);
+            //écoute changement de map
+            mediator.on("goToMap", function(event, placeTo){
+                this.mainPlayerData.x = placeTo.x;
+                this.mainPlayerData.y = placeTo.y;
+                this.mainPlayerData.place = placeTo.id;
+                this.server.updatePlayerMap(this.mainPlayerData, placeTo)    
+            }.bind(api));
+            mediator.on("changeMap", function(event, placeTo){
+                console.log("changeMap reçu");
+                this.nextMap = placeTo;
+                this.init(this.mainPlayerData.pseudo);        
+                me.loader.preload(this.getGRessources());
+                me.state.change(me.state.LOADING);
+            }.bind(api));
+            //écoute objets
+            mediator.on("objectInteraction", function(event, objData){
+                //objData["target"] = callerID;
+                api.server.updateObject(objData, this.mainPlayer.servData._id);
+            }.bind(api));   
         }
         //récupération des othersPlayers
         api.setPlayersData();
@@ -145,25 +164,6 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'e
         api.setMapData();
         //récupération des objets sur la map
         api.setObjectsData();
-        //écoute changement de map
-        mediator.on("goToMap", function(event, placeTo){
-            mainPlayerData.x = placeTo.x;
-            mainPlayerData.y = placeTo.y;
-            mainPlayerData.place = placeTo.id;
-            this.server.updatePlayerMap(tthis.mainPlayerData, placeTo)    
-        }.bind(api));
-        mediator.on("changeMap", function(event, placeTo){
-            console.log("changeMap reçu");
-            this.nextMap = placeTo;
-            this.init(this.mainPlayerData.pseudo);        
-            me.loader.preload(this.getGRessources());
-            me.state.change(me.state.LOADING);
-        }.bind(api));
-        //écoute objets
-        mediator.on("objectInteraction", function(event, objData){
-            //objData["target"] = callerID;
-            api.server.updateObject(objData, this.mainPlayer.servData._id);
-        }.bind(api));
         //écoute players
     }   
     return api;
