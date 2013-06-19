@@ -26,16 +26,15 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'gui/debugHUD', 'client/scene'
 			i=0;
 			me.game.collisionMap.layerData.forEach(function(col){
 				col.forEach(function(li){
-					tmp = (
-li) ? 1 : 0;
+					tmp = (li) ? 1 : 0;
 					matrice[i].push(tmp);
 					i++;
 				});
 				i=0;
 			});
-			me.game.collisionMap.collisionGrid = new PF.Grid(matrice.length, matrice[0].length, matrice); // melon v0.9.7+
+			me.game.collisionMap.collisionGrid = new PF.Grid(matrice[0].length, matrice.length, matrice); // melon v0.9.7+
 			//me.game.collisionMap.pathfinder = new PF.AStarFinder({allowDiagonal: true, dontCrossCorners: true});
-			//me.game.collisionMap.pathfinder = new PF.AStarFinder();
+			//me.game.collisionMap.pathfinder = new PF.AStarFinder({bidirectional: true});
 			me.game.collisionMap.pathfinder = new PF.JumpPointFinder();
 		},
 		initEntities: function(){
