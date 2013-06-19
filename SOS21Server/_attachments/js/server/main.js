@@ -245,8 +245,12 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
             console.log("unregister des listener");
             console.log(this.listener);
             Object.keys(this.listener).forEach(function(channel){
-                this.listener[channel].source.removeEventListener("message", this.listener[channel].handler, false);
-            });
+                console.log(channel);
+                this.listener[channel].source.close();
+                this.listener[channel].source.onmessage = null;
+                delete this.listener[channel].source;
+                delete this.listener[channel].handler;
+            }.bind(this));
             //delete this.listener;
         }
         
@@ -255,6 +259,11 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
                 this.listener = (this.listener || {"players": null, "objects": null, "mapBorder": null});
                 //listen to playersMovements
                 this.listener.players = {"source":null, "handler":null};
+                this.listener.players.handler = function(event){
+                    var data = JSON.parse(event.data).doc;
+                    console.log(data);
+                    mediator.publish('move'+'.'+data._id, [data.x, data.y]);
+                };
                 this.listener.players.source = new EventSource(serverUrl+("/_changes?feed=eventsource&filter=SOS21Server/other_players"
                                                             +"&limit=1"
                                                             +"&include_docs=true"
@@ -263,12 +272,8 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
                                                             +"&place="+mainPlayer.place
                                                        )
                 );
-                this.listener.players.handler = function(event){
-                    //console.log(data);
-                    var data = JSON.parse(event.data).doc;
-                    mediator.publish('move'+'.'+data._id, [data.x, data.y]);
-                };
-                this.listener.players.source.addEventListener("message", this.listener.players.handler, false);
+                this.listener.players.source.onmessage = this.listener.players.handler;
+                //this.listener.players.source.addEventListener("message", this.listener.players.handler, false);
                 //if (this.listener.players) {
                 //    $(this.listener.players).off();
                 //}
@@ -285,7 +290,8 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
                     var data = JSON.parse(event.data).doc;
                     mediator.publish("objectUpdated" + "." + data._id, [data.owner]);
                 }
-                this.listener.objects.source.addEventListener("message", this.listener.objects.handler, false);
+                this.listener.objects.source.onmessage = this.listener.objects.handler;
+                //this.listener.objects.source.addEventListener("message", this.listener.objects.handler, false);
                 //if (this.listener.objects) {
                 //    $(this.listener.objects).off();
                 //}
@@ -306,7 +312,8 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
                     console.log(data);
                     mediator.publish('borderCrossed', [data]);
                 };
-                this.listener.mapBorder.source.addEventListener("message", this.listener.mapBorder.handler, false);
+                this.listener.mapBorder.source.onmessage = this.listener.mapBorder.handler;
+                //this.listener.mapBorder.source.addEventListener("message", this.listener.mapBorder.handler, false);
                 //if (this.listener.mapBorder) {
                 //    $(this.listener.mapBorder).off();
                 //}
