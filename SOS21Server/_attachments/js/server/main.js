@@ -177,6 +177,8 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
         //};
         
         out.updateObject = function(objectData, ownerID){
+            console.log("update de l'objet !");
+            objectData.previousPlace = objectData.place;
             objectData.place = ownerID;
             var req_update = $.ajax({
                 url : serverUrl + "/" + objectData._id,
@@ -191,6 +193,7 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
         }
         
         out.applyObjectEffect = function(objectData, ownerID, index){
+            console.log("Apply action en bd !");
                 index = (index || ((objectData.actions) ? objectData.actions.length-1 : 0));
                 //url: serverUrl + "/_design/SOS21Server/_rewrite/action/" + objectData.actions[index],
                 var req_applyAction = $.ajax({
@@ -201,6 +204,7 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
                     async: false
                 });
                 req_applyAction.done(function(data){
+                    console.log("action appliqué");
                     if (index > 0) {
                         out.applyObjectEffect(ownerID, placeId, objectData, index--);
                     }else{
