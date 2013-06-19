@@ -177,7 +177,7 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
         //};
         
         out.updateObject = function(objectData, ownerID){
-            objectData["owner"] = ownerID;
+            objectData.place = ownerID;
             var req_update = $.ajax({
                 url : serverUrl + "/" + objectData._id,
                 type : "PUT",
@@ -192,21 +192,22 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
         
         out.applyObjectEffect = function(objectData, ownerID, index){
                 index = (index || ((objectData.actions) ? objectData.actions.length-1 : 0));
-                //var req_applyAction = $.ajax({
-                //    url: serverUrl + "/_design/SOS21Server/_rewrite/action/" + objectData.actions[index],
-                //    type: "POST",
-                //    data: JSON.stringify({"character" : ownerID, "place" : objectData.place}),
-                //    contentType: 'application/json; charset=UTF-8',
-                //    async: false
-                //});
-                //req_applyAction.done(function(data){
-                //    if (index > 0) {
-                //        out.applyObjectEffect(ownerID, placeId, objectData, index--);
-                //    }else{
-                //        out.updateObject(objectData, ownerID);
-                //    }
-                //});
-                out.updateObject(objectData, ownerID);
+                //url: serverUrl + "/_design/SOS21Server/_rewrite/action/" + objectData.actions[index],
+                var req_applyAction = $.ajax({
+                    url: serverUrl + "/action_" + new Date().getTime(),
+                    type: "PUT",
+                    data: JSON.stringify({"character" : ownerID, "place" : objectData.place}),
+                    contentType: 'application/json; charset=UTF-8',
+                    async: false
+                });
+                req_applyAction.done(function(data){
+                    if (index > 0) {
+                        out.applyObjectEffect(ownerID, placeId, objectData, index--);
+                    }else{
+                        out.updateObject(objectData, ownerID);
+                    }
+                });
+                //out.updateObject(objectData, ownerID);
         }
         
         out.longpoll = function (lastseq, pseudo){
