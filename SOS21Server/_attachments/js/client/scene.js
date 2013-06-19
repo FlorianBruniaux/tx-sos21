@@ -164,10 +164,10 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'e
             this.mainPlayerData.x = this.nextMap.x;
             this.mainPlayerData.y = this.nextMap.y;
             this.updatePlayer({changingPlace: true});
+            this.server.unregisterListeners();
         }else{
             this.server = Server;
             this.logMainPlayer(pseudo);
-            this.server.registerListeners(this.mainPlayerData);
             //écoute changement de map
             //mediator.on("goToMap", function(event, placeTo){
             //    this.mainPlayerData.x = placeTo.x;
@@ -210,7 +210,8 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'e
         api.setMapData();
         //récupération des objets sur la map
         api.setObjectsData();
-        //écoute players
+        //écoute de la scene
+        this.server.registerListeners(this.mainPlayerData);
     }   
     return api;
 });
