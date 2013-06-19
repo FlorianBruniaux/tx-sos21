@@ -3,82 +3,36 @@ define(['lib/melon'],
     // écran de chargement
    var CustomLoadingScreen = me.DefaultLoadingScreen.extend({
       onResetEvent : function(){
-         this.parent(true, true);
-      }
+            this.logo1 = new me.Font('century gothic', 32, 'white', 'middle');
+			this.logo2 = new me.Font('century gothic', 48, '#55A45A', 'middle');
+			this.logo2.bold();
+			this.logo1.textBaseline = this.logo2.textBaseline = "alphabetic";
+			// setup a callback
+			me.loader.onProgress = this.onProgressUpdate.bind(this);
+      },
+      update: function(){
+         return true;
+      },
+      draw : function(context) {
+			// measure the logo size
+			var logo1_width = this.logo1.measureText(context, "SOS").width;
+			var xpos = (me.video.getWidth() - logo1_width - this.logo2.measureText(context, "21").width) / 2;
+			var ypos = me.video.getHeight() / 2;
+			// clear surface
+			me.video.clearSurface(context, "black");
+			// draw the melonJS logo
+			this.logo1.draw(context, 'SOS', xpos , ypos);
+			xpos += logo1_width;
+			this.logo2.draw(context, '21', xpos, ypos);
+			ypos += this.logo1.measureText(context, "SOS").height / 2;
+			// display a progressive loading bar
+			var progress = Math.floor(this.loadPercent * me.video.getWidth());
+			// draw the progress bar
+			context.strokeStyle = "silver";
+			context.strokeRect(0, ypos, me.video.getWidth(), 7);
+			context.fillStyle = "#55A45A";
+			context.fillRect(2, ypos + 2, progress - 4, 3);
+		}
    });
-    /*me.ScreenObject.extend({
-       // constructor
-       init: function(){
-          // pass true to the parent constructor
-          // as we draw our progress bar in the draw function
-          this.parent(true);
-          // a font logo
-          this.logo = new me.Font('century gothic', 32, 'white');
-          // flag to know if we need to refresh the display
-          this.invalidate = false;
-          // load progress in percent
-          this.loadPercent = 0;
-          // setup a callback
-          me.loader.onProgress = this.onProgressUpdate.bind(this);
-          this.handle = null;
-    
-       },
-       
-      onResetEvent: function(){
-         //libération de la mémoire melon
-         //me.loader.unloadAll();
-         scene.init();        
-         me.loader.preload(scene.getGRessources());
-       },
-       
-       // will be fired by the loader each time a resource is loaded
-       onProgressUpdate: function(progress){
-          this.loadPercent = progress;
-          this.invalidate = true;
-       },
-    
-    
-       // make sure the screen is only refreshed on load progress
-       update: function(){
-          if (this.invalidate===true){
-             // clear the flag
-             this.invalidate = false;
-             // and return true
-             return true;
-          }
-          // else return false
-          return false;
-       },
-    
-       // on destroy event
-       onDestroyEvent : function (){
-          // "nullify" all fonts
-          this.logo = null;
-       },
-    
-       //	draw function
-       draw : function(context){
-          // clear the screen
-          me.video.clearSurface (context, "black");
-    
-          // measure the logo size
-          logo_width = this.logo.measureText(context,"SOS21").width;
-    
-          // draw our text somewhere in the middle
-          this.logo.draw(context,
-                         "SOS21",
-                         ((me.video.getWidth() - logo_width) / 2),
-                         (me.video.getHeight()) / 2);
-    
-          // display a progressive loading bar
-          var width = Math.floor(this.loadPercent * me.video.getWidth());
-    
-          // draw the progress bar
-          context.strokeStyle = "silver";
-          context.strokeRect(0, (me.video.getHeight() / 2) + 40, me.video.getWidth(), 6);
-          context.fillStyle = "#89b002";
-          context.fillRect(2, (me.video.getHeight() / 2) + 42, width-4, 2);
-       }
-    });*/
     return CustomLoadingScreen;
 });

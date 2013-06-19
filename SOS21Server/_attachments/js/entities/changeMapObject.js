@@ -8,9 +8,7 @@ define(['entities', 'lib/melon', 'server', 'client', 'entities/interactiveObject
 		},
         applyEffect: function(){
         	console.log("change map");
-                mediator.publish("changeMap", [this.servData.place_to]);
-                //me.state.change(me.state.LOADING);
-            //mediator.trigger("gotToPlace", function(event, this.effets.placeName){});
+            mediator.publish("changeMap", [this.servData.place_to]);
         }
     });
     

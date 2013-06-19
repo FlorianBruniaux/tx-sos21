@@ -47,7 +47,9 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
         },
         onCollision : function(res, obj) {
 			if (this.isClicked && obj.servData._id == scene.mainPlayerData._id) {
+				console.log("trigger");
 				this.triggerEffect();
+				this.isClicked = false;
 			}
 		},
         /**
