@@ -178,6 +178,11 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
         
         out.updateObject = function(objectData, ownerID){
             console.log("update de l'objet !");
+            /**
+             * requis pour la suite du process ! (cf ligne 298)
+             *@see entities/interactiveObject#registerListener (ownerID)
+             **/
+            objectData.owner = ownerID;
             objectData.previousPlace = objectData.place;
             objectData.place = ownerID;
             var req_update = $.ajax({
