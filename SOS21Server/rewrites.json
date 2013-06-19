@@ -18,6 +18,11 @@
         "method": "POST"
     },
     {
+        "to": "_update/action/*",
+        "from": "action/*",
+        "method": "PUT"
+    },
+    {
         "to": "_update/playable_character/*",
         "from": "playable_character/*",
         "method": "PUT"
