@@ -187,13 +187,26 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
             req_update.done(function(successData){
                 successData = JSON.parse(successData);
                 objectData._rev = successData.rev;
-                // url :  http://localhost:5984/sos21/_design
-                //var req_applyEffect = $.ajax({
-                //    url : "",
-                //    type : "POST",
-                //    data: JSON.stringify()
-                //});
             });
+        }
+        
+        out.applyObjectEffect = function(objectData, ownerID, index){
+                index = (index || ((objectData.actions) ? objectData.actions.length-1 : 0));
+                //var req_applyAction = $.ajax({
+                //    url: serverUrl + "/_design/SOS21Server/_rewrite/action/" + objectData.actions[index],
+                //    type: "POST",
+                //    data: JSON.stringify({"character" : ownerID, "place" : objectData.place}),
+                //    contentType: 'application/json; charset=UTF-8',
+                //    async: false
+                //});
+                //req_applyAction.done(function(data){
+                //    if (index > 0) {
+                //        out.applyObjectEffect(ownerID, placeId, objectData, index--);
+                //    }else{
+                //        out.updateObject(objectData, ownerID);
+                //    }
+                //});
+                out.updateObject(objectData, ownerID);
         }
         
         out.longpoll = function (lastseq, pseudo){
@@ -271,7 +284,9 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
                 );
                 var handler3 = function(event){
                     var data = JSON.parse(event.data).doc;
-                    mediator.publish('changeMap'+'.'+data._id, [data.place]);
+                    console.log("POP/DEPOP");
+                    console.log(data);
+                    mediator.publish('borderCrossed', [data]);
                 };
                 source3.addEventListener("message", handler3, false);
             }
