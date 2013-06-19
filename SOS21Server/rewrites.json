@@ -105,5 +105,10 @@
     {
         "to" : "_show/getJSONMap/:id",
         "from" : "getMap/:id/.json"
+    },
+    {
+        "to": "_list/getAllObjects/getAllObjects",
+        "from": "getAllObjects",
+        "method": "GET"
     }
 ]
