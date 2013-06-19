@@ -17,6 +17,9 @@ define(['jquery', 'lib/melon', 'entities', 'server', 'event/mediator', 'entities
             //}).bind(this); //on bind this à l'objet courrant, et non à l'objet global
             //me.event.subscribe("moveTo", goTo_callback);
             
+        },
+        onDestroy: function(){
+            $(mediator).off("move"+"."+this.servData._id);
         }
         //registerEvent: function(eventName, handler, eventData){
         //    $.on(eventName+"."+this.servData._id, , )
