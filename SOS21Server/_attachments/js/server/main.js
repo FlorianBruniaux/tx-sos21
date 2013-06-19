@@ -194,24 +194,24 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
         
         out.applyObjectEffect = function(objectData, ownerID, index){
             console.log("Apply action en bd !");
-                index = (index || ((objectData.actions) ? objectData.actions.length-1 : 0));
-                //url: serverUrl + "/_design/SOS21Server/_rewrite/action/" + objectData.actions[index],
-                var req_applyAction = $.ajax({
-                    url: serverUrl + "/action_" + new Date().getTime(),
-                    type: "PUT",
-                    data: JSON.stringify({"character" : ownerID, "place" : objectData.place}),
-                    contentType: 'application/json; charset=UTF-8',
-                    async: false
-                });
-                req_applyAction.done(function(data){
-                    console.log("action appliqué");
-                    if (index > 0) {
-                        out.applyObjectEffect(ownerID, placeId, objectData, index--);
-                    }else{
-                        out.updateObject(objectData, ownerID);
-                    }
-                });
-                //out.updateObject(objectData, ownerID);
+                //index = (index || ((objectData.actions) ? objectData.actions.length-1 : 0));
+                ////url: serverUrl + "/_design/SOS21Server/_rewrite/action/" + objectData.actions[index],
+                //var req_applyAction = $.ajax({
+                //    url: serverUrl + "/action_" + new Date().getTime(),
+                //    type: "PUT",
+                //    data: JSON.stringify({"character" : ownerID, "place" : objectData.place}),
+                //    contentType: 'application/json; charset=UTF-8',
+                //    async: false
+                //});
+                //req_applyAction.done(function(data){
+                //    console.log("action appliqué");
+                //    if (index > 0) {
+                //        out.applyObjectEffect(ownerID, placeId, objectData, index--);
+                //    }else{
+                //        out.updateObject(objectData, ownerID);
+                //    }
+                //});
+                out.updateObject(objectData, ownerID);
         }
         
         out.longpoll = function (lastseq, pseudo){
