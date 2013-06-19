@@ -51,7 +51,8 @@ define(['lib/melon',
 		scene.init(mainPlayerPseudo);        
 		me.loader.preload(scene.getGRessources());
 		console.log("onload");
-		me.state.set(me.state.LOADING, new LoadingScreen());
+		this.loadingScreen = new LoadingScreen();
+		me.state.set(me.state.LOADING, this.loadingScreen);
 		me.state.set(me.state.PLAY, new PlayScreen()); 
 		// load everything & display a loading screen
 		me.state.change(me.state.LOADING);
