@@ -1,9 +1,9 @@
-define(['lib/melon', 'client/scene', 'entities'],
-	   function(melon, scene, entities){
+define(['lib/melon'],
+	   function(melon){
     // écran de chargement
    var CustomLoadingScreen = me.DefaultLoadingScreen.extend({
       onResetEvent : function(){
-         this.parent();
+         this.parent(true, true);
       }
    });
     /*me.ScreenObject.extend({
