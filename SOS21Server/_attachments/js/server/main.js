@@ -1,7 +1,7 @@
 define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon, entities, mediator){
     var server = (function(){
         var db_name = "sos21";
-        var couchUrl = "http://localhost:5984";
+        var couchUrl = "http://"+window.location.host;
         var serverUrl = couchUrl + "/" + db_name;
         
         var out = {}; // public things
