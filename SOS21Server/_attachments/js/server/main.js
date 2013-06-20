@@ -149,32 +149,6 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
             }
             return output
         };
-        //out.updatePlayerPosition = function(playerData, x, y){
-        //    var output = null;
-        //    if(playerData._id && playerData._rev && playerData.type == "character"){
-        //        playerData.x = x; 
-        //        playerData.y = y;
-        //        playerData.changingPlace = false;
-        //        var req_update = $.ajax({
-        //            url: serverUrl+"/"+playerData._id,
-        //            type: "PUT",
-        //            data: JSON.stringify(playerData),
-        //            async: false
-        //        });
-        //    
-        //        req_update.done(function(data){
-        //            data = JSON.parse(data);
-        //            playerData._rev = data.rev;
-        //            output = playerData;
-        //
-        //        });
-        //    
-        //        req_update.fail(function(error){
-        //            output = null;
-        //        });
-        //    }
-        //    return output
-        //};
         
         out.updateObject = function(objectData, ownerID){
             console.log("update de l'objet !");
@@ -194,29 +168,28 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
             req_update.done(function(successData){
                 successData = JSON.parse(successData);
                 objectData._rev = successData.rev;
+                out.applyObjectEffect(objectData, ownerID);
             });
         }
         
         out.applyObjectEffect = function(objectData, ownerID, index){
             console.log("Apply action en bd !");
-                //index = (index || ((objectData.actions) ? objectData.actions.length-1 : 0));
-                ////url: serverUrl + "/_design/SOS21Server/_rewrite/action/" + objectData.actions[index],
-                //var req_applyAction = $.ajax({
-                //    url: serverUrl + "/action_" + new Date().getTime(),
-                //    type: "PUT",
-                //    data: JSON.stringify({"character" : ownerID, "place" : objectData.place}),
-                //    contentType: 'application/json; charset=UTF-8',
-                //    async: false
-                //});
-                //req_applyAction.done(function(data){
-                //    console.log("action appliqué");
-                //    if (index > 0) {
-                //        out.applyObjectEffect(ownerID, placeId, objectData, index--);
-                //    }else{
-                //        out.updateObject(objectData, ownerID);
-                //    }
-                //});
-                out.updateObject(objectData, ownerID);
+                index = (index || ((objectData.actions) ? objectData.actions.length-1 : 0));
+                //url: serverUrl + "/_design/SOS21Server/_rewrite/action/" + objectData.actions[index],
+                var req_applyAction = $.ajax({
+                    url: serverUrl + "/_design/SOS21Server/_rewrite/action/" + objectData.actions[index],
+                    type: "PUT",
+                    data: JSON.stringify({"character" : ownerID, "place" : objectData.place}),
+                    contentType: 'application/json; charset=UTF-8',
+                    async: true
+                });
+                req_applyAction.done(function(data){
+                    console.log("action appliqué");
+                    if (index > 0) {
+                        out.applyObjectEffect(objectData, ownerID, index--);
+                    }
+                });
+                //out.updateObject(objectData, ownerID);
         }
         
         out.longpoll = function (lastseq, pseudo){
