@@ -25,7 +25,7 @@ define(['lib/melon',
     var mainPlayerPseudo = "";
     var viewPortWidth = 0;
     var viewPortHeight = 0;
-    var debug = true;
+    var debug = false;
     
     //public api
     var api = {};
