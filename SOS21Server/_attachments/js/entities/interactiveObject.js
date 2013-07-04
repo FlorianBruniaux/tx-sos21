@@ -5,8 +5,8 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
      * Ne pas instacier, utiliser un surcouche comme CollectableObject ou ChangeMapObject
      */
     var InteractiveObject = GameObject.extend({
-		isClicked: false,
-        isPicked: false,
+		isClicked: false, // verrou local
+        isPicked: false, // verrou monde
 		playerPicking: "",
         effectTriggered: false,
         init: function(x, y, settings){
@@ -49,7 +49,18 @@ define(['entities', 'lib/melon', 'client/scene', 'client', 'entities/gameObject'
 			if (this.isClicked && obj.servData._id == scene.mainPlayerData._id) {
 				console.log("trigger");
 				this.triggerEffect();
-				this.isClicked = false;
+				this.isClicked = false;// empeche un deuxième déclenchement de l'effet
+			}
+		},
+		onRemoteCollision: function(obj){
+			if (this.isPicked && obj.servData._id == this.playerPicking) {
+				if (this.isClicked && this.playerPicking==scene.mainPlayerData._id) {
+					this.triggerEffect();
+					this.isClicked = false; // empeche un deuxième déclenchement de l'effet
+				}
+				else{
+					this.onPicked();
+				}
 			}
 		},
         /**

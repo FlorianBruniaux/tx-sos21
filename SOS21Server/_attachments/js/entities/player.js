@@ -32,6 +32,6 @@ define(['entities', 'lib/melon', 'client', 'client/scene', 'entities/sos21Player
 				}
                 this.parent();
             }
-    }); //gestion de l'entité joueur
+    });
     return Player;
 });

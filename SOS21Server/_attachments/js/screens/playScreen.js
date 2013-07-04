@@ -5,11 +5,8 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'gui/debugHUD', 'client/scene'
 	var playScreen = me.ScreenObject.extend({
 
 		onResetEvent: function(){
-			// changement de l'état (me.state.change)
-			// charger un niveau, currentMap vien de scene
 			me.levelDirector.loadLevel(scene.mainPlayerData.place);
-			//me.game.viewport.move(540,255); // décalage de la caméra mode iso
-			me.game.viewport.move(30,15); // decalage de la caméra mode ortho
+			me.game.viewport.move(30,15); // decalage de la caméra mode orthogonal
 			this.loadPathFinding();
 			// add entities
 			this.initEntities();
@@ -20,7 +17,7 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'gui/debugHUD', 'client/scene'
 			// initialisation du pathfinding sur la carte chargée
 			var i=0, tmp=0;
 			var matrice = [];
-			for(i=0; i< me.game.collisionMap.rows; i++){ // melon v0.9.7+
+			for(i=0; i< me.game.collisionMap.rows; i++){
 				matrice.push([]);
 			}
 			i=0;
@@ -32,9 +29,7 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'gui/debugHUD', 'client/scene'
 				});
 				i=0;
 			});
-			me.game.collisionMap.collisionGrid = new PF.Grid(matrice[0].length, matrice.length, matrice); // melon v0.9.7+
-			//me.game.collisionMap.pathfinder = new PF.AStarFinder({allowDiagonal: true, dontCrossCorners: true});
-			//me.game.collisionMap.pathfinder = new PF.AStarFinder({bidirectional: true});
+			me.game.collisionMap.collisionGrid = new PF.Grid(matrice[0].length, matrice.length, matrice);
 			me.game.collisionMap.pathfinder = new PF.JumpPointFinder();
 		},
 		initEntities: function(){

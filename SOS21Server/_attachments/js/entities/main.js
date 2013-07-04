@@ -63,7 +63,8 @@ define(['lib/melon'], function(melon){
 	};
 	api.getSkin = function(skinName){ 
 		var skin = {};
-		if (skinExists(skinName)) { // TODO : récupérer un vrai skin depuis la DB
+		if (skinExists(skinName)) {
+			// TO DO : charger skin en DB
 			skin.name = skinName;
 			skin.height = this.defaultSkin.height;
 			skin.width = this.defaultSkin.width;
@@ -77,7 +78,7 @@ define(['lib/melon'], function(melon){
 	};
 	api.getSkinName = function(skinName){
 		var skin = "";
-		if (skinExists(skinName)) { // TODO : récupérer un vrai skin depuis la DB
+		if (skinExists(skinName)) {
 			skin = skinName;
 		}
 		else{

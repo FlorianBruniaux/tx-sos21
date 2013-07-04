@@ -87,7 +87,6 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
                             // ajuster le marqueur au milieu de la tile
                         	tmp.x += me.game.currentLevel.mapLayers[0].layerData[coord[0]][coord[1]].width/2;
                         	tmp.y += me.game.currentLevel.mapLayers[0].layerData[coord[0]][coord[1]].height/2;
-                        	// ajout du marqueur dans le path
                             path[i][0] = tmp.x;
                             path[i][1] = tmp.y;
                         }
@@ -126,7 +125,7 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
                             this.lastStep = true;
                         }
                     }
-                    // choix de la direction
+                    // choix de la direction // me.timer.tick
                     this.vel.x = this.vel.x = this.tmp_pos.x - this.position.x;
                     if(this.vel.x>0){
                         this.direction.x = "right";
@@ -147,11 +146,20 @@ define(['entities', 'lib/melon', 'server'], function(entities, melon, server){
                     else{
                         this.direction.y = "";
                     }
+                    //this.updateVel();
                 }
             }
         },
+        updateVel: function(){
+            if (this.direction.x!="" && this.direction.y!="") { 
+                this.vel.x /= 2;// problèmes avec la direction
+                this.vel.y /= 2;
+                //this.vel.x = (this.tmp_pos.x - this.position.x)*0.5;
+                //this.vel.y = (this.tmp_pos.y - this.position.y)*0.5;
+            }
+        },
         endPath: function(){
-            // le joueur est arrivé en position
+            
         },
         renderUpdate: function(){
             return (this.vel.x!=0 || this.vel.y!=0);

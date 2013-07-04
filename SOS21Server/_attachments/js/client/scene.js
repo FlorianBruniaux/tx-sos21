@@ -168,13 +168,6 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'e
         }else{
             this.server = Server;
             this.logMainPlayer(pseudo);
-            //écoute changement de map
-            //mediator.on("goToMap", function(event, placeTo){
-            //    this.mainPlayerData.x = placeTo.x;
-            //    this.mainPlayerData.y = placeTo.y;
-            //    this.mainPlayerData.place = placeTo.id;
-            //    this.server.updatePlayerMap(this.mainPlayerData, placeTo)    
-            //}.bind(api));
             mediator.on("changeMap", function(event, placeTo){
                 console.log("changeMap reçu");
                 this.nextMap = placeTo;
@@ -190,15 +183,8 @@ define(['lib/melon', 'lib/pathfinding', 'client', 'server', 'event/mediator', 'e
             mediator.on("borderCrossed", function(event, playerData){
                 console.log(playerData);
                 if (playerData.place == this.mainPlayerData.place) {
-                    //var pos = (playerData.x && playerData.y) ? {"x":playerData.x, "y":playerData.y} : {"x":me.game.viewport.limits.x/2, "y":me.game.viewport.limits.y/2};
-                    //var otherPlayer = me.entityPool.newInstanceOf("otherPlayer", pos.x, pos.y, playerData);
-                    //api.players[playerData._id] = otherPlayer;
-                    //me.game.add(otherPlayer, 4);
                     this.addPlayer(playerData);
                 }else if(playerData.previousPlace == this.mainPlayerData.place){
-                    //this.players[id].onDestroyEvent();
-                    //me.game.remove(this.players[id]);
-                    //delete this.players[id];
                     console.log("del joueur");
                     this.removePlayer(playerData._id);
                 }

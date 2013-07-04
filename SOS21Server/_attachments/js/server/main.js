@@ -127,8 +127,6 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
         out.updatePlayer = function(playerData){
             var output = null;
             if(playerData._id && playerData._rev && playerData.type == "character"){
-                //playerData.x = x; 
-                //playerData.y = y;
                 var req_update = $.ajax({
                     url: serverUrl+"/"+playerData._id,
                     type: "PUT",
@@ -175,7 +173,6 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
         out.applyObjectEffect = function(objectData, ownerID, index){
             console.log("Apply action en bd !");
                 index = (index || ((objectData.actions) ? objectData.actions.length-1 : 0));
-                //url: serverUrl + "/_design/SOS21Server/_rewrite/action/" + objectData.actions[index],
                 var req_applyAction = $.ajax({
                     url: serverUrl + "/_design/SOS21Server/_rewrite/action/" + objectData.actions[index],
                     type: "PUT",
@@ -189,7 +186,6 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
                         out.applyObjectEffect(objectData, ownerID, index--);
                     }
                 });
-                //out.updateObject(objectData, ownerID);
         }
         
         out.longpoll = function (lastseq, pseudo){
@@ -212,16 +208,10 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
                 });
             
                 maj.done(function(dataPerso){
-                    /*if (me.game.getEntityByGUID(dataChange.results[0].id)) {
-                            me.game.getEntityByGUID(dataChange.results[0].id).longpollMvt(dataPerso.x, dataPerso.y);
-                    }*/
-                    
                     _this.longpoll(dataChange.results[dataChange.results.length-1].seq, pseudo);
                     
                 });
-            // maj.fail();
-            });  
-        // req.fail();
+            });
         };
         
         out.unregisterListeners = function(){
@@ -234,7 +224,6 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
                 delete this.listener[channel].source;
                 delete this.listener[channel].handler;
             }.bind(this));
-            //delete this.listener;
         }
         
         out.registerListeners = function(mainPlayer){
@@ -256,11 +245,6 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
                                                        )
                 );
                 this.listener.players.source.onmessage = this.listener.players.handler;
-                //this.listener.players.source.addEventListener("message", this.listener.players.handler, false);
-                //if (this.listener.players) {
-                //    $(this.listener.players).off();
-                //}
-                //$(this.listener.players).on("message", handler);
                 ///listen to objectUpdates
                 this.listener.objects = {"source":null, "handler":null};
                 this.listener.objects.source = new EventSource(serverUrl+("/_changes?feed=eventsource&filter=SOS21Server/objects"
@@ -273,13 +257,7 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
                     var data = JSON.parse(event.data).doc;
                     mediator.publish("objectUpdated" + "." + data._id, [data.owner]);
                 }
-                this.listener.objects.source.onmessage = this.listener.objects.handler;
-                //this.listener.objects.source.addEventListener("message", this.listener.objects.handler, false);
-                //if (this.listener.objects) {
-                //    $(this.listener.objects).off();
-                //}
-                //$(this.listener.objects).on("message", handler2);
-                
+                this.listener.objects.source.onmessage = this.listener.objects.handler;       
                 //listen to mapChange
                 this.listener.mapBorder = {"source":null, "handler":null};
                 this.listener.mapBorder.source = new EventSource(serverUrl+("/_changes?feed=eventsource&filter=SOS21Server/place"
@@ -296,11 +274,6 @@ define(['jquery', 'lib/melon', 'entities', 'event/mediator'], function($, melon,
                     mediator.publish('borderCrossed', [data]);
                 };
                 this.listener.mapBorder.source.onmessage = this.listener.mapBorder.handler;
-                //this.listener.mapBorder.source.addEventListener("message", this.listener.mapBorder.handler, false);
-                //if (this.listener.mapBorder) {
-                //    $(this.listener.mapBorder).off();
-                //}
-                //$(this.listener.mapBorder).on("message", handler3);
             }
         };
         
