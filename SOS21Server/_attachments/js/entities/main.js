@@ -4,11 +4,6 @@ define(['lib/melon'], function(melon){
     api.entities_folder = "data/images/player/";
 	api.objects_folder = "data/images/objects/";
 	
-	
-	// ~~~~ TEMP --- chargement depuis le server à valider ~~~~
-    api.entities = [{name: "default"},{name:"skinPersoTest"}];
-	api.objects = [{name: "obj1"}];
-	
 	//--------------------------------------
 	// Player - paramètres & fonctions
 	//--------------------------------------
